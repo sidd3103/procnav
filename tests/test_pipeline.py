@@ -409,3 +409,15 @@ def test_submission_approval_answered_from_review_policy(tmp_path, acme_llm):
     assert "Q-012" in unconfirmed and "Q-010" in missing and "Q-021" in evidenced
     assert "Q-023" not in a.answer.split("\n", 1)[1]  # does not list itself
     assert "Q-024" not in a.answer                    # template rows are not listed
+
+
+def test_open_decisions_become_caveats_end_to_end(tmp_path, acme_llm):
+    snap = run_case(ACME_DIR, date(2026, 9, 25), acme_llm(), tmp_path / "c")
+    affected = {t for d in snap.open_decisions for t in d.affected_topics}
+    caveated = {t for t, v in snap.verdicts.items()
+                if any(c.startswith("open decision (") for c in v.caveats)}
+    assert caveated and caveated <= affected
+    assert all(not snap.verdicts[t].sendable for t in caveated)
+    # the decision reaches the draft through the code-appended caveats line
+    a = next(a for a in snap.answers if a.req_id == "Q-012")
+    assert "Caveats: " in a.answer and "open decision" in a.answer

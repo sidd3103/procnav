@@ -39,6 +39,7 @@ from .reconcile import reconcile_all
 from .requirements import (
     RequirementResult,
     apply_blockers,
+    apply_decision_caveats,
     build_requirements,
     evaluate,
     template_flags,
@@ -274,7 +275,7 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
     referenced |= {t for d in decisions for t in d.affected_topics}
     for t in referenced - verdicts.keys():
         verdicts[t] = resolve_topic(t, [], as_of)
-    verdicts = dict(sorted(verdicts.items()))
+    verdicts = apply_decision_caveats(dict(sorted(verdicts.items())), decisions)
 
     # case-level answers derived deterministically from dependencies and the blocker list
     verdicts = derive_submission_approval(derive_from_dependencies(verdicts, deps))

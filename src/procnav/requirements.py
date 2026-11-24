@@ -111,10 +111,30 @@ def evaluate(
     return results
 
 
+DECISION_CAVEAT = "open decision"
+
+
+def apply_decision_caveats(verdicts: dict[str, Verdict],
+                           decisions: list[OpenDecision]) -> dict[str, Verdict]:
+    """A pending decision on a topic is a caveat: the value may still change, so the topic is
+    never sendable and its answers need confirmation. UNKNOWN and derived topics are left as is."""
+    out = dict(verdicts)
+    for d in decisions:
+        cav = f"{DECISION_CAVEAT} ({d.decider}): {d.text}"
+        for t in d.affected_topics:
+            v = out.get(t)
+            if v is None or v.status == "UNKNOWN" or v.rule.startswith("derived from") \
+                    or cav in v.caveats:
+                continue
+            out[t] = v.model_copy(update={"caveats": [*v.caveats, cav], "sendable": False})
+    return out
+
+
 def readiness(topics: list[str], verdicts: dict[str, Verdict]) -> Readiness:
     """Can we write a true answer now? Separate from deal risk (blocked or not).
 
-    ready: every topic is VERIFIED evidence (caveats allowed: an expiry is part of the answer),
+    ready: every topic is VERIFIED evidence (an expiry caveat is part of the answer; an open
+    decision is not, it means the value may change),
     or any topic is derived by code from the case (code then writes the whole answer). missing: no topic has anything usable. confirm: the
     rest (proposed values, conflicts, or partly known).
     """
@@ -124,7 +144,9 @@ def readiness(topics: list[str], verdicts: dict[str, Verdict]) -> Readiness:
         return "missing"
     if any(v.rule.startswith("derived from") for v in known):
         return "ready"
-    if len(known) == len(vs) and all(v.status == "VERIFIED" for v in known):
+    if len(known) == len(vs) and all(
+            v.status == "VERIFIED" and not any(c.startswith(DECISION_CAVEAT) for c in v.caveats)
+            for v in known):
         return "ready"
     return "confirm"
 

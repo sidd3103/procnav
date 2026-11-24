@@ -133,3 +133,16 @@ def test_dependency_subject_requirement_is_blocked_too():
 def test_dependency_subject_not_blocked_once_dependencies_verified():
     deps = [dep("d1", "blocked_until", "DPA", ["subprocessors"])]
     assert run({"subprocessors": V("subprocessors")}, [R("Q-020", ["dpa"])], deps) == []
+
+
+def test_derived_dependency_value_lists_only_open_topics():
+    from procnav.blockers import derive_from_dependencies
+    deps = [dep("d1", "blocked_until", "DPA", ["subprocessors", "cross_border"])]
+    vs = {"dpa": V("dpa", "UNKNOWN", None), "subprocessors": V("subprocessors"),
+          "cross_border": V("cross_border", "UNKNOWN", None)}
+    out = derive_from_dependencies(vs, deps)
+    assert out["dpa"].value == "blocked until cross_border is confirmed"
+    vs["cross_border"] = V("cross_border")
+    out = derive_from_dependencies(vs, deps)
+    assert out["dpa"].status == "PROPOSED"
+    assert out["dpa"].value == "no longer blocked: subprocessors, cross_border are confirmed"

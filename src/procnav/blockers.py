@@ -122,7 +122,8 @@ def dependencies_for(topic: str, dependencies: list[Dependency]) -> list[Depende
 def derive_from_dependencies(verdicts: dict[str, Verdict],
                              dependencies: list[Dependency]) -> dict[str, Verdict]:
     """An UNKNOWN topic that is the subject of a blocked_until dependency is answered by that
-    dependency: PROPOSED "blocked until <topics> are confirmed"."""
+    dependency: PROPOSED "blocked until <still-open topics> are confirmed", or "no longer
+    blocked" once every depended-on topic is VERIFIED."""
     out = dict(verdicts)
     for t, v in verdicts.items():
         if v.status != "UNKNOWN":
@@ -133,8 +134,12 @@ def derive_from_dependencies(verdicts: dict[str, Verdict],
             on += [x for x in d.depends_on_topics if x != t and x not in on]
         if not on:
             continue
+        still = [x for x in on if (w := verdicts.get(x)) is None or w.status != "VERIFIED"]
+        verb = "is" if len(still) == 1 else "are"
+        value = (f"blocked until {', '.join(still)} {verb} confirmed" if still
+                 else f"no longer blocked: {', '.join(on)} are confirmed")
         out[t] = v.model_copy(update={
-            "status": "PROPOSED", "value": f"blocked until {', '.join(on)} are confirmed",
+            "status": "PROPOSED", "value": value,
             "rule": DERIVED_DEPENDENCY, "hints": v.hints + [f"{d.quote} ({d.file})" for d in hits],
             "sendable": False})
     return out

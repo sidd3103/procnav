@@ -151,3 +151,29 @@ def test_readiness_separates_answerable_from_missing():
     assert readiness(["st"], vs) == "confirm"
     assert readiness(["fb"], vs) == "confirm"           # someone must settle the conflict
     assert readiness(["cur", "nope"], vs) == "missing"
+
+
+def _dec(topics, text="Is the fallback disabled?", decider="internal"):
+    return OpenDecision(id="o1", text=text, decider=decider, affected_topics=topics,
+                        quote="q", file="chat.txt")
+
+
+def test_open_decision_adds_caveat_and_blocks_sendable():
+    from procnav.requirements import apply_decision_caveats
+    vs = {"mp": V("mp"), "un": V("un", "UNKNOWN", None, False),
+          "dpa": V("dpa", "PROPOSED", sendable=False).model_copy(
+              update={"rule": "derived from dependency"})}
+    out = apply_decision_caveats(vs, [_dec(["mp", "un", "dpa", "missing"])])
+    assert out["mp"].caveats == ["open decision (internal): Is the fallback disabled?"]
+    assert out["mp"].status == "VERIFIED" and not out["mp"].sendable
+    assert out["un"] == vs["un"] and out["dpa"] == vs["dpa"]  # nothing to caveat
+    assert "missing" not in out
+    assert apply_decision_caveats(vs, []) == vs
+
+
+def test_readiness_open_decision_needs_confirmation():
+    from procnav.requirements import apply_decision_caveats, readiness
+    vs = apply_decision_caveats({"mp": V("mp")}, [_dec(["mp"])])
+    assert readiness(["mp"], vs) == "confirm"
+    expiring = {"ins": V("ins", caveats=["expires 2026-10-01"], sendable=False)}
+    assert readiness(["ins"], expiring) == "ready"  # an expiry is part of the answer
