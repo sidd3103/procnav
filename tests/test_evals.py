@@ -121,3 +121,14 @@ def test_cli_eval_no_run_is_error(tmp_path, capsys):
     kp.write_text(json.dumps(KEY))
     rc = cli.main(["eval", str(tmp_path / "runs"), "C", "--key", str(kp)])
     assert rc != 0 and "no run" in capsys.readouterr().err
+
+
+def test_answer_key_files_parse_and_cover_every_question():
+    from pathlib import Path
+    keys = sorted((Path(__file__).resolve().parents[1] / "evals" / "answer_key").glob("*.json"))
+    assert len(keys) == 2
+    for p in keys:
+        k = AnswerKey.model_validate_json(p.read_text(encoding="utf-8"))
+        ids = {q.id for q in k.questions if q.id}
+        assert ids == {f"Q-{i:03d}" for i in range(1, 24)}, p.name
+        assert all(q.statuses for q in k.questions) and all(t.statuses for t in k.topics)

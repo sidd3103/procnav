@@ -1,0 +1,487 @@
+{
+  "case": "CASE_2_Northstar_Telecom",
+  "as_of": "2026-09-25",
+  "answers_must_not_include": [
+    "remain open",
+    "remediation status: open",
+    "owner not specified",
+    "BluePeak",
+    "write-enabled"
+  ],
+  "questions": [
+    {
+      "id": "Q-001",
+      "statuses": [
+        "needs_confirmation"
+      ],
+      "must_include": [
+        "network-support"
+      ],
+      "must_not_include": [
+        "not yet known"
+      ],
+      "note": "Cover file: AI operations assistant for internal network-support teams."
+    },
+    {
+      "id": "Q-002",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "must_not_include": [
+        "no personal information"
+      ],
+      "note": "Privacy asks to clarify employee-data scope; not stated."
+    },
+    {
+      "id": "Q-003",
+      "statuses": [
+        "blocked",
+        "unknown",
+        "needs_confirmation"
+      ],
+      "must_include": [
+        "Canada",
+        "inference"
+      ],
+      "note": "Persistence AWS Canada (chat + draft agree); inference geography explicitly separate and not stated."
+    },
+    {
+      "id": "Q-004",
+      "statuses": [
+        "blocked",
+        "unknown",
+        "needs_confirmation"
+      ],
+      "must_include": [
+        "14"
+      ],
+      "note": "App logs 14 days (draft); source files workspace lifetime unless custom deletion; traces/prompts not stated."
+    },
+    {
+      "id": "Q-005",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "Old subprocessor list not approved for external use."
+    },
+    {
+      "id": "Q-006",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "Not stated."
+    },
+    {
+      "id": "Q-009",
+      "statuses": [
+        "unknown",
+        "blocked",
+        "needs_confirmation"
+      ],
+      "note": "No Northstar encryption/IAM statement."
+    },
+    {
+      "id": "Q-011",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "must_not_include": [
+        "24h",
+        "24 hours"
+      ],
+      "note": "24h RTO/RPO is BluePeak's (other customer) and the questionnaire draft is stale."
+    },
+    {
+      "id": "Q-012",
+      "statuses": [
+        "needs_confirmation",
+        "blocked"
+      ],
+      "must_include": [
+        "OpenAI"
+      ],
+      "must_not_include": [
+        "Multiple model providers"
+      ],
+      "note": "Draft: OpenAI primary inference; secondary disabled unless customer approves."
+    },
+    {
+      "id": "Q-014",
+      "statuses": [
+        "needs_confirmation",
+        "blocked"
+      ],
+      "must_include": [
+        [
+          "disabled",
+          "unless the customer approves",
+          "unless customer approves"
+        ]
+      ],
+      "note": "Secondary provider disabled unless the customer approves (a customer decision)."
+    },
+    {
+      "id": "Q-015",
+      "statuses": [
+        "needs_confirmation",
+        "blocked"
+      ],
+      "must_include": [
+        [
+          "read-only",
+          "read only"
+        ]
+      ],
+      "must_not_include": [
+        "read/write"
+      ],
+      "note": "Pilot connectors allowlisted and read-only; external actions disabled. Generic read/write is platform capability, not this pilot."
+    },
+    {
+      "id": "Q-016",
+      "statuses": [
+        "unknown",
+        "blocked",
+        "needs_confirmation"
+      ],
+      "note": "No Northstar human-oversight statement; AI Governance asks for it."
+    },
+    {
+      "id": "Q-020",
+      "statuses": [
+        "unknown",
+        "blocked",
+        "needs_confirmation"
+      ],
+      "note": "No DPA dependency stated for Northstar; subprocessor list not approved."
+    },
+    {
+      "id": "Q-007",
+      "statuses": [
+        "ready_for_review",
+        "needs_confirmation"
+      ],
+      "must_include": [
+        "Type II",
+        [
+          "Jan-Dec 2025",
+          "Jan–Dec 2025",
+          "January",
+          "2025"
+        ],
+        [
+          "2026"
+        ]
+      ],
+      "note": "SOC 2 Type II Jan-Dec 2025 is FINAL (evidence); the 2026 audit is not yet final and must be mentioned."
+    },
+    {
+      "id": "Q-008",
+      "statuses": [
+        "needs_confirmation",
+        "unknown",
+        "blocked"
+      ],
+      "must_include": [
+        "Feb",
+        "Medium",
+        [
+          "no remediation evidence",
+          "evidence",
+          "not confirmed",
+          "unconfirmed",
+          "unverified"
+        ]
+      ],
+      "must_not_include": [
+        "remain open",
+        "remediation status: open",
+        "are open"
+      ],
+      "note": "Feb 2026 report: no Critical/High, two Mediums OPEN at report time. Remediation claimed internally but no evidence. Must keep the time frame, never say they are open now."
+    },
+    {
+      "id": "Q-010",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "Nothing in the case states incident response."
+    },
+    {
+      "id": "Q-013",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "Nothing states provider retention/training terms."
+    },
+    {
+      "id": "Q-017",
+      "statuses": [
+        "unknown",
+        "blocked",
+        "needs_confirmation"
+      ],
+      "note": "No prompt-injection controls stated."
+    },
+    {
+      "id": "Q-018",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "No evaluation methodology stated."
+    },
+    {
+      "id": "Q-019",
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "No provenance/citation handling stated."
+    },
+    {
+      "id": "Q-021",
+      "statuses": [
+        "blocked"
+      ],
+      "must_include": [
+        "5,000,000",
+        [
+          "Oct 1, 2026",
+          "2026-10-01",
+          "October 1, 2026"
+        ],
+        "renewal"
+      ],
+      "note": "CAD 5,000,000 cover, certificate expires Oct 1, 2026, renewal pending; expiry falls before the milestone so it blocks."
+    },
+    {
+      "id": "Q-022",
+      "statuses": [
+        "needs_confirmation"
+      ],
+      "must_include": [
+        "insurance"
+      ],
+      "note": "Derived from the blocker list; must list every blocker item (insurance at least)."
+    },
+    {
+      "id": "Q-023",
+      "statuses": [
+        "unknown",
+        "blocked",
+        "needs_confirmation"
+      ],
+      "must_not_include": [
+        "no responses require",
+        "none require",
+        "no approval"
+      ],
+      "note": "Every external answer needs human/Legal sign-off (guidance + 'don't guess in customer paperwork'); must never say none do."
+    },
+    {
+      "match": [
+        "tool"
+      ],
+      "statuses": [
+        "needs_confirmation",
+        "blocked",
+        "unknown"
+      ],
+      "note": "AI Governance: tool authorization, oversight, evaluation, untrusted content."
+    },
+    {
+      "match": [
+        "retention"
+      ],
+      "statuses": [
+        "blocked",
+        "unknown",
+        "needs_confirmation"
+      ],
+      "note": "Privacy: retention by data type."
+    },
+    {
+      "match": [
+        "subprocessor"
+      ],
+      "statuses": [
+        "unknown",
+        "blocked"
+      ],
+      "note": "Privacy: subprocessors."
+    }
+  ],
+  "topics": [
+    {
+      "topic": "storage_location",
+      "statuses": [
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "Canada"
+        ]
+      ],
+      "used_files_exclude": [
+        "general_or_older_reference",
+        "prior_customer_answers"
+      ],
+      "note": "'AWS persistence is Canada' (chat) and 'AWS Canada persistence' (draft) agree: never CONFLICT."
+    },
+    {
+      "topic": "tool_actions",
+      "statuses": [
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "read-only",
+          "read only",
+          "allowlisted",
+          "disabled"
+        ]
+      ],
+      "used_files_exclude": [
+        "general_or_older_reference",
+        "prior_customer_answers"
+      ],
+      "note": "Never CONFLICT and never from the generic architecture doc."
+    },
+    {
+      "topic": "model_fallback",
+      "statuses": [
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "disabled"
+        ]
+      ]
+    },
+    {
+      "topic": "trace_payload_capture",
+      "statuses": [
+        "PROPOSED",
+        "UNKNOWN"
+      ],
+      "note": "'traces should redact payloads, but verify' belongs here, not in retention_traces."
+    },
+    {
+      "topic": "soc2",
+      "statuses": [
+        "VERIFIED",
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "2025"
+        ]
+      ],
+      "note": "Value must keep its period, not just 'final'."
+    },
+    {
+      "topic": "pen_test_remediation",
+      "statuses": [
+        "PROPOSED",
+        "UNKNOWN",
+        "CONFLICT"
+      ],
+      "note": "Never VERIFIED: no remediation evidence."
+    },
+    {
+      "topic": "insurance",
+      "statuses": [
+        "VERIFIED",
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "5,000,000",
+          "5000000",
+          "5 million"
+        ]
+      ]
+    },
+    {
+      "topic": "approval_blockers",
+      "statuses": [
+        "PROPOSED"
+      ]
+    },
+    {
+      "topic": "service_description",
+      "statuses": [
+        "PROPOSED"
+      ]
+    },
+    {
+      "topic": "inference_location",
+      "statuses": [
+        "UNKNOWN"
+      ],
+      "note": "No file states where inference runs; 'OpenAI primary inference' is the provider, not a location."
+    },
+    {
+      "topic": "retention_traces",
+      "statuses": [
+        "UNKNOWN",
+        "PROPOSED"
+      ],
+      "used_quotes_exclude": [
+        "payload"
+      ],
+      "note": "Trace retention is never stated; a payload-capture line must not be used for it."
+    },
+    {
+      "topic": "retention_app_logs",
+      "statuses": [
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "14"
+        ]
+      ],
+      "used_files_exclude": [
+        "general_or_older_reference",
+        "prior_customer_answers"
+      ],
+      "note": "14 days (internal/draft) beats generic 30 days and prior-customer 30 days."
+    },
+    {
+      "topic": "model_providers",
+      "statuses": [
+        "PROPOSED"
+      ],
+      "value_includes": [
+        [
+          "OpenAI"
+        ]
+      ],
+      "used_files_exclude": [
+        "general_or_older_reference",
+        "prior_customer_answers"
+      ]
+    },
+    {
+      "topic": "subprocessors",
+      "statuses": [
+        "UNKNOWN"
+      ]
+    },
+    {
+      "topic": "rto_rpo",
+      "statuses": [
+        "UNKNOWN"
+      ],
+      "note": "24h/24h is a stale draft / other customer; nothing applies to this customer."
+    }
+  ]
+}
