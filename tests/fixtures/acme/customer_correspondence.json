@@ -1,0 +1,56 @@
+{
+  "source_type": "customer_request",
+  "customer_scope": "this_customer",
+  "date": null,
+  "is_draft": false,
+  "facts": [],
+  "requirements": [
+    {
+      "text": "Provide security evidence as part of the supplier profile and technology risk assessment.",
+      "requester": "Marcus, Procurement",
+      "topics": ["soc2", "pen_test"],
+      "quote": "Complete supplier profile, technology risk assessment, security evidence and AI governance intake."
+    },
+    {
+      "text": "Clarify the scope of personal information processed.",
+      "requester": "Elena, Privacy",
+      "topics": ["personal_info_scope"],
+      "quote": "Clarify personal-information scope"
+    },
+    {
+      "text": "Clarify whether content leaves Canada during processing.",
+      "requester": "Elena, Privacy",
+      "topics": ["inference_location", "cross_border"],
+      "quote": "whether content leaves Canada during processing"
+    },
+    {
+      "text": "Clarify retention by data type.",
+      "requester": "Elena, Privacy",
+      "topics": ["retention_app_logs", "retention_traces", "retention_source_files", "retention_prompts_responses"],
+      "quote": "retention by data type"
+    },
+    {
+      "text": "List subprocessors with access to customer content.",
+      "requester": "Elena, Privacy",
+      "topics": ["subprocessors"],
+      "quote": "subprocessors with content access"
+    }
+  ],
+  "dependencies": [
+    {
+      "kind": "milestone",
+      "subject": "October production pilot",
+      "depends_on_topics": [],
+      "date": null,
+      "quote": "October production pilot is agreed in principle, subject to vendor onboarding."
+    }
+  ],
+  "open_decisions": [
+    {
+      "text": "Does the pilot stay synthetic-only or include real customer-support transcripts?",
+      "decider": "customer",
+      "affected_topics": ["personal_info_scope"],
+      "quote": "The team is deciding whether the pilot stays synthetic-only or includes real customer-support transcripts."
+    }
+  ]
+}

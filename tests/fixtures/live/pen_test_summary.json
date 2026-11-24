@@ -1,0 +1,61 @@
+{
+  "_note": "Verbatim ExtractionOut cached from LIVE RUN 1 (Acme, 2026-11-24) plus the source file text.",
+  "cache_file": "aa0ff4ee89ef87a1f0b785b179e11755a07b46c879c8ee06f593ef4f987b940e.json",
+  "path": "05_evidence/pen_test_summary.txt",
+  "text": "External penetration test - Feb 2026.\nNo Critical or High findings. Two Medium findings were OPEN in the original report:\nM-01 internal service-token scope; M-02 rate-limit bypass under retry pattern.\nThis file contains no remediation evidence.",
+  "out": {
+    "source_type": "evidence",
+    "customer_scope": "this_customer",
+    "date": "2026-02",
+    "is_draft": false,
+    "facts": [
+      {
+        "topic": "pen_test",
+        "claim": "An external penetration test was conducted in February 2026.",
+        "value": "external penetration test Feb 2026",
+        "applies_to": "this_customer",
+        "certainty": "stated",
+        "date": "2026-02",
+        "speaker": null,
+        "quote": "External penetration test - Feb 2026.",
+        "valid_until": null
+      },
+      {
+        "topic": "pen_test",
+        "claim": "No Critical or High findings were found in the penetration test.",
+        "value": "no critical or high findings",
+        "applies_to": "this_customer",
+        "certainty": "stated",
+        "date": "2026-02",
+        "speaker": null,
+        "quote": "No Critical or High findings.",
+        "valid_until": null
+      },
+      {
+        "topic": "pen_test_remediation",
+        "claim": "Two Medium findings were open in the original report: M-01 internal service-token scope and M-02 rate-limit bypass under retry pattern.",
+        "value": "two medium findings open",
+        "applies_to": "this_customer",
+        "certainty": "stated",
+        "date": "2026-02",
+        "speaker": null,
+        "quote": "Two Medium findings were OPEN in the original report:\nM-01 internal service-token scope; M-02 rate-limit bypass under retry pattern.",
+        "valid_until": null
+      },
+      {
+        "topic": "pen_test_remediation",
+        "claim": "This file contains no remediation evidence.",
+        "value": "no remediation evidence",
+        "applies_to": "this_customer",
+        "certainty": "stated",
+        "date": "2026-02",
+        "speaker": null,
+        "quote": "This file contains no remediation evidence.",
+        "valid_until": null
+      }
+    ],
+    "requirements": [],
+    "dependencies": [],
+    "open_decisions": []
+  }
+}

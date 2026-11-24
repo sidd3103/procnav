@@ -1,0 +1,33 @@
+{
+  "source_type": "evidence",
+  "customer_scope": "generic",
+  "date": null,
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "pen_test",
+      "claim": "Feb 2026 external pen test: no Critical or High findings; two Medium findings open in the original report.",
+      "value": "no Critical/High; 2 Medium open at report time",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "No Critical or High findings. Two Medium findings were OPEN in the original report:",
+      "valid_until": null
+    },
+    {
+      "topic": "pen_test_remediation",
+      "claim": "The pen test summary contains no remediation evidence.",
+      "value": "no evidence",
+      "applies_to": "generic",
+      "certainty": "absent",
+      "date": null,
+      "speaker": null,
+      "quote": "This file contains no remediation evidence.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

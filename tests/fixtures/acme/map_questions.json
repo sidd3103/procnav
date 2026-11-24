@@ -1,0 +1,152 @@
+{
+  "mappings": [
+    {
+      "req_id": "Q-001",
+      "topics": [
+        "service_description"
+      ]
+    },
+    {
+      "req_id": "Q-002",
+      "topics": [
+        "personal_info_scope"
+      ]
+    },
+    {
+      "req_id": "Q-003",
+      "topics": [
+        "storage_location",
+        "inference_location"
+      ]
+    },
+    {
+      "req_id": "Q-004",
+      "topics": [
+        "retention_source_files",
+        "retention_prompts_responses",
+        "retention_app_logs",
+        "retention_traces"
+      ]
+    },
+    {
+      "req_id": "Q-005",
+      "topics": [
+        "subprocessors"
+      ]
+    },
+    {
+      "req_id": "Q-006",
+      "topics": [
+        "cross_border"
+      ]
+    },
+    {
+      "req_id": "Q-007",
+      "topics": [
+        "soc2",
+        "soc2_current"
+      ]
+    },
+    {
+      "req_id": "Q-008",
+      "topics": [
+        "pen_test",
+        "pen_test_remediation"
+      ]
+    },
+    {
+      "req_id": "Q-009",
+      "topics": [
+        "encryption_in_transit",
+        "encryption_at_rest",
+        "iam_access"
+      ]
+    },
+    {
+      "req_id": "Q-010",
+      "topics": [
+        "incident_response"
+      ]
+    },
+    {
+      "req_id": "Q-011",
+      "topics": [
+        "rto_rpo"
+      ]
+    },
+    {
+      "req_id": "Q-012",
+      "topics": [
+        "model_providers"
+      ]
+    },
+    {
+      "req_id": "Q-013",
+      "topics": [
+        "provider_training_retention"
+      ]
+    },
+    {
+      "req_id": "Q-014",
+      "topics": [
+        "model_fallback"
+      ]
+    },
+    {
+      "req_id": "Q-015",
+      "topics": [
+        "tool_actions"
+      ]
+    },
+    {
+      "req_id": "Q-016",
+      "topics": [
+        "human_oversight"
+      ]
+    },
+    {
+      "req_id": "Q-017",
+      "topics": [
+        "prompt_injection"
+      ]
+    },
+    {
+      "req_id": "Q-018",
+      "topics": [
+        "evaluation"
+      ]
+    },
+    {
+      "req_id": "Q-019",
+      "topics": [
+        "provenance"
+      ]
+    },
+    {
+      "req_id": "Q-020",
+      "topics": [
+        "dpa",
+        "subprocessors",
+        "cross_border"
+      ]
+    },
+    {
+      "req_id": "Q-021",
+      "topics": [
+        "insurance"
+      ]
+    },
+    {
+      "req_id": "Q-022",
+      "topics": [
+        "approval_risks"
+      ]
+    },
+    {
+      "req_id": "Q-023",
+      "topics": [
+        "submission_approval"
+      ]
+    }
+  ]
+}

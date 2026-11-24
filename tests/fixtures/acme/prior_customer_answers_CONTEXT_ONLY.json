@@ -1,0 +1,55 @@
+{
+  "source_type": "prior_customer",
+  "customer_scope": "other_customer",
+  "date": null,
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "model_providers",
+      "claim": "Meridian used OpenAI and Anthropic.",
+      "value": "OpenAI + Anthropic",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Meridian used OpenAI + Anthropic",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_app_logs",
+      "claim": "Meridian had 30-day log retention.",
+      "value": "30 days",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "30-day logs",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_source_files",
+      "claim": "Meridian had 90-day source-file retention.",
+      "value": "90 days",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "90-day source-file retention",
+      "valid_until": null
+    },
+    {
+      "topic": "storage_location",
+      "claim": "Meridian's answer said data hosted in Canada, without separating storage from inference.",
+      "value": "Canada",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Questionnaire answer said \"data hosted in Canada\" without distinguishing storage from inference.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

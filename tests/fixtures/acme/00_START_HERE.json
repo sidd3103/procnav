@@ -1,0 +1,10 @@
+{
+  "source_type": "case_header",
+  "customer_scope": "this_customer",
+  "date": null,
+  "is_draft": false,
+  "facts": [],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

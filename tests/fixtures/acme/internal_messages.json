@@ -1,0 +1,87 @@
+{
+  "source_type": "internal_chat",
+  "customer_scope": "this_customer",
+  "date": null,
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "retention_app_logs",
+      "claim": "Enterprise app log retention should now be 14 days.",
+      "value": "14d",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "enterprise app logs should be 14d now.",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_app_logs",
+      "claim": "Dev agrees with the app log retention change; no period is written in this message.",
+      "value": null,
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Dev",
+      "quote": "app logs yes",
+      "valid_until": null
+    },
+    {
+      "topic": "model_fallback",
+      "claim": "Anthropic fallback is enabled globally on the platform.",
+      "value": "enabled",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "globally yes",
+      "valid_until": null
+    },
+    {
+      "topic": "pen_test",
+      "claim": "The February pen test had two medium findings.",
+      "value": "2 medium findings",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "Feb pen test had 2 mediums",
+      "valid_until": null
+    },
+    {
+      "topic": "pen_test_remediation",
+      "claim": "The medium findings were remediated later, but evidence is still needed.",
+      "value": "remediated",
+      "applies_to": "generic",
+      "certainty": "uncertain",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "remediated later, but need evidence.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [
+    {
+      "kind": "blocked_until",
+      "subject": "DPA",
+      "depends_on_topics": [
+        "subprocessors",
+        "cross_border"
+      ],
+      "date": null,
+      "quote": "DPA blocked until subprocessors and cross-border transfers are confirmed."
+    }
+  ],
+  "open_decisions": [
+    {
+      "text": "Is the Anthropic fallback disabled for Acme (if residency/legal requires it)?",
+      "decider": "internal",
+      "affected_topics": [
+        "model_fallback",
+        "model_providers"
+      ],
+      "quote": "for Acme probably disable if residency/legal requires it. Not finalized."
+    }
+  ]
+}

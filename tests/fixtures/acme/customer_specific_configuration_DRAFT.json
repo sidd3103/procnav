@@ -1,0 +1,97 @@
+{
+  "source_type": "customer_config_draft",
+  "customer_scope": "this_customer",
+  "date": null,
+  "is_draft": true,
+  "facts": [
+    {
+      "topic": "storage_location",
+      "claim": "Supplier persistence is proposed in AWS ca-central-1.",
+      "value": "AWS ca-central-1",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "AWS ca-central-1 for supplier persistence.",
+      "valid_until": null
+    },
+    {
+      "topic": "model_providers",
+      "claim": "OpenAI is the proposed primary inference provider.",
+      "value": "OpenAI",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "OpenAI primary inference.",
+      "valid_until": null
+    },
+    {
+      "topic": "model_fallback",
+      "claim": "Anthropic fallback is intended to be disabled unless approved.",
+      "value": "disabled",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Anthropic fallback intended OFF unless approved.",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_app_logs",
+      "claim": "App logs are intended to be retained for 14 days.",
+      "value": "14 days",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "App logs intended 14 days.",
+      "valid_until": null
+    },
+    {
+      "topic": "observability_payload_capture",
+      "claim": "Observability payload capture is intended to be disabled.",
+      "value": "disabled",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Observability payload capture intended OFF.",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_source_files",
+      "claim": "Source files currently persist for the workspace lifetime; customer-specific retention is TBD.",
+      "value": "workspace lifetime",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Source files currently persist for workspace lifetime; customer-specific retention TBD.",
+      "valid_until": null
+    },
+    {
+      "topic": "human_oversight",
+      "claim": "A human confirms customer-facing actions.",
+      "value": "human confirms customer-facing actions",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Human confirms customer-facing actions.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": [
+    {
+      "text": "What customer-specific retention applies to source files?",
+      "decider": "internal",
+      "affected_topics": [
+        "retention_source_files"
+      ],
+      "quote": "customer-specific retention TBD."
+    }
+  ]
+}

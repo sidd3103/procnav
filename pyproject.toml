@@ -1,0 +1,31 @@
+[project]
+name = "procnav"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "sidd-mep-assist", email = "siddharth@mep-assist.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=3.58.0",
+    "pydantic>=2.14.4",
+    "python-dotenv>=1.2.4",
+    "streamlit>=1.67.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.10.4,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[project.scripts]
+procnav = "procnav.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: calls a real LLM; runs only when PROCNAV_LIVE=1"]

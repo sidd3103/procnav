@@ -1,0 +1,105 @@
+{
+  "_note": "Verbatim ExtractionOut cached from LIVE RUN 1 (Acme, 2026-11-24) plus the source file text.",
+  "cache_file": "cc92b33990b3289a8a85820f8602ef048e3ed493954d039f4d742b4d0ff52eef.json",
+  "path": "04_knowledge/customer_specific_configuration_DRAFT.md",
+  "text": "ACME PROPOSED DEPLOYMENT - DRAFT\nAWS ca-central-1 for supplier persistence.\nOpenAI primary inference. Anthropic fallback intended OFF unless approved.\nApp logs intended 14 days. Observability payload capture intended OFF.\nSource files currently persist for workspace lifetime; customer-specific retention TBD.\nHuman confirms customer-facing actions.\nDRAFT: proposed configuration, not proof of deployed state.",
+  "out": {
+    "source_type": "customer_config_draft",
+    "customer_scope": "this_customer",
+    "date": null,
+    "is_draft": true,
+    "facts": [
+      {
+        "topic": "storage_location",
+        "claim": "Supplier persistence is proposed to be in AWS ca-central-1.",
+        "value": "AWS ca-central-1",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "AWS ca-central-1 for supplier persistence.",
+        "valid_until": null
+      },
+      {
+        "topic": "model_providers",
+        "claim": "OpenAI is the primary inference provider.",
+        "value": "OpenAI primary",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "OpenAI primary inference.",
+        "valid_until": null
+      },
+      {
+        "topic": "model_fallback",
+        "claim": "Anthropic fallback is intended to be off unless approved.",
+        "value": "Anthropic fallback intended OFF unless approved",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "Anthropic fallback intended OFF unless approved.",
+        "valid_until": null
+      },
+      {
+        "topic": "retention_app_logs",
+        "claim": "Application logs are intended to be retained for 14 days.",
+        "value": "14 days",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "App logs intended 14 days.",
+        "valid_until": null
+      },
+      {
+        "topic": "retention_traces",
+        "claim": "Observability payload capture is intended to be off.",
+        "value": "disabled",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "Observability payload capture intended OFF.",
+        "valid_until": null
+      },
+      {
+        "topic": "retention_source_files",
+        "claim": "Source files currently persist for the workspace lifetime.",
+        "value": "workspace lifetime",
+        "applies_to": "this_customer",
+        "certainty": "stated",
+        "date": null,
+        "speaker": null,
+        "quote": "Source files currently persist for workspace lifetime;",
+        "valid_until": null
+      },
+      {
+        "topic": "retention_source_files",
+        "claim": "Customer-specific retention for source files is to be determined.",
+        "value": "TBD",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "customer-specific retention TBD.",
+        "valid_until": null
+      },
+      {
+        "topic": "human_oversight",
+        "claim": "Human confirms customer-facing actions.",
+        "value": "enabled",
+        "applies_to": "this_customer",
+        "certainty": "proposed",
+        "date": null,
+        "speaker": null,
+        "quote": "Human confirms customer-facing actions.",
+        "valid_until": null
+      }
+    ],
+    "requirements": [],
+    "dependencies": [],
+    "open_decisions": []
+  }
+}

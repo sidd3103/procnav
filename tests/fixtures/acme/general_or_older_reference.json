@@ -1,0 +1,66 @@
+{
+  "source_type": "generic_doc",
+  "customer_scope": "generic",
+  "date": null,
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "model_providers",
+      "claim": "OpenAI and Anthropic may be used on the platform.",
+      "value": "OpenAI and Anthropic",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "OpenAI and Anthropic may be used.",
+      "valid_until": null
+    },
+    {
+      "topic": "retention_app_logs",
+      "claim": "Standard application logs are retained for 30 days.",
+      "value": "30 days",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Standard application logs: 30 days.",
+      "valid_until": null
+    },
+    {
+      "topic": "storage_location",
+      "claim": "The primary AWS region is in Canada.",
+      "value": "AWS Canada",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Primary AWS region Canada.",
+      "valid_until": null
+    },
+    {
+      "topic": "encryption_in_transit",
+      "claim": "Data in transit is protected with TLS 1.2 or higher.",
+      "value": "TLS 1.2+",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "TLS 1.2+",
+      "valid_until": null
+    },
+    {
+      "topic": "encryption_at_rest",
+      "claim": "Primary databases and object storage are encrypted with AES-256.",
+      "value": "AES-256",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "AES-256 primary databases/object storage.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

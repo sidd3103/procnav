@@ -1,0 +1,33 @@
+{
+  "source_type": "evidence",
+  "customer_scope": "generic",
+  "date": null,
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "insurance",
+      "claim": "Cyber / Technology E&O coverage of CAD 5,000,000; the current certificate expires Oct 1, 2026.",
+      "value": "Cyber / Technology E&O CAD 5,000,000",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Cyber / Technology E&O: CAD 5,000,000. Current certificate expires Oct 1, 2026.",
+      "valid_until": "2026-10-01"
+    },
+    {
+      "topic": "insurance_renewal",
+      "claim": "Insurance renewal is pending.",
+      "value": "pending",
+      "applies_to": "generic",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Renewal pending.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

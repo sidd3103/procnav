@@ -1,0 +1,22 @@
+{
+  "source_type": "evidence",
+  "customer_scope": "generic",
+  "date": "2026-06-15",
+  "is_draft": false,
+  "facts": [
+    {
+      "topic": "pen_test_remediation",
+      "claim": "Both Medium findings from the Feb 2026 pen test were remediated and confirmed on retest.",
+      "value": "remediated",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": "2026-06-15",
+      "speaker": null,
+      "quote": "Both Medium findings (M-01, M-02) were remediated and confirmed closed on retest.",
+      "valid_until": null
+    }
+  ],
+  "requirements": [],
+  "dependencies": [],
+  "open_decisions": []
+}

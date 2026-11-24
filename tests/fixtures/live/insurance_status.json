@@ -1,0 +1,39 @@
+{
+  "_note": "Verbatim ExtractionOut cached from LIVE RUN 1 (Acme, 2026-11-24) plus the source file text.",
+  "cache_file": "083d7fa2ef2ecf74407f8af52635fd7c003ff4ae65a25bf1fca4bad4238f3e70.json",
+  "path": "05_evidence/insurance_status.txt",
+  "text": "Cyber / Technology E&O: CAD 5,000,000. Current certificate expires Oct 1, 2026. Renewal pending.",
+  "out": {
+    "source_type": "evidence",
+    "customer_scope": "generic",
+    "date": null,
+    "is_draft": false,
+    "facts": [
+      {
+        "topic": "insurance",
+        "claim": "The supplier has Cyber / Technology E&O insurance coverage of CAD 5,000,000.",
+        "value": "CAD 5,000,000",
+        "applies_to": "generic",
+        "certainty": "stated",
+        "date": null,
+        "speaker": null,
+        "quote": "Cyber / Technology E&O: CAD 5,000,000.",
+        "valid_until": null
+      },
+      {
+        "topic": "insurance",
+        "claim": "The current insurance certificate expires on Oct 1, 2026.",
+        "value": "2026-10-01",
+        "applies_to": "generic",
+        "certainty": "stated",
+        "date": null,
+        "speaker": null,
+        "quote": "Current certificate expires Oct 1, 2026.",
+        "valid_until": null
+      }
+    ],
+    "requirements": [],
+    "dependencies": [],
+    "open_decisions": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "_note": "Verbatim ExtractionOut cached from LIVE RUN 1 (Acme, 2026-11-24) plus the source file text.",
+  "cache_file": "8d5a921a6ec07fa8f5915d23020208cbafe4592b25e82cb557232490d9b08278.json",
+  "path": "05_evidence/soc2_status.txt",
+  "text": "SOC 2 Type II, Jan-Dec 2025: FINAL. 2026 audit is not yet final.",
+  "out": {
+    "source_type": "evidence",
+    "customer_scope": "generic",
+    "date": null,
+    "is_draft": false,
+    "facts": [
+      {
+        "topic": "soc2",
+        "claim": "The SOC 2 Type II report for Jan-Dec 2025 is final.",
+        "value": "final for 2025",
+        "applies_to": "generic",
+        "certainty": "stated",
+        "date": null,
+        "speaker": null,
+        "quote": "SOC 2 Type II, Jan-Dec 2025: FINAL.",
+        "valid_until": null
+      },
+      {
+        "topic": "soc2_current",
+        "claim": "The 2026 SOC 2 audit is not yet final.",
+        "value": "not final for 2026",
+        "applies_to": "generic",
+        "certainty": "stated",
+        "date": null,
+        "speaker": null,
+        "quote": "2026 audit is not yet final.",
+        "valid_until": null
+      }
+    ],
+    "requirements": [],
+    "dependencies": [],
+    "open_decisions": []
+  }
+}
