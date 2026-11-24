@@ -64,12 +64,13 @@ def test_pen_test_remediation_not_sendable_with_no_evidence_caveat(verdicts):
     assert any(c.startswith("no evidence:") for c in v.caveats)
 
 
-def test_soc2_current_not_verified_sendable(verdicts):
-    v = verdicts["soc2_current"]
-    assert not (v.status == "VERIFIED" and v.sendable)
-    assert v.status != "VERIFIED"
+def test_soc2_not_sendable_while_2026_audit_open(verdicts):
+    # the model's legacy "soc2_current" topic is aliased onto soc2
+    assert "soc2_current" not in verdicts
+    v = verdicts["soc2"]
+    assert v.status == "VERIFIED"  # the final 2025 report is untouched
+    assert not v.sendable
     assert any(c.startswith("no evidence:") for c in v.caveats)
-    assert verdicts["soc2"].status == "VERIFIED"  # the final 2025 report is untouched
 
 
 def test_retention_source_files_proposed_workspace_lifetime(verdicts):
@@ -86,7 +87,7 @@ def test_live_facts_postprocessed_fail_closed(tmp_path):
             by_topic.setdefault(f.topic, []).append(f)
     expiry = [f for f in by_topic["insurance"] if f.value == "2026-10-01"]
     assert [f.valid_until for f in expiry] == [date(2026, 10, 1)]
-    assert {f.certainty for f in by_topic["soc2_current"]} == {"absent"}
+    assert {f.certainty for f in by_topic["soc2"]} == {"stated", "absent"}
     rem = {f.value: f.certainty for f in by_topic["pen_test_remediation"]}
     assert rem["no remediation evidence"] == "absent"
     assert [f.value for f in by_topic["retention_source_files"]] == ["workspace lifetime", None]

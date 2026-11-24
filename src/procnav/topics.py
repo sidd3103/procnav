@@ -67,10 +67,9 @@ _ROWS = [
     ("provenance", PC, "ai", "Provenance and citation of sources behind AI outputs.",
      ["provenance", "citations", "sources", "ai", "traceability", "engineering"]),
     ("pen_test_remediation", PW, "security",
-     "Status of remediation for penetration test findings.",
+     "Whether findings were fixed after the test (retest, remediation evidence). The "
+     "findings' status in the original report belongs to pen_test.",
      ["pen test", "remediation", "security", "findings", "evidence"]),
-    ("soc2_current", PC, "security", "Whether the SOC 2 report is currently valid for this customer.",
-     ["soc2", "current", "report", "security", "evidence", "audit"]),
     ("trace_payload_capture", PC, "ai",
      "Whether observability/tracing captures or redacts request and response payloads.",
      ["traces", "payloads", "capture", "redaction", "observability", "architecture",
@@ -114,7 +113,6 @@ TITLES = {
     "prompt_injection": "Prompt-injection defences",
     "provenance": "Sources and citations in outputs",
     "pen_test_remediation": "Pen test remediation",
-    "soc2_current": "SOC 2 currently valid",
     "trace_payload_capture": "Payload capture in traces",
     "service_description": "Proposed service",
     "submission_approval": "Sign-off before submission",
@@ -130,11 +128,16 @@ SEED: dict[str, Topic] = {
 
 _SEED_NO_UNDERSCORE = {k.replace("_", ""): k for k in SEED}
 
+# retired seed ids (and their spellings) that now belong to another seed topic;
+# "current" is a property of the SOC 2 report (period + caveats), not its own subject
+_ALIASES = {"soc2current": "soc2"}  # keyed without underscores
+
 
 def get_topic(topic_id: str) -> Topic:
     """Seed topic for any spelling of a seed id ("SOC 2", "Retention_Traces"), else other:<slug>."""
     raw = topic_id.strip().lower().removeprefix("other:")
     slug = re.sub(r"[^a-z0-9]+", "_", raw).strip("_")
+    slug = _ALIASES.get(slug.replace("_", ""), slug)
     if slug in SEED:
         return SEED[slug]
     alias = _SEED_NO_UNDERSCORE.get(slug.replace("_", ""))

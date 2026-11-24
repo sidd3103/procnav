@@ -42,7 +42,10 @@ def test_acme_golden(acme):
     assert v["retention_traces"].status == "UNKNOWN"
     assert v["inference_location"].status == "UNKNOWN"
     assert v["model_fallback"].status == "PROPOSED"
-    assert v["soc2"].status == "VERIFIED" and v["soc2"].sendable
+    # the 2025 report is verified; "2026 audit not final" folds in as a caveat (not sendable)
+    assert v["soc2"].status == "VERIFIED" and not v["soc2"].sendable
+    assert any(c.startswith("no evidence:") and "2026" in c for c in v["soc2"].caveats)
+    assert v["pen_test"].status == "VERIFIED" and v["pen_test"].sendable
     assert not v["insurance"].sendable
     assert v["encryption_in_transit"].status == "PROPOSED"
     assert v["encryption_at_rest"].status == "PROPOSED"
@@ -116,7 +119,7 @@ def test_next_steps(acme):
     assert keys == sorted(keys)
     all_items = [i for s in internal for i in s.items]
     assert any(i.startswith("retention_traces: UNKNOWN") and "Q-004" in i for i in all_items)
-    assert not any(i.startswith("soc2:") for i in all_items), "sendable topics are resolved"
+    assert not any(i.startswith("pen_test:") for i in all_items), "sendable topics are resolved"
     # one BLOCKER line per item, even when several rules fire for it
     blk = [i.split()[1] for i in all_items if i.startswith("BLOCKER")]
     assert len(blk) == len(set(blk))
@@ -239,7 +242,10 @@ def test_live_acme(tmp_path):
     assert v["retention_traces"].status in ("UNKNOWN", "PROPOSED")
     assert v["inference_location"].status in ("UNKNOWN", "CONFLICT")
     assert v["model_fallback"].status in ("PROPOSED", "CONFLICT")
-    assert v["soc2"].status == "VERIFIED" and v["soc2"].sendable
+    # the 2025 report is verified; "2026 audit not final" folds in as a caveat (not sendable)
+    assert v["soc2"].status == "VERIFIED" and not v["soc2"].sendable
+    assert any(c.startswith("no evidence:") and "2026" in c for c in v["soc2"].caveats)
+    assert v["pen_test"].status == "VERIFIED" and v["pen_test"].sendable
     assert not v["insurance"].sendable
     prior = _prior_fact_ids(snap)
     for verdict in v.values():

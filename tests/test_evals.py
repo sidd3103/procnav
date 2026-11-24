@@ -132,3 +132,38 @@ def test_answer_key_files_parse_and_cover_every_question():
         ids = {q.id for q in k.questions if q.id}
         assert ids == {f"Q-{i:03d}" for i in range(1, 24)}, p.name
         assert all(q.statuses for q in k.questions) and all(t.statuses for t in k.topics)
+
+
+def _dec(did, text, decider):
+    from procnav.models import OpenDecision
+    return OpenDecision(id=did, text=text, decider=decider, affected_topics=[], quote=text,
+                        file="f.txt")
+
+
+def test_decision_key_checks_decider_by_text_match():
+    s = snapshot().model_copy(update={"open_decisions": [
+        _dec("a#O1", "Whether the pilot uses synthetic or real transcripts", "customer"),
+        _dec("b#O1", "Whether fallback is enabled for this customer", "customer"),
+    ]})
+    key = AnswerKey.model_validate({"case": "C", "as_of": "2026-09-25", "decisions": [
+        {"match": ["synthetic", "real"], "decider": "customer"},
+        {"match": ["fallback"], "decider": "internal"},
+        {"match": ["insurance"], "decider": "internal"},
+    ]})
+    got = _by_name(score(s, key))
+    assert got["decision ['synthetic', 'real'] decider customer"].passed
+    fb = got["decision ['fallback'] decider internal"]
+    assert not fb.passed and "customer" in fb.detail
+    miss = got["decision ['insurance'] decider internal"]
+    assert not miss.passed and "not found" in miss.detail
+
+
+def test_decision_key_needs_every_match_to_agree():
+    s = snapshot().model_copy(update={"open_decisions": [
+        _dec("a#O1", "Real transcripts or synthetic only?", "customer"),
+        _dec("b#O1", "Synthetic vs real data for the pilot", "internal"),
+    ]})
+    key = AnswerKey.model_validate({"case": "C", "as_of": "2026-09-25", "decisions": [
+        {"match": ["synthetic"], "decider": "customer"}]})
+    [c] = score(s, key)
+    assert not c.passed and "b#O1" in c.detail

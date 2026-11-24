@@ -63,7 +63,7 @@ def cache(tmp_path):
 
 
 def test_prompt_version():
-    assert PROMPT_VERSION == "v6"
+    assert PROMPT_VERSION == "v7"
 
 
 def test_valid_fact_is_built(cache):
@@ -389,7 +389,7 @@ def test_extraction_out_defaults_and_coercion():
 
 
 def test_prompt_v3_no_case_content_and_value_rules():
-    assert PROMPT_VERSION == "v6"
+    assert PROMPT_VERSION == "v7"
     assert "ca-central-1" not in SYSTEM_PROMPT
     assert "never add a region, number or name that is not written" in SYSTEM_PROMPT
     assert "'enabled' or 'disabled'" in SYSTEM_PROMPT
@@ -596,7 +596,7 @@ def test_real_values_are_not_placeholders(cache):
 def test_stated_absence_wording_becomes_absent(cache):
     a = fact(topic="pen_test_remediation", value="no remediation evidence", certainty="stated",
              quote="This file contains no remediation evidence.")
-    b = fact(topic="soc2_current", value="not final for 2026", certainty="stated",
+    b = fact(topic="soc2", value="not final for 2026", certainty="stated",
              quote="2026 audit is not yet final.")
     f, llm = _ev([a, b])
     assert [x.certainty for x in extract_file(f, INFO, llm, cache).facts] == ["absent", "absent"]
@@ -605,7 +605,7 @@ def test_stated_absence_wording_becomes_absent(cache):
 # R27 (c): prompt v4
 
 def test_prompt_v4_absence_and_expiry_examples():
-    assert PROMPT_VERSION == "v6"
+    assert PROMPT_VERSION == "v7"
     p = SYSTEM_PROMPT
     assert "certainty \"absent\"" in p
     for phrase in ["contains no", "is not yet final", "has been provided"]:
@@ -671,7 +671,7 @@ def test_empty_quote_with_paraphrased_text_still_dropped(cache):
 
 
 def test_prompt_v5_requires_quotes_on_every_item():
-    assert PROMPT_VERSION == "v6"
+    assert PROMPT_VERSION == "v7"
     assert ("Every fact, requirement, dependency and open decision MUST include a verbatim quote"
             in SYSTEM_PROMPT)
 
@@ -713,4 +713,23 @@ def test_prompt_v6_values_keep_qualifiers_and_decider_rule():
     assert "keep its qualifiers" in p
     assert '"SOC 2 Type II, Jan-Dec 2025, final", not "final"' in p
     assert "'enabled' or 'disabled'" in p and "followed by any condition" in p
-    assert "decider: customer ONLY when the text says the customer decides or approves" in p
+
+
+def test_prompt_v7_decider_and_non_decisions():
+    p = SYSTEM_PROMPT
+    assert ("decider: customer when the text says the customer decides or approves, or a "
+            "customer-side person says their team is deciding; otherwise internal.") in p
+    assert "An open decision is a choice between options that changes answers." in p
+    assert ("Pending tasks, renewals and verification steps ('renewal pending', 'verify X') "
+            "are not decisions") in p
+
+
+def test_prompt_v7_pending_renewal_is_an_absent_fact_not_a_decision():
+    p = SYSTEM_PROMPT
+    assert ('"Renewal pending." -> certainty "absent", value "renewal pending"' in p)
+    assert "record a pending renewal as an absent fact on its topic" in p
+
+
+def test_prompt_v7_heading_date_qualifies_facts():
+    assert ("a period or date written in the file's heading or title line (e.g. the date of a "
+            "test or audit) qualifies every fact under it; keep it in their values") in SYSTEM_PROMPT

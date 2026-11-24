@@ -120,7 +120,8 @@
       "id": "Q-014",
       "statuses": [
         "needs_confirmation",
-        "blocked"
+        "blocked",
+        "unknown"
       ],
       "must_include": [
         [
@@ -132,7 +133,7 @@
           "intended"
         ]
       ],
-      "note": "Fallback for Acme probably disabled, not finalized (internal decision)."
+      "note": "Fallback for Acme is not settled: the draft says 'off unless approved', the chat says 'on globally, off if residency requires' (opposite defaults). Unknown is acceptable while the model_fallback verdict is a CONFLICT."
     },
     {
       "id": "Q-015",
@@ -367,15 +368,10 @@
     {
       "topic": "model_fallback",
       "statuses": [
+        "CONFLICT",
         "PROPOSED"
       ],
-      "value_includes": [
-        [
-          "disabled",
-          "off"
-        ]
-      ],
-      "note": "Chat ('probably disable for Acme') and draft ('intended OFF unless approved') agree; 'globally yes' is generic."
+      "note": "The two Acme sources state opposite defaults: the draft is 'off unless approved', the chat is 'on globally, off if residency requires'. CONFLICT is right; PROPOSED 'disabled' is also acceptable if a run reads them as agreeing."
     },
     {
       "topic": "human_oversight",
@@ -500,6 +496,15 @@
         "UNKNOWN"
       ],
       "note": "24h/24h is a stale draft / other customer; nothing applies to this customer."
+    }
+  ],
+  "decisions": [
+    {
+      "match": [
+        "synthetic"
+      ],
+      "decider": "customer",
+      "note": "Nina (customer): 'The team is deciding whether the pilot stays synthetic-only or includes real customer-support transcripts.'"
     }
   ]
 }

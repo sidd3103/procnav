@@ -10,7 +10,7 @@ PER_CUSTOMER = [
     "retention_source_files", "retention_prompts_responses", "cross_border",
     "personal_info_scope", "tool_actions", "human_oversight",
     "provider_training_retention", "dpa", "evaluation", "prompt_injection",
-    "provenance", "soc2_current",
+    "provenance",
     "trace_payload_capture", "service_description", "submission_approval", "approval_blockers",
 ]
 
@@ -84,3 +84,15 @@ def test_every_seed_topic_has_a_plain_title():
 
 def test_unknown_topic_title_is_humanised():
     assert get_topic("other:eu_ai_act").title == "Eu ai act"
+
+
+def test_pen_test_remediation_is_about_fixing_not_report_time_state():
+    d = SEED["pen_test_remediation"].description
+    assert "fixed after the test" in d and "retest" in d
+    assert "original report belongs to pen_test" in d
+
+
+def test_soc2_current_folds_into_soc2():
+    assert "soc2_current" not in SEED
+    for raw in ["soc2_current", "SOC 2 current", "other:soc2_current"]:
+        assert get_topic(raw) is SEED["soc2"], raw

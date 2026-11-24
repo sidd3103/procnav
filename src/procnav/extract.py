@@ -31,7 +31,7 @@ from .models import (
 )
 from .topics import SEED, get_topic
 
-PROMPT_VERSION = "v6"
+PROMPT_VERSION = "v7"
 
 MIN_FALLBACK_WORDS = 3  # shorter texts would match almost any file by accident
 NO_FACT_SOURCES = {"guidance", "people", "case_header", "questionnaire"}
@@ -229,7 +229,9 @@ snake_case id (e.g. backup_frequency). Do not force a fact into a seed topic it 
 "no". claim: one plain sentence restating the fact.
 - A value must keep its qualifiers: any period, scope, version or condition written with it \
 (e.g. "SOC 2 Type II, Jan-Dec 2025, final", not "final"; "30 days for this customer", not \
-"30 days" when the scope is written).
+"30 days" when the scope is written). Likewise a period or date written in the file's heading \
+or title line (e.g. the date of a test or audit) qualifies every fact under it; keep it in their \
+values (e.g. "no critical findings, Mar 2026 test").
 - value must not be more specific than the quote; never add a region, number or name that is \
 not written.
 - For on/off settings use 'enabled' or 'disabled', followed by any condition or scope as \
@@ -253,6 +255,8 @@ tag such a sentence stated: a sentence saying evidence is missing is not evidenc
   - "This document contains no X evidence." -> certainty "absent", value "no X evidence".
   - "The X report is not yet final." -> certainty "absent", value "X report not final".
   - "No X has been provided." -> certainty "absent", value "X not provided".
+  - "Renewal pending." -> certainty "absent", value "renewal pending" (the renewed \
+certificate or contract does not exist yet), on the topic it renews.
 - value must be a real value. If the file only says a value is TBD, to be determined, unknown, \
 pending or not decided, set value to null and record the open point as an open decision.
 - date: when the statement was made or takes effect, as YYYY-MM-DD if known, else null.
@@ -281,9 +285,12 @@ lists any topics it is conditional on.
 
 OPEN DECISIONS
 - Something a stakeholder says is still undecided, not finalized, or awaiting a choice, where \
-the outcome would change answers. text: the open question. decider: customer ONLY when the text says the customer decides or approves; \
-otherwise internal. affected_topics: topic ids whose answers depend \
-on it.
+the outcome would change answers. An open decision is a choice between options that changes \
+answers. Pending tasks, renewals and verification steps ('renewal pending', 'verify X') are not \
+decisions; record a pending renewal as an absent fact on its topic.
+- text: the open question. decider: customer when the text says the customer decides or \
+approves, or a customer-side person says their team is deciding; otherwise internal. \
+affected_topics: topic ids whose answers depend on it.
 
 QUOTES (all items)
 - Every fact, requirement, dependency and open decision MUST include a verbatim quote from the \

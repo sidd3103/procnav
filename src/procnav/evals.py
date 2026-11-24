@@ -6,10 +6,14 @@ The key (JSON, case-specific, lives outside src/) lists:
 - topics: allowed verdict statuses, value substrings, and source files / quotes the verdict
   must not be built from.
 - answers_must_not_include: substrings banned from every draft answer.
+- decisions: open decisions found by `match` (all substrings in the decision text) and the
+  decider they must have; every matching decision must agree, and no match fails.
 A must_include entry is a string, or a list of alternatives (any one is enough). Matching is
 case-insensitive.
 """
 from __future__ import annotations
+
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -36,12 +40,19 @@ class TopicKey(BaseModel):
     note: str = ""
 
 
+class DecisionKey(BaseModel):
+    match: list[str]
+    decider: Literal["customer", "internal"]
+    note: str = ""
+
+
 class AnswerKey(BaseModel):
     case: str
     as_of: str
     questions: list[QuestionKey] = []
     topics: list[TopicKey] = []
     answers_must_not_include: list[str] = []
+    decisions: list[DecisionKey] = []
 
 
 class Check(BaseModel):
@@ -115,6 +126,17 @@ def _topic_checks(s: Snapshot, t: TopicKey) -> list[Check]:
     return out
 
 
+def _decision_check(s: Snapshot, d: DecisionKey) -> Check:
+    name = f"decision {d.match!r} decider {d.decider}"
+    hits = [o for o in s.open_decisions
+            if all(m.casefold() in o.text.casefold() for m in d.match)]
+    if not hits:
+        return Check(name=name, passed=False, detail="decision not found in run")
+    wrong = [o for o in hits if o.decider != d.decider]
+    return Check(name=name, passed=not wrong,
+                 detail="; ".join(f"{o.id}: {o.decider} — {_short(o.text, 80)}" for o in hits))
+
+
 def score(s: Snapshot, key: AnswerKey) -> list[Check]:
     out: list[Check] = []
     for q in key.questions:
@@ -124,6 +146,7 @@ def score(s: Snapshot, key: AnswerKey) -> list[Check]:
     for n in key.answers_must_not_include:
         bad = [a.req_id for a in s.answers if _has(a.answer, n)]
         out.append(Check(name=f"answers exclude {n!r}", passed=not bad, detail=", ".join(bad)))
+    out += [_decision_check(s, d) for d in key.decisions]
     return out
 
 

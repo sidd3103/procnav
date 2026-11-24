@@ -37,15 +37,17 @@ def test_summary_counts_match_cli_headers(snap):
 
 def test_known_rows(snap):
     rows = view.known_rows(snap)
+    pen = next(r for r in rows if r["topic"] == "pen_test")
+    assert pen["status"] == "VERIFIED" and pen["sendable"]
     soc2 = next(r for r in rows if r["topic"] == "soc2")
-    assert soc2["status"] == "VERIFIED" and soc2["sendable"]
+    assert soc2["status"] == "VERIFIED" and not soc2["sendable"]
     assert all(r["status"] in ("VERIFIED", "PROPOSED") for r in rows)
     assert len(rows) == view.summary_counts(snap)["known"]
 
 
 def test_unresolved_rows_have_suggested_owner(snap):
     rows = view.unresolved_rows(snap)
-    assert not any(r["topic"] == "soc2" for r in rows)
+    assert not any(r["topic"] == "pen_test" for r in rows)
     logs = next(r for r in rows if r["topic"] == "retention_app_logs")
     assert logs["owner"] == "Anthony"
     assert logs["value"] == "14 days"
