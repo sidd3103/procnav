@@ -74,3 +74,13 @@ def test_human_oversight_excludes_questionnaire_signoff():
 ])
 def test_new_case_level_topics(tid, area):
     assert SEED[tid].area == area
+
+
+def test_every_seed_topic_has_a_plain_title():
+    for tid, t in SEED.items():
+        assert t.title and "_" not in t.title, tid
+    assert SEED["inference_location"].title == "Where inference runs"
+
+
+def test_unknown_topic_title_is_humanised():
+    assert get_topic("other:eu_ai_act").title == "Eu ai act"

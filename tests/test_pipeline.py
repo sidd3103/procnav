@@ -392,3 +392,20 @@ def test_service_fact_not_created_when_quote_not_verbatim(tmp_path, acme_llm):
 
     snap = run_case(ACME_DIR, date(2026, 9, 25), Spy(), tmp_path / "c")
     assert not [f for f in snap.facts if f.topic == "service_description"]
+
+
+def test_submission_approval_answered_from_review_policy(tmp_path, acme_llm):
+    spy, keys = _answer_keys_spy(acme_llm())
+    snap = run_case(ACME_DIR, date(2026, 9, 25), spy, tmp_path / "c")
+    v = snap.verdicts["submission_approval"]
+    assert v.status == "PROPOSED" and v.rule == "derived from review policy"
+    assert "KEY: answer:Q-023" not in keys
+    a = next(a for a in snap.answers if a.req_id == "Q-023")
+    assert a.answer.startswith("Every response needs human approval before external submission")
+    lines = a.answer.splitlines()
+    unconfirmed = next(l for l in lines if l.startswith("Confirm first"))
+    missing = next(l for l in lines if l.startswith("Not answerable yet"))
+    evidenced = next(l for l in lines if l.startswith("Evidence-backed"))
+    assert "Q-012" in unconfirmed and "Q-010" in missing and "Q-021" in evidenced
+    assert "Q-023" not in a.answer.split("\n", 1)[1]  # does not list itself
+    assert "Q-024" not in a.answer                    # template rows are not listed

@@ -19,6 +19,7 @@ from .blockers import (
     Blocker,
     derive_approval_blockers,
     derive_from_dependencies,
+    derive_submission_approval,
     find_blockers,
     group_blockers,
 )
@@ -276,7 +277,7 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
     verdicts = dict(sorted(verdicts.items()))
 
     # case-level answers derived deterministically from dependencies and the blocker list
-    verdicts = derive_from_dependencies(verdicts, deps)
+    verdicts = derive_submission_approval(derive_from_dependencies(verdicts, deps))
     results = evaluate(reqs, verdicts, decisions)
     blockers = find_blockers(verdicts, results, deps, as_of)
     verdicts = derive_approval_blockers(verdicts, blockers)
@@ -291,7 +292,7 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
     answers = [
         draft_answer(r, verdicts, facts_by_id,
                      owners[r.req.topics[0]] if r.req.topics else "Unassigned", llm, cache,
-                     as_of=as_of, blockers=blockers, dependencies=deps)
+                     as_of=as_of, blockers=blockers, dependencies=deps, results=results)
         for r in results
     ]
 

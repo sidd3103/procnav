@@ -99,118 +99,95 @@ def test_latest_two_runs(tmp_path, snap):
     assert latest.customer == "Changed" and prev == snap
 
 
-# ---------------------------------------------------------------- question-first view
-
-BACKEND_STATUSES = ["blocked", "unknown", "needs_confirmation", "ready_for_review"]
-
+# ---------------------------------------------------------------- deal brief
 
 def _row(rows, qid):
     return next(r for r in rows if r["id"] == qid)
 
 
-def test_status_labels_cover_backend_statuses_in_severity_order():
-    assert list(view.STATUS_LABELS) == BACKEND_STATUSES
-    assert view.STATUS_LABELS["blocked"] == ("⛔", "Blocks launch")
-    assert view.STATUS_LABELS["unknown"] == ("❔", "Missing information")
-    assert view.STATUS_LABELS["needs_confirmation"] == ("🟡", "Drafted, needs sign-off")
-    assert view.STATUS_LABELS["ready_for_review"] == ("✅", "Ready for Legal")
+def test_readiness_labels():
+    assert list(view.READINESS) == ["ready", "confirm", "missing"]
+    assert view.READINESS["missing"] == ("❔", "Not in the files")
 
 
-def test_question_counts_match_backend(snap):
-    c = view.question_counts(snap)
-    assert list(c) == [lbl for _, lbl in view.STATUS_LABELS.values()]
-    assert sum(c.values()) == len(snap.required)
-    for status, (_, lbl) in view.STATUS_LABELS.items():
-        assert c[lbl] == sum(r.status == status for r in snap.required)
-
-
-def test_question_rows_fields_and_order(snap):
-    rows = view.question_rows(snap)
-    assert len(rows) == len(snap.required)
-    sev = [BACKEND_STATUSES.index(r["status"]) for r in rows]
-    assert sev == sorted(sev)
+def test_answer_rows_group_by_readiness_with_risk_separate(snap):
+    rows = view.answer_rows(snap)
+    assert all(not r["template"] for r in rows)
+    assert len(view.answer_rows(snap, templates=True)) == len(snap.required)
     q21 = _row(rows, "Q-021")
-    assert (q21["icon"], q21["label"]) == ("⛔", "Blocks launch")
-    assert q21["owner"] == next(a.owner for a in snap.answers if a.req_id == "Q-021")
-    assert q21["answer"] and q21["asked_by"] == "questionnaire" and not q21["template"]
-    assert _row(rows, "Q-024")["template"]
+    assert q21["readiness"] == "ready" and q21["blocked"]  # answerable, yet a deal risk
+    assert _row(rows, "Q-010")["readiness"] == "missing"
+    assert _row(rows, "Q-012")["readiness"] == "confirm"
+    assert _row(rows, "Q-020")["readiness"] == "ready"
+    order = [list(view.READINESS).index(r["readiness"]) for r in rows]
+    assert order == sorted(order)
     r2 = _row(rows, "01_customer/customer_correspondence#R2")
-    assert r2["asked_by"] == "Elena, Privacy"
-    # original order kept within a status
-    blocked = [r["id"] for r in rows if r["status"] == "blocked"]
-    assert blocked == [r.req.id for r in snap.required if r.status == "blocked"]
-
-
-def test_reason_blocked_uses_blocker_chain(snap):
-    reason = _row(view.question_rows(snap), "Q-021")["reason"]
-    assert "insurance" in reason and "2026-10-01" in reason
-    assert "October production pilot" in reason and "→" in reason
-
-
-def test_reason_prefers_caveat_without_prefix(snap):
-    q7 = _row(view.question_rows(snap), "Q-007")
-    assert q7["label"] == view.STATUS_LABELS[q7["status"]][1]
-    assert q7["reason"].startswith("The 2026 SOC 2 audit is not yet final.")
-    assert "no evidence" not in q7["reason"]
-
-
-def test_reason_unknown_and_more_count(snap):
-    rows = view.question_rows(snap)
-    assert _row(rows, "Q-010")["reason"] == "nobody has stated incident response"
-    assert _row(rows, "Q-001")["reason"] == ("service description: AI operations assistant for "
-                                             "customer-service workflows (unconfirmed)")
-    q9 = _row(rows, "Q-009")["reason"]  # iam_access UNKNOWN; encryption topics are PROPOSED
-    assert q9 == "nobody has stated iam access"
-    q13 = _row(rows, "Q-026")["reason"]
-    assert "(+" in q13 and "more)" in q13
-
-
-def test_reason_needs_signoff_and_decision(snap):
-    rows = view.question_rows(snap)
-    assert _row(rows, "Q-016")["reason"] == (
-        "human oversight: human confirms customer-facing actions (unconfirmed)")
-    assert _row(rows, "Q-012")["reason"] == "model providers: OpenAI (unconfirmed) · waiting on decision"
-
-
-def test_question_reason_edge_cases(snap):
-    from procnav.models import Verdict
-    r10 = next(r for r in snap.required if r.req.id == "Q-010")
-    no_topics = r10.model_copy(update={"req": r10.req.model_copy(update={"topics": []})})
-    assert view.question_reason(no_topics, snap) == "not linked to any topic"
-    conflict = Verdict(topic="incident_response", status="CONFLICT", value=None, used=[],
-                       excluded=[], hints=[], rule="r", caveats=[], sendable=False)
-    s2 = snap.model_copy(update={"verdicts": {**snap.verdicts, "incident_response": conflict}})
-    assert view.question_reason(r10, s2) == "sources disagree on incident response"
-    ready = next(r for r in snap.required if r.status == "ready_for_review")
-    assert view.question_reason(ready, snap).startswith("evidence: soc2 = SOC 2 Type II")
-
-
-def test_filter_questions(snap):
-    rows = view.question_rows(snap)
-    only = view.filter_questions(rows, ["Blocks launch"], "All", "")
-    assert only and all(r["status"] == "blocked" for r in only)
-    assert view.filter_questions(rows, [], "All", "") == rows
-    mina = view.filter_questions(rows, [], "Mina", "")
-    assert mina and all(r["owner"] == "Mina" for r in mina)
-    hit = view.filter_questions(rows, [], "All", "INSURANCE EVIDENCE")
-    assert [r["id"] for r in hit] == ["Q-021"]
-    assert view.filter_questions(rows, [], "All", "q-021")[0]["id"] == "Q-021"
-    assert view.filter_questions(rows, [], "All", "pilot")  # matches reason text
-
-
-def test_question_detail(snap):
-    d = view.question_detail(snap, "Q-021")
+    assert r2["asked_by"] == "Elena, Privacy" and r2["label_id"] == "Email ask · Elena, Privacy"
+    assert q21["label_id"] == "Q-021"
     a = next(a for a in snap.answers if a.req_id == "Q-021")
-    assert d["id"] == "Q-021" and d["label"] == "Blocks launch"
-    assert d["answer"] == a.answer and d["cited"] == a.cited
-    assert d["evidence_quotes"] == a.evidence_quotes
-    assert d["open_assumptions"] == a.open_assumptions
-    assert d["citation_errors"] == a.citation_errors
-    assert d["topics"] == ["insurance"]
-    assert "stale_draft" in d and "quote" in d and "source_file" in d
-    r2 = view.question_detail(snap, "01_customer/customer_correspondence#R2")
-    assert r2["decisions"] and r2["decisions"][0]["text"].startswith("Does the pilot")
-    assert view.question_detail(snap, "nope") is None
+    assert q21["answer"] == a.answer and q21["quotes"] == a.evidence_quotes
+
+
+def test_answer_why_uses_plain_titles(snap):
+    rows = view.answer_rows(snap)
+    assert _row(rows, "Q-010")["why"] == "Incident response: not in the files"
+    q3 = _row(rows, "Q-003")["why"]
+    assert q3.startswith("Where inference runs: not in the files")
+    assert "Where data is stored: “AWS ca-central-1”" in q3 and "(unconfirmed)" in q3
+    q21 = _row(rows, "Q-021")["why"]
+    assert q21.startswith("Insurance: “") and "evidence" in q21 and "2026-10-01" in q21
+    assert "_" not in _row(rows, "Q-004")["why"]
+    assert "(+" in _row(rows, "Q-004")["why"]
+
+
+def test_brief_sentence(snap):
+    b = view.brief(snap)
+    rows = view.answer_rows(snap)
+    for k in view.READINESS:
+        assert b[k] == sum(r["readiness"] == k for r in rows)
+    assert b["milestone"] == "October production pilot"
+    assert b["blockers"] == len({x.item for x in snap.blockers})
+    assert f"{b['ready']} answers ready to draft" in b["sentence"]
+    assert f"{b['blockers']} things block the October production pilot" in b["sentence"]
+    assert "people to chase" in b["sentence"]
+
+
+def test_blocker_actions_are_plain_sentences(snap):
+    acts = {a["topic"]: a for a in view.blocker_actions(snap)}
+    assert set(acts) == {b.item for b in snap.blockers}
+    ins = acts["insurance"]
+    assert ins["title"] == "Insurance" and "2026-10-01" in ins["why"]
+    assert "before October production pilot" in ins["why"]
+    sub = acts["subprocessors"]
+    assert "DPA waits on it" in sub["why"] and sub["owner"]
+    assert any(q.startswith("Email ask · ") for q in sub["questions"])
+    assert len(sub["questions"]) == len(set(sub["questions"]))
+    assert "Q-005" in sub["questions"] and not any(q.startswith("Q-02") and q > "Q-023"
+                                                    for q in sub["questions"])
+    assert "→" not in " ".join(a["why"] for a in acts.values())
+
+
+def test_chase_cards_plain_items(snap):
+    cards = view.chase_cards(snap)
+    assert [c["owner"] for c in cards] == [s.owner for s in snap.next_steps]
+    internal = [c for c in cards if c["kind"] == "internal"]
+    lines = " ".join(l for c in internal for l in c["lines"])
+    assert "_" not in lines.replace("other:", "")
+    assert "Subprocessors: not in the files — blocks the October production pilot" in lines
+    cust = next(c for c in cards if c["kind"] == "customer_decision")
+    assert cust["lines"] and all(l.startswith("Decide: ") for l in cust["lines"])
+    assert all("message" in c for c in cards)
+
+
+def test_conflict_rows(snap):
+    from procnav.models import Verdict
+    v = snap.verdicts["model_providers"]
+    c = Verdict(**{**v.model_dump(), "status": "CONFLICT", "value": None})
+    s2 = snap.model_copy(update={"verdicts": {**snap.verdicts, "model_providers": c}})
+    rows = view.conflict_rows(s2)
+    mp = next(r for r in rows if r["topic"] == "model_providers")
+    assert mp["title"] == "Model providers" and mp["sides"] and mp["owner"]
+    assert all(set(x) == {"value", "where", "quote"} for x in mp["sides"])
 
 
 def test_blocking_rows_list_blocked_questions(snap):

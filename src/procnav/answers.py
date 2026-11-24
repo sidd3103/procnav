@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from .blockers import (
     DERIVED_BLOCKERS,
     DERIVED_DEPENDENCY,
+    DERIVED_REVIEW,
     DERIVED_RULES,
     Blocker,
     dependencies_for,
@@ -22,7 +23,7 @@ from .cache import JsonCache, cache_key
 from .extract import PROMPT_VERSION, LLMOut, _complete, _short
 from .llm import LLMClient
 from .models import Dependency, Fact, Verdict
-from .requirements import RequirementResult, Status
+from .requirements import RequirementResult, Status, readiness
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -179,8 +180,25 @@ def _label(t: str, verdicts: dict[str, Verdict]) -> str:
     return f"{t}: {v.status}" + (f" {v.value}" if v.value else "")
 
 
+def _review_lines(self_id: str, verdicts: dict[str, Verdict],
+                  results: list[RequirementResult]) -> list[str]:
+    groups: dict[str, list[str]] = {"confirm": [], "missing": [], "ready": []}
+    for r in results:
+        if r.req.id == self_id or r.req.from_customer or (r.req.group or "").startswith("template:"):
+            continue
+        groups[readiness(r.req.topics, verdicts)].append(r.req.id)
+    fmt = lambda ids: ", ".join(ids) or "(none)"  # noqa: E731
+    return ["Every response needs human approval before external submission; nothing is sent "
+            "automatically.",
+            f"Confirm first (drafted from unconfirmed or conflicting sources): "
+            f"{fmt(groups['confirm'])}",
+            f"Not answerable yet (the owner must supply it): {fmt(groups['missing'])}",
+            f"Evidence-backed (Legal still reviews the wording): {fmt(groups['ready'])}"]
+
+
 def _derived_answer(topics: list[str], verdicts: dict[str, Verdict], blockers: list[Blocker],
-                    dependencies: list[Dependency]) -> tuple[str, list[str]]:
+                    dependencies: list[Dependency], self_id: str = "",
+                    results: list[RequirementResult] | None = None) -> tuple[str, list[str]]:
     """Deterministic draft for requirements answered by a derived verdict. (text, quotes)"""
     lines: list[str] = []
     quotes: list[str] = []
@@ -195,7 +213,9 @@ def _derived_answer(topics: list[str], verdicts: dict[str, Verdict], blockers: l
         if v is None or v.rule not in DERIVED_RULES:
             continue
         covered.add(t)
-        if v.rule == DERIVED_BLOCKERS:
+        if v.rule == DERIVED_REVIEW:
+            lines += _review_lines(self_id, verdicts, results or [])
+        elif v.rule == DERIVED_BLOCKERS:
             groups = {i: g for i, g in group_blockers(blockers).items() if i != t}
             lines.append(f"Items that may delay approval ({len(groups)}):" if groups
                          else "No blockers found in the case files.")
@@ -233,6 +253,7 @@ def draft_answer(
     as_of: date | None = None,
     blockers: list[Blocker] | None = None,
     dependencies: list[Dependency] | None = None,
+    results: list[RequirementResult] | None = None,
 ) -> DraftAnswer:
     req = result.req
     open_a = _open_assumptions(result, verdicts, facts_by_id)
@@ -249,7 +270,8 @@ def draft_answer(
         return make(f"Not yet known. Owner: {owner}. Open: {detail}", [], [], [])
 
     if any((v := verdicts.get(t)) is not None and v.rule in DERIVED_RULES for t in req.topics):
-        text, quotes = _derived_answer(req.topics, verdicts, blockers or [], dependencies or [])
+        text, quotes = _derived_answer(req.topics, verdicts, blockers or [], dependencies or [],
+                                       req.id, results)
         listed = [b.item for b in blockers or []] if any(
             verdicts[t].rule == DERIVED_BLOCKERS for t in req.topics if t in verdicts) else []
         return make(text, [], quotes, [], caveat_topics=list(dict.fromkeys(req.topics + listed)))

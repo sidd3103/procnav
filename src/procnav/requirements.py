@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from .blockers import Blocker
 
 Status = Literal["ready_for_review", "needs_confirmation", "blocked", "unknown"]
+Readiness = Literal["ready", "confirm", "missing"]
 _SEVERITY = {"ready_for_review": 0, "needs_confirmation": 1, "unknown": 2}
 
 
@@ -108,6 +109,24 @@ def evaluate(
             req=req, status=status, topic_verdicts=tv, open_assumptions=open_a,
             stale_draft=_stale_draft(req, verdicts), depends_on_decisions=deps))
     return results
+
+
+def readiness(topics: list[str], verdicts: dict[str, Verdict]) -> Readiness:
+    """Can we write a true answer now? Separate from deal risk (blocked or not).
+
+    ready: every topic is VERIFIED evidence (caveats allowed: an expiry is part of the answer),
+    or any topic is derived by code from the case (code then writes the whole answer). missing: no topic has anything usable. confirm: the
+    rest (proposed values, conflicts, or partly known).
+    """
+    vs = [verdicts.get(t) for t in topics]
+    known = [v for v in vs if v is not None and v.status != "UNKNOWN"]
+    if not known:
+        return "missing"
+    if any(v.rule.startswith("derived from") for v in known):
+        return "ready"
+    if len(known) == len(vs) and all(v.status == "VERIFIED" for v in known):
+        return "ready"
+    return "confirm"
 
 
 def apply_blockers(

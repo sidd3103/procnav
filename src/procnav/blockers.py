@@ -107,8 +107,10 @@ def group_blockers(blockers: list[Blocker]) -> dict[str, list[Blocker]]:
 
 DERIVED_DEPENDENCY = "derived from dependency"
 DERIVED_BLOCKERS = "derived from blocker list"
-DERIVED_RULES = (DERIVED_DEPENDENCY, DERIVED_BLOCKERS)
+DERIVED_REVIEW = "derived from review policy"
+DERIVED_RULES = (DERIVED_DEPENDENCY, DERIVED_BLOCKERS, DERIVED_REVIEW)
 APPROVAL_TOPIC = "approval_blockers"
+SUBMISSION_TOPIC = "submission_approval"
 
 
 def dependencies_for(topic: str, dependencies: list[Dependency]) -> list[Dependency]:
@@ -151,4 +153,17 @@ def derive_approval_blockers(verdicts: dict[str, Verdict],
     out[APPROVAL_TOPIC] = v.model_copy(update={
         "status": "PROPOSED", "value": value, "rule": DERIVED_BLOCKERS, "used": [],
         "sendable": False})
+    return out
+
+
+def derive_submission_approval(verdicts: dict[str, Verdict]) -> dict[str, Verdict]:
+    """Which answers need sign-off is product policy, not case content: every external answer
+    does (nothing is sent automatically). The draft lists them by readiness."""
+    v = verdicts.get(SUBMISSION_TOPIC)
+    if v is None:
+        return verdicts
+    out = dict(verdicts)
+    out[SUBMISSION_TOPIC] = v.model_copy(update={
+        "status": "PROPOSED", "value": "every response needs human approval before submission",
+        "rule": DERIVED_REVIEW, "used": [], "sendable": False})
     return out

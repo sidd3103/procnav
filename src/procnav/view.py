@@ -5,24 +5,25 @@ Owners are suggestions only (routing is a human decision).
 """
 from __future__ import annotations
 
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from .models import Rank, Verdict
 from .pipeline import Snapshot, group_blockers
-from .requirements import RequirementResult, _topic_status
+from .requirements import RequirementResult, readiness
+from .topics import get_topic
 
 Row = dict[str, Any]
 
-# Backend requirement status -> (icon, plain-English label), most severe first.
-STATUS_LABELS: dict[str, tuple[str, str]] = {
-    "blocked": ("⛔", "Blocks launch"),
-    "unknown": ("❔", "Missing information"),
-    "needs_confirmation": ("🟡", "Drafted, needs sign-off"),
-    "ready_for_review": ("✅", "Ready for Legal"),
+# Answer readiness ("can we write a true answer now?") -> (icon, label). Deal risk (blocks the
+# milestone or not) is a separate flag on each row.
+READINESS: dict[str, tuple[str, str]] = {
+    "ready": ("✅", "Ready to draft"),
+    "confirm": ("🟡", "Needs someone to confirm"),
+    "missing": ("❔", "Not in the files"),
 }
-_SEVERITY = {k: i for i, k in enumerate(STATUS_LABELS)}
 
 
 def list_cases(root: str | Path) -> list[str]:
@@ -130,118 +131,182 @@ def verdict_detail(s: Snapshot, topic: str) -> Row | None:
     }
 
 
-# ---------------------------------------------------------------- question-first view
+# ---------------------------------------------------------------- deal brief
 
 
-def _words(topic: str) -> str:
-    return topic.removeprefix("other:").replace("_", " ")
+def title(topic: str) -> str:
+    return get_topic(topic).title or topic
 
 
-def _caveat(v: Verdict | None) -> str | None:
-    if v is None or not v.caveats:
-        return None
-    return v.caveats[0].removeprefix("no evidence: ").strip()
+def _caveat(v: Verdict) -> str:
+    return "; ".join(c.removeprefix("no evidence: ").strip() for c in v.caveats)
 
 
-def _topic_level(s: Snapshot, topic: str, blocked: set[str]) -> str:
-    """The question status this one topic would cause on its own."""
-    return "blocked" if topic in blocked else _topic_status(s.verdicts.get(topic))
+_TOPIC_ORDER = {"UNKNOWN": 0, "CONFLICT": 1, "PROPOSED": 2, "VERIFIED": 3}
 
 
-def _topic_reason(s: Snapshot, level: str, topic: str) -> str:
+def topic_phrase(s: Snapshot, topic: str) -> str:
+    """One plain clause about a topic's state, e.g. 'Where data is stored: “AWS…” (unconfirmed)'."""
     v = s.verdicts.get(topic)
-    words = _words(topic)
-    if level == "blocked":
-        chain = list(group_blockers(s.blockers)[topic][0].chain)
-        chain[0] = chain[0].replace(topic, words, 1)
-        return " → ".join(chain)
-    if (cav := _caveat(v)) is not None:
-        return cav
-    if level == "unknown":
-        if v is not None and v.status == "CONFLICT":
-            return f"sources disagree on {words}"
-        return f"nobody has stated {words}"
-    if level == "needs_confirmation":
-        return f"{words}: {v.value if v else '?'} (unconfirmed)"
-    return f"evidence: {words} = {v.value if v else '?'}"
+    t = title(topic)
+    if v is None or v.status == "UNKNOWN":
+        return f"{t}: not in the files"
+    if v.status == "CONFLICT":
+        return f"{t}: sources disagree"
+    if v.rule.startswith("derived from"):
+        return f"{t}: worked out from the case"
+    if v.status == "PROPOSED":
+        return f"{t}: “{v.value}” (unconfirmed)"
+    cav = _caveat(v)
+    return f"{t}: “{v.value}” (evidence{'; ' + cav if cav else ''})"
 
 
-def question_reason(r: RequirementResult, s: Snapshot) -> str:
-    """One plain line explaining a question's status, from its worst topic."""
-    topics = r.req.topics
+def answer_why(s: Snapshot, topics: list[str], limit: int = 2) -> str:
+    """Gaps first, then unconfirmed, then evidence; at most `limit` clauses."""
     if not topics:
-        reason = "not linked to any topic"
-    else:
-        blocked = {b.item for b in s.blockers}
-        levels = {t: _topic_level(s, t, blocked) for t in topics}
-        worst = min(levels.values(), key=_SEVERITY.__getitem__)
-        at_worst = [t for t in topics if levels[t] == worst]
-        reason = _topic_reason(s, worst, at_worst[0])
-        if len(at_worst) > 1:
-            reason += f" (+{len(at_worst) - 1} more)"
-    if r.depends_on_decisions:
-        reason += " · waiting on decision"
-    return reason
+        return "not linked to any topic"
+    order = sorted(topics, key=lambda t: _TOPIC_ORDER.get(
+        s.verdicts[t].status if t in s.verdicts else "UNKNOWN", 0))
+    out = "; ".join(topic_phrase(s, t) for t in order[:limit])
+    return out + (f" (+{len(order) - limit} more)" if len(order) > limit else "")
 
 
 def _answer(s: Snapshot, req_id: str):  # -> DraftAnswer | None
     return next((a for a in s.answers if a.req_id == req_id), None)
 
 
-def _question_row(s: Snapshot, r: RequirementResult) -> Row:
-    req, a = r.req, _answer(s, r.req.id)
-    icon, label = STATUS_LABELS[r.status]
-    return {
-        "id": req.id, "question": req.text, "status": r.status, "icon": icon, "label": label,
-        "reason": question_reason(r, s), "owner": a.owner if a else "?",
-        "asked_by": req.requester if req.from_customer and req.requester else "questionnaire",
-        "template": (req.group or "").startswith("template:"),
-        "answer": a.answer if a else "",
-    }
+def _is_template(r: RequirementResult) -> bool:
+    return (r.req.group or "").startswith("template:")
 
 
-def question_rows(s: Snapshot) -> list[Row]:
-    """One row per question, most severe status first, original order within a status."""
-    rows = [_question_row(s, r) for r in s.required]
-    return sorted(rows, key=lambda row: _SEVERITY[row["status"]])
+def label_id(r: RequirementResult) -> str:
+    """Questionnaire id as is; a customer ask by who asked (extracted ids are internal)."""
+    if r.req.from_customer:
+        return f"Email ask · {r.req.requester or 'customer'}"
+    return r.req.id
 
 
-def question_counts(s: Snapshot) -> dict[str, int]:
-    """Questions per plain-English label (all four labels, severity order)."""
-    counts = {label: 0 for _, label in STATUS_LABELS.values()}
+def answer_rows(s: Snapshot, templates: bool = False) -> list[Row]:
+    """One row per question/ask, grouped by readiness (ready, confirm, missing), original order
+    within a group. `blocked` is the separate deal-risk flag."""
+    blocked_q = {r.req.id for r in s.required if r.status == "blocked"}
+    decisions = {d.id: d for d in s.open_decisions}
+    rows: list[Row] = []
     for r in s.required:
-        counts[STATUS_LABELS[r.status][1]] += 1
-    return counts
+        if _is_template(r) and not templates:
+            continue
+        a = _answer(s, r.req.id)
+        rd = readiness(r.req.topics, s.verdicts)
+        icon, label = READINESS[rd]
+        rows.append({
+            "id": r.req.id, "label_id": label_id(r), "question": r.req.text, "readiness": rd, "icon": icon,
+            "label": label, "blocked": r.req.id in blocked_q,
+            "why": answer_why(s, r.req.topics), "owner": a.owner if a else "?",
+            "asked_by": r.req.requester if r.req.from_customer and r.req.requester
+            else "questionnaire",
+            "source_file": r.req.source_file, "ask_quote": r.req.quote,
+            "template": _is_template(r),
+            "answer": a.answer if a else "", "quotes": list(a.evidence_quotes) if a else [],
+            "cited": list(a.cited) if a else [],
+            "citation_errors": list(a.citation_errors) if a else [],
+            "stale_draft": r.stale_draft, "topics": list(r.req.topics),
+            "decisions": [f"{decisions[i].decider} decides: {decisions[i].text}"
+                          for i in r.depends_on_decisions if i in decisions],
+        })
+    keys = list(READINESS)
+    return sorted(rows, key=lambda row: keys.index(row["readiness"]))
 
 
-def filter_questions(rows: list[Row], labels: list[str], owner_: str, text: str) -> list[Row]:
-    """Keep rows whose label is in labels (empty = any), owner matches ("All" = any) and
-    whose id, question or reason contains text (case-insensitive)."""
-    needle = text.strip().lower()
-    return [r for r in rows
-            if (not labels or r["label"] in labels)
-            and (owner_ == "All" or r["owner"] == owner_)
-            and (not needle or needle in f"{r['id']} {r['question']} {r['reason']}".lower())]
+def milestone(s: Snapshot) -> str | None:
+    ms = [d for d in s.dependencies if d.kind == "milestone"]
+    dated = sorted((m for m in ms if m.date), key=lambda m: m.date)
+    first = dated[0] if dated else (ms[0] if ms else None)
+    return first.subject if first else None
 
 
-def question_detail(s: Snapshot, req_id: str) -> Row | None:
-    r = next((x for x in s.required if x.req.id == req_id), None)
-    if r is None:
-        return None
-    a = _answer(s, req_id)
-    decisions = [{"id": d.id, "text": d.text, "decider": d.decider}
-                 for d in s.open_decisions if d.id in r.depends_on_decisions]
-    decisions += [{"id": i, "text": i, "decider": "?"} for i in r.depends_on_decisions
-                  if i not in {d["id"] for d in decisions}]
-    return {
-        **_question_row(s, r),
-        "cited": list(a.cited) if a else [],
-        "evidence_quotes": list(a.evidence_quotes) if a else [],
-        "open_assumptions": list(a.open_assumptions) if a else [],
-        "citation_errors": list(a.citation_errors) if a else [],
-        "stale_draft": r.stale_draft, "quote": r.req.quote, "source_file": r.req.source_file,
-        "decisions": decisions, "topics": list(r.req.topics),
-    }
+def brief(s: Snapshot) -> Row:
+    rows = answer_rows(s)
+    n = {k: sum(r["readiness"] == k for r in rows) for k in READINESS}
+    n_block = len(group_blockers(s.blockers))
+    people = len({st.owner for st in s.next_steps if st.kind == "internal"})
+    ms = milestone(s) or "launch"
+    sentence = (f"{n['ready']} answers ready to draft · {n['confirm']} need someone to confirm · "
+                f"{n['missing']} not in the files. {n_block} things block the {ms}. "
+                f"{people} people to chase.")
+    return {**n, "blockers": n_block, "milestone": ms, "people": people, "sentence": sentence}
+
+
+_REASON_ORDER = {"explicit_dependency": 0, "caveat_before_milestone": 1, "asked_hard_gap": 2}
+
+
+def _blocker_why(s: Snapshot, b) -> str:
+    if b.reason == "explicit_dependency":
+        return f"{b.chain[1]} waits on it"
+    if b.reason == "caveat_before_milestone":
+        return f"{b.quote}, before {b.chain[-1]}"
+    v = s.verdicts.get(b.item)
+    gap = "sources disagree" if v is not None and v.status == "CONFLICT" else "not in the files"
+    return f"the customer asked; {gap}"
+
+
+def blocker_actions(s: Snapshot) -> list[Row]:
+    """What blocks the milestone, as plain sentences with the suggested owner."""
+    rows: list[Row] = []
+    for item, group in group_blockers(s.blockers).items():
+        group = sorted(group, key=lambda b: _REASON_ORDER[b.reason])
+        rows.append({
+            "topic": item, "title": title(item), "owner": owner(s, item),
+            "why": "; ".join(_blocker_why(s, b) for b in group),
+            "rank": _REASON_ORDER[group[0].reason],
+            "questions": list(dict.fromkeys(label_id(r) for r in s.required
+                                            if item in r.req.topics and not _is_template(r))),
+        })
+    return sorted(rows, key=lambda r: (r["rank"], r["title"]))
+
+
+def _chase_line(s: Snapshot, topic: str, blocked: set[str], ms: str) -> str:
+    v = s.verdicts.get(topic)
+    t = title(topic)
+    if v is None or v.status == "UNKNOWN":
+        line = f"{t}: not in the files"
+    elif v.status == "CONFLICT":
+        line = f"{t}: sources disagree, settle which is right"
+    elif v.status == "PROPOSED":
+        line = f"{t}: confirm “{v.value}”"
+    else:
+        line = f"{t}: {_caveat(v) or 'confirm for external use'}"
+    return line + (f" — blocks the {ms}" if topic in blocked else "")
+
+
+def chase_cards(s: Snapshot) -> list[Row]:
+    """One card per suggested owner: plain to-do lines plus the drafted message."""
+    blocked = {b.item for b in s.blockers}
+    ms = milestone(s) or "launch"
+    cards: list[Row] = []
+    for row in next_step_rows(s):
+        lines = [] if row["kind"] == "customer_decision" else [
+            _chase_line(s, t, blocked, ms) for t in row["topics"]
+            if not (t in s.verdicts and s.verdicts[t].rule.startswith("derived from"))]
+        lines += ["Decide: " + re.sub(r" \(affects [^)]*\)$", "", i.split("): ", 1)[1])
+                  for i in row["items"] if i.startswith("decide (")]
+        ch = row["chase"] or {}
+        cards.append({"owner": row["owner"], "kind": row["kind"], "lines": lines,
+                      "message": ch.get("message", ""), "cited": ch.get("cited", []),
+                      "citation_errors": ch.get("citation_errors", [])})
+    return cards
+
+
+def conflict_rows(s: Snapshot) -> list[Row]:
+    """CONFLICT topics with each side's value and source."""
+    out: list[Row] = []
+    for t, v in sorted(s.verdicts.items()):
+        if v.status != "CONFLICT":
+            continue
+        sides = [{"value": f["value"] if f.get("value") is not None else "", "where": f["where"],
+                  "quote": f["quote"]} for f in (_fact_or_stub(s, i) for i in v.used)]
+        out.append({"topic": t, "title": title(t), "owner": owner(s, t), "sides": sides,
+                    "hints": list(v.hints)})
+    return out
 
 
 # ---------------------------------------------------------------- sources & decisions

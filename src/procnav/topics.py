@@ -86,8 +86,44 @@ _ROWS = [
      ["blockers", "approval", "delay", "procurement", "deal", "process"]),
 ]
 
+TITLES = {
+    "encryption_in_transit": "Encryption in transit",
+    "encryption_at_rest": "Encryption at rest",
+    "soc2": "SOC 2 report",
+    "pen_test": "Penetration test",
+    "insurance": "Insurance",
+    "incident_response": "Incident response",
+    "iam_access": "Access control (IAM)",
+    "model_providers": "Model providers",
+    "model_fallback": "Fallback model",
+    "inference_location": "Where inference runs",
+    "storage_location": "Where data is stored",
+    "retention_app_logs": "App log retention",
+    "retention_traces": "Trace retention",
+    "retention_source_files": "Source file retention",
+    "retention_prompts_responses": "Prompt and response retention",
+    "subprocessors": "Subprocessors",
+    "cross_border": "Cross-border transfers",
+    "personal_info_scope": "Personal information in scope",
+    "tool_actions": "Tools and actions the AI can take",
+    "human_oversight": "Human oversight",
+    "rto_rpo": "Recovery objectives (RTO/RPO)",
+    "provider_training_retention": "Provider training and retention",
+    "dpa": "Data processing agreement (DPA)",
+    "evaluation": "AI evaluation",
+    "prompt_injection": "Prompt-injection defences",
+    "provenance": "Sources and citations in outputs",
+    "pen_test_remediation": "Pen test remediation",
+    "soc2_current": "SOC 2 currently valid",
+    "trace_payload_capture": "Payload capture in traces",
+    "service_description": "Proposed service",
+    "submission_approval": "Sign-off before submission",
+    "approval_blockers": "What may delay approval",
+}
+
 SEED: dict[str, Topic] = {
-    id_: Topic(id=id_, description=desc, scope=scope, area=area, keywords=kw)
+    id_: Topic(id=id_, description=desc, scope=scope, area=area, keywords=kw,
+               title=TITLES[id_])
     for id_, scope, area, desc, kw in _ROWS
 }
 
@@ -104,5 +140,6 @@ def get_topic(topic_id: str) -> Topic:
     alias = _SEED_NO_UNDERSCORE.get(slug.replace("_", ""))
     if alias is not None:
         return SEED[alias]
-    return Topic(id=f"other:{slug or 'unspecified'}", description=topic_id, scope="per_customer",
-                 area="other", keywords=[])
+    slug = slug or "unspecified"
+    return Topic(id=f"other:{slug}", description=topic_id, scope="per_customer",
+                 area="other", keywords=[], title=slug.replace("_", " ").capitalize())

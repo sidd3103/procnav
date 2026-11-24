@@ -10,8 +10,7 @@ from procnav.llm import FakeLLM, OpenAIClient
 from procnav.pipeline import run_case, save_snapshot
 
 APP = str(Path(__file__).resolve().parents[1] / "app.py")
-TABS = ["Required", "Blocking", "Next steps", "Known: evidence by topic"]
-METRICS = ["Ready for Legal", "Drafted, needs sign-off", "Missing information", "Blocks launch"]
+TABS = ["Deal brief", "How we know"]
 CASE = ACME_DIR.name
 
 
@@ -29,10 +28,6 @@ def _app():
     return AppTest.from_file(APP, default_timeout=30)
 
 
-def _questions_df(at):
-    return next(d.value for d in at.dataframe if "Status" in d.value.columns)
-
-
 def _texts(at):
     return " ".join(str(e.value) for kind in ("markdown", "caption", "info", "error", "success")
                     for e in getattr(at, kind))
@@ -46,39 +41,45 @@ def saved(env, tmp_path):
     return snap
 
 
-def test_shows_saved_snapshot_with_all_tabs(saved):
+def _labels(at):
+    return [e.label for e in at.expander]
+
+
+def test_shows_deal_brief_and_how_we_know(saved):
     at = _app().run()
     assert not at.exception
     assert [t.label for t in at.tabs] == TABS
-    assert "ready for Legal review" in _texts(at)
-    assert [m.label.split(" ", 1)[1] for m in at.metric] == METRICS
-    n = len(saved.required)
-    assert all(m.value.endswith(f"/ {n}") for m in at.metric)
+    from procnav import view
+    b = view.brief(saved)
+    assert any(b["sentence"].split(".")[0].split("·")[0].strip() in m.value
+               for m in at.markdown)
+    heads = [h.value for h in at.header]
+    assert heads[:3] == ["① What blocks the October production pilot", "② Answers",
+                         "③ Who to chase"]
+    assert {"Conflicts", "Evidence by topic", "Open decisions", "Run log"} <= set(heads)
+    subs = [h.value for h in at.subheader]
+    assert any(x.startswith("✅ Ready to draft (") for x in subs)
+    assert any(x.startswith("❔ Not in the files (") for x in subs)
 
 
-def test_selecting_question_shows_its_draft_answer(saved):
+def test_blockers_read_as_plain_actions(saved):
+    t = _texts(_app().run())
+    assert "Insurance" in t and "before October production pilot" in t
+    assert "→ ask" in t and "asked\\_hard\\_gap" not in t and "asked_hard_gap" not in t
+
+
+def test_answer_opens_in_place_with_its_draft(saved):
     at = _app().run()
-    at.selectbox(key="open_q").set_value("Q-021").run()
-    assert not at.exception
+    assert any(lbl.startswith("⛔ Q-021 — ") for lbl in _labels(at))  # ready, yet blocks
     answer = next(a.answer for a in saved.answers if a.req_id == "Q-021")
     assert any(c.value == answer for c in at.code)
-    assert "October production pilot" in _texts(at)
-
-
-def test_filter_to_blocks_launch(saved):
-    at = _app().run()
-    at.multiselect(key="q_status").set_value(["Blocks launch"]).run()
-    assert not at.exception
-    df = _questions_df(at)
-    assert len(df) and all("Blocks launch" in v for v in df["Status"])
 
 
 def test_template_rows_hidden_until_toggled(saved):
     at = _app().run()
-    ids = list(_questions_df(at)["ID"])
-    assert "Q-024" not in ids
-    at.toggle(key="q_templates").set_value(True).run()
-    assert "Q-024" in list(_questions_df(at)["ID"])
+    assert not any("Q-024 — " in lbl for lbl in _labels(at))
+    at.toggle(key="templates").set_value(True).run()
+    assert any("Q-024 — " in lbl for lbl in _labels(at))
 
 
 def test_no_saved_run_shows_hint(env):
@@ -110,21 +111,17 @@ def test_rerun_saves_snapshot_and_shows_changes(env, monkeypatch):
     assert "LLM calls:" in _texts(at)
     at.button(key="rerun").click().run()
     assert len(list((runs / CASE).glob("*.json"))) == 2
-    assert "No changes" in _texts(at)
+    assert "No changes since last run" in _texts(at)
     assert "LLM calls: 0" in _texts(at)
 
 
-def test_brief_legend_sources_and_decisions(saved):
+def test_how_we_know_shows_sources_and_decisions(saved):
     at = _app().run()
-    t = _texts(at)
-    for word in ("Required", "Known", "Unresolved", "Blocking", "Next"):
-        assert word in t
-    assert any(e.label.startswith("Sources") for e in at.expander)
     src = next(d.value for d in at.dataframe if "Rank" in d.value.columns)
     ranks = dict(zip(src["File"], src["Rank"]))
     assert ranks["04_knowledge/prior_customer_answers_CONTEXT_ONLY.md"] == "other customer"
-    assert "Open decisions" in [h.value for h in at.subheader]
-    assert "Anthropic fallback" in t
+    assert "Anthropic fallback" in _texts(at)
+    assert any(lbl.startswith("✅ Insurance: VERIFIED") for lbl in _labels(at))
 
 
 def test_as_of_defaults_to_latest_run(saved):

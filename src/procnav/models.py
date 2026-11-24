@@ -92,6 +92,7 @@ class Topic(BaseModel):
     scope: Literal["platform_wide", "per_customer"]
     area: str
     keywords: list[str]
+    title: str = ""  # plain-English name for the UI
 
 
 class Reconciliation(BaseModel):

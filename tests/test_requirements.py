@@ -134,3 +134,20 @@ def test_stale_draft_lists_every_contradiction():
     assert res.stale_draft == ("unsourced draft '30 days?'; contradicts "
                                "retention_app_logs='14 days', "
                                "retention_source_files='workspace lifetime'")
+
+
+def test_readiness_separates_answerable_from_missing():
+    from procnav.requirements import readiness
+    vs = {"soc2": V("soc2", caveats=["no evidence: 2026 not final"], sendable=False),
+          "cur": V("cur", "UNKNOWN", None, False), "st": V("st", "PROPOSED", sendable=False),
+          "fb": V("fb", "CONFLICT", None, False),
+          "dpa": V("dpa", "PROPOSED", sendable=False).model_copy(
+              update={"rule": "derived from dependency"})}
+    assert readiness([], vs) == "missing"
+    assert readiness(["soc2"], vs) == "ready"           # evidence with a caveat is answerable
+    assert readiness(["dpa"], vs) == "ready"            # derived by code from the case
+    assert readiness(["dpa", "cur"], vs) == "ready"     # code writes the whole answer
+    assert readiness(["soc2", "cur"], vs) == "confirm"  # partly known
+    assert readiness(["st"], vs) == "confirm"
+    assert readiness(["fb"], vs) == "confirm"           # someone must settle the conflict
+    assert readiness(["cur", "nope"], vs) == "missing"

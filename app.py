@@ -1,9 +1,11 @@
-"""Procurement Navigator: one shared, read-only page per case.
+"""Procurement Navigator: a deal brief per case, read top to bottom.
 
 Run:  uv run streamlit run app.py --server.address 0.0.0.0
 Shows the latest saved run of a case (runs/<case>/*.json). "Re-run" processes the case folder
 again (cached, so only changed files call the LLM), saves a new snapshot and shows what changed.
-All logic lives in procnav; this file only lays out what procnav.view returns.
+Tab 1 answers the brief's questions in order (what blocks, answers by readiness, who to chase);
+tab 2 shows how the system knows (conflicts, evidence by topic, sources, decisions, run log).
+All logic lives in procnav.view; this file only lays it out.
 """
 from __future__ import annotations
 
@@ -38,7 +40,7 @@ def esc(text: object) -> str:
 def verdict_body(s: Snapshot, topic: str) -> None:
     d = view.verdict_detail(s, topic)
     if d is None:
-        st.caption(f"No verdict for {topic}")
+        st.caption("No verdict")
         return
     st.markdown(f"**Value:** {esc(d['value']) or '—'} · **Status:** {d['status']} · "
                 f"**Rule:** {esc(d['rule'])} · **Suggested owner:** {esc(d['owner'])}")
@@ -56,14 +58,6 @@ def verdict_body(s: Snapshot, topic: str) -> None:
             st.markdown(f"- `{e['where']}` — “{esc(e['quote'])}” · *{esc(e['reason'])}*")
     for h in d["hints"]:
         st.markdown(f"- :gray[hint (not evidence):] {esc(h)}")
-
-
-def verdict_expander(s: Snapshot, topic: str) -> None:
-    v = s.verdicts[topic]
-    value = f" — {v.value}" if v.value else ""
-    ready = " · ready for Legal review" if v.sendable else ""
-    with st.expander(f"{STATUS_ICON.get(v.status, '')} {topic}: {v.status}{value}{ready}"):
-        verdict_body(s, topic)
 
 
 # ---------------------------------------------------------------- sidebar
@@ -99,27 +93,98 @@ if s is None:
 
 # ---------------------------------------------------------------- header
 
+b = view.brief(s)
 st.title(s.customer or s.case)
-st.caption(f"Case {s.case} · supplier {s.supplier} · as of {s.as_of.isoformat()}")
-qcounts = view.question_counts(s)
-total = len(s.required)
-for col, status in zip(st.columns(4), reversed(view.STATUS_LABELS)):
-    icon, label = view.STATUS_LABELS[status]
-    col.metric(f"{icon} {label}", f"{qcounts[label]} / {total}")
-st.caption("**Required:** every question and customer ask (Required tab) · "
-           "**Known:** ✅ Ready for Legal + 🟡 Drafted, needs sign-off · "
-           "**Unresolved:** ❔ Missing information + ⛔ Blocks launch · "
-           "**Blocking:** Blocking tab · **Next:** Next steps tab")
+st.caption(f"{s.supplier} → {s.customer} · {b['milestone']} · as of {s.as_of:%b %d, %Y}")
+st.markdown(f"#### {esc(b['sentence'])}")
 
-with st.expander("What changed since last run", expanded=prev is not None):
-    if prev is None:
-        st.markdown("No previous run")
-    else:
-        changes = diff(prev, s)
-        st.markdown("\n".join(f"- {esc(c)}" for c in changes) if changes else "No changes")
+changes = diff(prev, s) if prev is not None else None
+if changes:
+    st.info("**Since last run:** " + esc("; ".join(changes[:3]))
+            + (f" (+{len(changes) - 3} more in How we know)" if len(changes) > 3 else ""))
+elif changes is not None:
+    st.caption("No changes since last run")
 
-src_rows = view.source_rows(s)
-with st.expander(f"Sources ({len(src_rows)} files): how each file was judged"):
+t_brief, t_how = st.tabs(["Deal brief", "How we know"])
+
+# ---------------------------------------------------------------- deal brief
+
+with t_brief:
+    st.header(f"① What blocks the {b['milestone']}")
+    acts = view.blocker_actions(s)
+    if not acts:
+        st.markdown("Nothing blocks it.")
+    for a in acts:
+        qs = f" · questions {', '.join(a['questions'])}" if a["questions"] else ""
+        st.markdown(f"⛔ **{esc(a['title'])}**: {esc(a['why'])} → ask **{esc(a['owner'])}**"
+                    f":gray[{esc(qs)}]")
+
+    st.header("② Answers")
+    show_tmpl = st.toggle("include repeated template controls", key="templates")
+    rows = view.answer_rows(s, templates=show_tmpl)
+    for key, (icon, label) in view.READINESS.items():
+        group = [r for r in rows if r["readiness"] == key]
+        st.subheader(f"{icon} {label} ({len(group)})")
+        for r in group:
+            risk = "⛔ " if r["blocked"] else ""
+            with st.expander(f"{risk}{r['label_id']} — {r['question']}"):
+                st.markdown(f"**Why:** {esc(r['why'])}")
+                st.caption(f"Asked by {r['asked_by']} · `{r['source_file']}` · "
+                           f"suggested owner: {r['owner']}"
+                           + (" · blocks the milestone" if r["blocked"] else ""))
+                if r["ask_quote"]:
+                    st.markdown(f"> {esc(r['ask_quote'])}")
+                st.markdown("**Draft answer** (copy, edit, send yourself)")
+                st.code(r["answer"] or "(no draft)", language=None, wrap_lines=True)
+                for q in r["quotes"]:
+                    st.markdown(f"> {esc(q)}")
+                for d in r["decisions"]:
+                    st.markdown(f":orange[waiting on:] {esc(d)}")
+                if r["stale_draft"]:
+                    st.markdown(f":orange[existing questionnaire draft:] {esc(r['stale_draft'])}")
+                for e in r["citation_errors"]:
+                    st.markdown(f":red[citation issue:] {esc(e)}")
+                st.caption("Topics: " + " · ".join(view.topic_phrase(s, t) for t in r["topics"])
+                           + " — details in How we know")
+
+    st.header("③ Who to chase")
+    for c in view.chase_cards(s):
+        who = f"{c['owner']} (customer decision)" if c["kind"] == "customer_decision" \
+            else c["owner"]
+        st.subheader(who)
+        st.markdown("\n".join(f"- {esc(line)}" for line in c["lines"]) or "-")
+        if c["message"]:
+            with st.expander("Draft message"):
+                st.code(c["message"], language=None, wrap_lines=True)
+                for e in c["citation_errors"]:
+                    st.markdown(f":red[citation issue:] {esc(e)}")
+
+# ---------------------------------------------------------------- how we know
+
+with t_how:
+    st.header("Conflicts")
+    conf = view.conflict_rows(s)
+    if not conf:
+        st.markdown("None: no two sources disagree.")
+    for c in conf:
+        st.markdown(f"⚠️ **{esc(c['title'])}** → ask **{esc(c['owner'])}**")
+        st.markdown("\n".join(f"- “{esc(x['value'] or x['quote'])}” · `{x['where']}`"
+                              for x in c["sides"]))
+
+    st.header("Evidence by topic")
+    order = list(STATUS_ICON)
+    statuses = st.multiselect("Topic status", order, default=order, key="ev_status")
+    topics = sorted((v for v in s.verdicts.values() if not statuses or v.status in statuses),
+                    key=lambda v: (order.index(v.status), view.title(v.topic)))
+    st.caption(f"{len(topics)} of {len(s.verdicts)} topics")
+    for v in topics:
+        value = f" — {v.value}" if v.value else ""
+        with st.expander(f"{STATUS_ICON[v.status]} {view.title(v.topic)}: {v.status}{value}"):
+            st.caption(f"topic id `{v.topic}`")
+            verdict_body(s, v.topic)
+
+    src_rows = view.source_rows(s)
+    st.header(f"Sources ({len(src_rows)} files)")
     st.dataframe(
         [{"File": r["file"], "Source type": r["source_type"], "Rank": r["rank"],
           "Extracted": r["extracted"], "Applies to": r["applies_to"], "Note": r["note"]}
@@ -128,111 +193,18 @@ with st.expander(f"Sources ({len(src_rows)} files): how each file was judged"):
                "generic > other customer (hints only). Questionnaire and people files are "
                "parsed in code; guidance files hold nothing to extract.")
 
-# ---------------------------------------------------------------- tabs
-
-t_q, t_block, t_chase, t_ev = st.tabs(
-    ["Required", "Blocking", "Next steps", "Known: evidence by topic"])
-
-with t_q:
-    rows = view.question_rows(s)
-    labels = [label for _, label in view.STATUS_LABELS.values()]
-    c1, c2, c3 = st.columns([3, 1, 2])
-    pick = c1.multiselect("Status", labels, default=labels, key="q_status")
-    owners = ["All"] + sorted({r["owner"] for r in rows})
-    who = c2.selectbox("Suggested owner", owners, key="q_owner")
-    text = c3.text_input("Search", key="q_text", placeholder="ID, question or reason")
-    n_tmpl = sum(r["template"] for r in rows)
-    show_tmpl = st.toggle(f"show template rows ({n_tmpl})", key="q_templates")
-    shown = [r for r in view.filter_questions(rows, pick, who, text)
-             if show_tmpl or not r["template"]]
-    st.dataframe(
-        [{"Status": f"{r['icon']} {r['label']}", "ID": r["id"], "Question": r["question"],
-          "Reason": r["reason"], "Suggested owner": r["owner"]} for r in shown],
-        hide_index=True, width="stretch")
-    if not shown:
-        st.info("No questions match these filters.")
-    else:
-        by_id = {r["id"]: r for r in shown}
-        qid = st.selectbox("Open question", list(by_id), key="open_q",
-                           format_func=lambda i: f"{by_id[i]['icon']} {i} — {by_id[i]['question']}")
-        d = view.question_detail(s, qid)
-        st.subheader(f"{d['icon']} {d['label']}")
-        st.markdown(f"**Why:** {esc(d['reason'])}")
-        st.caption(f"Asked by {d['asked_by']} · `{d['source_file']}` · "
-                   f"suggested owner: {d['owner']}")
-        if d["quote"]:
-            st.markdown(f"> {esc(d['quote'])}")
-        st.markdown("**Draft answer** (copy, edit, send yourself)")
-        st.code(d["answer"] or "(no draft)", language=None, wrap_lines=True)
-        if d["cited"]:
-            st.caption(f"cites: {', '.join(d['cited'])}")
-        for q in d["evidence_quotes"]:
-            st.markdown(f"> {esc(q)}")
-        if d["open_assumptions"]:
-            st.markdown(f":orange[open:] {esc('; '.join(d['open_assumptions']))}")
-        for e in d["citation_errors"]:
-            st.markdown(f":red[citation issue:] {esc(e)}")
-        if d["stale_draft"]:
-            st.markdown(f":orange[existing questionnaire draft:] {esc(d['stale_draft'])}")
-        for dec in d["decisions"]:
-            st.markdown(f"Waiting on {dec['decider']} decision: {esc(dec['text'])}")
-        for t in d["topics"]:
-            if t in s.verdicts:
-                verdict_expander(s, t)
-            else:
-                st.caption(f"No verdict for {t}")
-
-with t_block:
-    rows = view.blocking_rows(s)
-    if not rows:
-        st.markdown("Nothing blocking")
-    for b in rows:
-        with st.expander(f"⛔ {b['item']} [{', '.join(b['reasons'])}] · suggested owner: "
-                         f"{b['owner']}"):
-            for ch in b["chains"]:
-                st.markdown(f"- {esc(ch)}")
-            if b["questions"]:
-                st.markdown(f"**Blocks questions:** {esc(', '.join(b['questions']))}")
-            if b["item"] in s.verdicts:
-                verdict_body(s, b["item"])
-
-with t_chase:
-    for row in view.next_step_rows(s):
-        st.subheader(f"Suggested owner: {row['owner']}")
-        st.caption(row["label"])
-        st.markdown("\n".join(f"- {esc(i)}" for i in row["items"]))
-        ch = row["chase"]
-        if ch is not None:
-            st.markdown("**Draft message**")
-            st.code(ch["message"], language=None, wrap_lines=True)
-            if ch["cited"]:
-                st.caption(f"cites: {', '.join(ch['cited'])}")
-            for e in ch["citation_errors"]:
-                st.markdown(f":red[citation issue:] {esc(e)}")
-    st.subheader("Open decisions")
+    st.header("Open decisions")
     decs = view.decision_rows(s)
     if not decs:
         st.markdown("None")
     for d in decs:
-        topics = f" · affects {esc(', '.join(d['topics']))}" if d["topics"] else ""
-        st.markdown(f"- **{d['decider']} decides:** {esc(d['text'])}{topics}  \n"
+        st.markdown(f"- **{d['decider']} decides:** {esc(d['text'])}  \n"
                     f"  :gray[“{esc(d['quote'])}” — `{d['file']}`]")
 
-with t_ev:
-    order = list(STATUS_ICON)
-    statuses = st.multiselect("Topic status", order, default=order, key="ev_status")
-    topics = sorted((v for v in s.verdicts.values() if not statuses or v.status in statuses),
-                    key=lambda v: (order.index(v.status), v.topic))
-    st.caption(f"{len(topics)} of {len(s.verdicts)} topics")
-    for v in topics:
-        verdict_expander(s, v.topic)
-
-# ---------------------------------------------------------------- footer
-
-st.divider()
-st.markdown("**Failures / skipped / dropped / new topics**")
-foot = ([f"- failed: `{p}`: {esc(r)}" for p, r in s.failed_files]
-        + [f"- skipped: `{p}`" for p in s.skipped_files]
-        + [f"- dropped quote: {esc(d)}" for d in s.dropped_quotes]
-        + [f"- new topic discovered: `{t}`" for t in s.new_topics])
-st.markdown("\n".join(foot) if foot else "None")
+    st.header("Run log")
+    log = ([f"- changed: {esc(c)}" for c in changes or []]
+           + [f"- failed: `{p}`: {esc(r)}" for p, r in s.failed_files]
+           + [f"- skipped: `{p}`" for p in s.skipped_files]
+           + [f"- dropped quote: {esc(d)}" for d in s.dropped_quotes]
+           + [f"- new topic discovered: `{t}`" for t in s.new_topics])
+    st.markdown("\n".join(log) if log else "Nothing to report")
