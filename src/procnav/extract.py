@@ -31,7 +31,7 @@ from .models import (
 )
 from .topics import SEED, get_topic
 
-PROMPT_VERSION = "v5"
+PROMPT_VERSION = "v6"
 
 MIN_FALLBACK_WORDS = 3  # shorter texts would match almost any file by accident
 NO_FACT_SOURCES = {"guidance", "people", "case_header", "questionnaire"}
@@ -227,9 +227,13 @@ FACTS (statements about the supplier's system, contract or posture)
 snake_case id (e.g. backup_frequency). Do not force a fact into a seed topic it does not match.
 - value: canonical and short, e.g. "30 days", "<provider> <region> exactly as written", "yes", \
 "no". claim: one plain sentence restating the fact.
+- A value must keep its qualifiers: any period, scope, version or condition written with it \
+(e.g. "SOC 2 Type II, Jan-Dec 2025, final", not "final"; "30 days for this customer", not \
+"30 days" when the scope is written).
 - value must not be more specific than the quote; never add a region, number or name that is \
 not written.
-- For on/off settings use 'enabled' or 'disabled' (with any condition kept in claim).
+- For on/off settings use 'enabled' or 'disabled', followed by any condition or scope as \
+written (e.g. "disabled for this customer"); keep the condition in claim too.
 - Distinguish storage location (where data is kept at rest) from inference location (where \
 models process requests); these are different topics even when stated in one sentence.
 - Distinguish retention of app logs, traces, source files, and prompts/responses; each is its \
@@ -277,8 +281,8 @@ lists any topics it is conditional on.
 
 OPEN DECISIONS
 - Something a stakeholder says is still undecided, not finalized, or awaiting a choice, where \
-the outcome would change answers. text: the open question. decider: customer if the customer \
-must decide, internal if the supplier must. affected_topics: topic ids whose answers depend \
+the outcome would change answers. text: the open question. decider: customer ONLY when the text says the customer decides or approves; \
+otherwise internal. affected_topics: topic ids whose answers depend \
 on it.
 
 QUOTES (all items)

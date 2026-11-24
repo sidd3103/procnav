@@ -56,6 +56,11 @@ Rules:
 - Never claim approval, sign-off, compliance or any status. Status is decided elsewhere.
 - Caveats are binding: an expired item must be described as expired, never as current. \
 Judge dates against today's (as-of) date given in the request.
+- A fact about a past state keeps its date or time frame: write "were open in the Feb 2026 \
+report", never "open" or "remain open" alone. Do not present a past finding as current.
+- The suggested internal owner is a routing suggestion, not a confirmed owner. When the \
+requirement asks for an accountable owner, name the suggested owner as proposed, never write \
+"not specified".
 - Return the ids of the allowed facts you relied on in cited_fact_ids. Cite only allowed ids.
 - Keep the answer short and factual."""
 
@@ -148,13 +153,17 @@ def _topic_lines(topics: list[str], verdicts: dict[str, Verdict]) -> list[str]:
     return out
 
 
+def _owner_line(owner: str) -> str:
+    return f"Suggested internal owner (routing suggestion, not confirmed): {owner}"
+
+
 def _user_prompt(
     result: RequirementResult, verdicts: dict[str, Verdict],
-    allowed: list[Fact], open_a: list[str], as_of: date | None = None,
+    allowed: list[Fact], open_a: list[str], as_of: date | None = None, owner: str = "",
 ) -> str:
     req = result.req
-    lines = [f"KEY: answer:{req.id}", *as_of_line(as_of), f"REQUIREMENT: {req.text}", "",
-             "TOPICS:"]
+    lines = [f"KEY: answer:{req.id}", *as_of_line(as_of), f"REQUIREMENT: {req.text}",
+             _owner_line(owner), "", "TOPICS:"]
     lines += _topic_lines(req.topics, verdicts)
     lines += ["", "ALLOWED FACTS:"]
     lines += fact_lines(allowed)
@@ -249,10 +258,10 @@ def draft_answer(
     allowed = [facts_by_id[i] for i in allowed_ids]
     key = cache_key("answer", PROMPT_VERSION, llm.model, ANSWER_SYSTEM, req.id, req.text,
                     sorted((f.id, f.value, f.quote) for f in allowed), open_a,
-                    _topic_lines(req.topics, verdicts), as_of_line(as_of))
+                    _topic_lines(req.topics, verdicts), as_of_line(as_of), _owner_line(owner))
 
     out, err = cached_complete(llm, cache, key, ANSWER_SYSTEM,
-                               lambda: _user_prompt(result, verdicts, allowed, open_a, as_of),
+                               lambda: _user_prompt(result, verdicts, allowed, open_a, as_of, owner),
                                AnswerOut)
     if out is None:
         return make(LLM_ERROR_ANSWER, [], [], [f"llm_failed: {_short(err)}"])

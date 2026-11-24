@@ -256,3 +256,33 @@ def test_as_of_change_is_cache_miss(tmp_path):
     d = draft_answer(RR(["storage"]), verdicts, facts, "Bob", llm, cache,
                      as_of=date(2026, 12, 1))
     assert llm.calls == 2 and d.answer == "b"
+
+
+def test_prompt_has_owner_routing_line_and_past_state_rule(tmp_path):
+    from procnav.answers import ANSWER_SYSTEM
+    facts, verdicts, cache = setup(tmp_path)
+    seen = {}
+
+    def fn(system, user, schema):
+        seen["user"] = user
+        return AnswerOut(answer="x", cited_fact_ids=["f1"])
+
+    draft_answer(RR(["storage"]), verdicts, facts, "Bob", FakeLLM(fn), cache, as_of=AS_OF)
+    assert "Suggested internal owner (routing suggestion, not confirmed): Bob" in seen["user"]
+    assert "keeps its date or time frame" in ANSWER_SYSTEM
+    assert '"remain open"' in ANSWER_SYSTEM
+    assert "asks for an accountable owner" in ANSWER_SYSTEM
+
+
+def test_owner_change_is_cache_miss(tmp_path):
+    facts, verdicts, cache = setup(tmp_path)
+    llm = FakeLLM({"answer:Q-1": [AnswerOut(answer="a", cited_fact_ids=["f1"]),
+                                  AnswerOut(answer="b", cited_fact_ids=["f1"])]})
+    draft_answer(RR(["storage"]), verdicts, facts, "Bob", llm, cache, as_of=AS_OF)
+    d = draft_answer(RR(["storage"]), verdicts, facts, "Ann", llm, cache, as_of=AS_OF)
+    assert llm.calls == 2 and d.answer == "b"
+
+
+def test_prompt_version_bumped_for_new_rules():
+    from procnav.extract import PROMPT_VERSION
+    assert PROMPT_VERSION != "v5"
