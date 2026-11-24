@@ -1,4 +1,6 @@
 {
   "customer": "Acme National Bank",
-  "supplier": "Lantern AI Technologies Inc."
+  "supplier": "Lantern AI Technologies Inc.",
+  "service": "AI operations assistant for customer-service workflows",
+  "service_quote": "Service: AI operations assistant for customer-service workflows"
 }

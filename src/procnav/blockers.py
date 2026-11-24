@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from .models import Dependency, Verdict
 from .requirements import RequirementResult
+from .topics import get_topic
 
 _ISO = re.compile(r"\d{4}-\d{2}-\d{2}")
 
@@ -90,3 +91,62 @@ def find_blockers(
             seen.add(k)
             uniq.append(b)
     return uniq
+
+
+def group_blockers(blockers: list[Blocker]) -> dict[str, list[Blocker]]:
+    """Blockers grouped by item (sorted), each group sorted by reason."""
+    out: dict[str, list[Blocker]] = {}
+    for b in sorted(blockers, key=lambda b: (b.item, b.reason)):
+        out.setdefault(b.item, []).append(b)
+    return out
+
+
+# --- case-level verdicts derived from the run (deterministic; never VERIFIED) -------------
+
+DERIVED_DEPENDENCY = "derived from dependency"
+DERIVED_BLOCKERS = "derived from blocker list"
+DERIVED_RULES = (DERIVED_DEPENDENCY, DERIVED_BLOCKERS)
+APPROVAL_TOPIC = "approval_blockers"
+
+
+def dependencies_for(topic: str, dependencies: list[Dependency]) -> list[Dependency]:
+    """`blocked_until` dependencies whose subject names this topic ("DPA" -> dpa)."""
+    return [d for d in dependencies
+            if d.kind == "blocked_until" and get_topic(d.subject).id == topic]
+
+
+def derive_from_dependencies(verdicts: dict[str, Verdict],
+                             dependencies: list[Dependency]) -> dict[str, Verdict]:
+    """An UNKNOWN topic that is the subject of a blocked_until dependency is answered by that
+    dependency: PROPOSED "blocked until <topics> are confirmed"."""
+    out = dict(verdicts)
+    for t, v in verdicts.items():
+        if v.status != "UNKNOWN":
+            continue
+        hits = dependencies_for(t, dependencies)
+        on: list[str] = []
+        for d in hits:
+            on += [x for x in d.depends_on_topics if x != t and x not in on]
+        if not on:
+            continue
+        out[t] = v.model_copy(update={
+            "status": "PROPOSED", "value": f"blocked until {', '.join(on)} are confirmed",
+            "rule": DERIVED_DEPENDENCY, "hints": v.hints + [f"{d.quote} ({d.file})" for d in hits],
+            "sendable": False})
+    return out
+
+
+def derive_approval_blockers(verdicts: dict[str, Verdict],
+                             blockers: list[Blocker]) -> dict[str, Verdict]:
+    """The approval-blockers topic (if asked) is answered from the blocker list."""
+    v = verdicts.get(APPROVAL_TOPIC)
+    if v is None:
+        return verdicts
+    items = sorted({b.item for b in blockers if b.item != APPROVAL_TOPIC})
+    value = (f"{len(items)} items may delay approval: {', '.join(items)}" if items
+             else "no blockers found in the case files")
+    out = dict(verdicts)
+    out[APPROVAL_TOPIC] = v.model_copy(update={
+        "status": "PROPOSED", "value": value, "rule": DERIVED_BLOCKERS, "used": [],
+        "sendable": False})
+    return out

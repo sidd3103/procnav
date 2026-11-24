@@ -309,3 +309,86 @@ def test_pipeline_reconcile_failure_is_listed_and_topic_unchanged(tmp_path, acme
                     acme_llm(fail_paths=("reconcile storage_location",)), tmp_path / "b")
     assert [p for p, _ in snap.failed_files] == ["reconcile:storage_location"]
     assert snap.verdicts["storage_location"] == base.verdicts["storage_location"]
+
+
+# --- case-level answers derived from the run ----------------------------------------------
+
+DPA_QUOTE = "DPA blocked until subprocessors and cross-border transfers are confirmed."
+
+
+def _answer_keys_spy(inner):
+    keys = []
+
+    class Spy:
+        model = inner.model
+
+        def complete_json(self, system, user, schema):
+            keys.append(user.split("\n", 1)[0])
+            return inner.complete_json(system, user, schema)
+
+    return Spy(), keys
+
+
+def test_dependency_subject_gets_derived_verdict_and_deterministic_draft(tmp_path, acme_llm):
+    spy, keys = _answer_keys_spy(acme_llm())
+    snap = run_case(ACME_DIR, date(2026, 9, 25), spy, tmp_path / "c")
+    v = snap.verdicts["dpa"]
+    assert v.status == "PROPOSED" and v.rule == "derived from dependency" and not v.sendable
+    assert v.value == "blocked until subprocessors, cross_border are confirmed"
+    assert any(DPA_QUOTE in h and "internal_messages" in h for h in v.hints)
+    a = next(a for a in snap.answers if a.req_id == "Q-020")
+    assert "KEY: answer:Q-020" not in keys
+    assert "blocked until subprocessors, cross_border are confirmed" in a.answer
+    assert "subprocessors: UNKNOWN" in a.answer and "cross_border: UNKNOWN" in a.answer
+    assert a.evidence_quotes == [DPA_QUOTE]
+    # the depended-on topics still block
+    assert {"subprocessors", "cross_border"} <= {b.item for b in snap.blockers}
+    assert "dpa" not in {b.item for b in snap.blockers}
+
+
+def test_approval_blockers_answered_from_blocker_list(tmp_path, acme_llm):
+    spy, keys = _answer_keys_spy(acme_llm())
+    snap = run_case(ACME_DIR, date(2026, 9, 25), spy, tmp_path / "c")
+    items = sorted({b.item for b in snap.blockers})
+    assert items and "approval_blockers" not in items
+    v = snap.verdicts["approval_blockers"]
+    assert v.status == "PROPOSED" and v.rule == "derived from blocker list"
+    assert v.value.startswith(f"{len(items)} items may delay approval")
+    a = next(a for a in snap.answers if a.req_id == "Q-022")
+    assert "KEY: answer:Q-022" not in keys
+    for item in items:
+        assert item in a.answer
+    assert DPA_QUOTE in a.evidence_quotes
+    r = next(r for r in snap.required if r.req.id == "Q-022")
+    assert r.status == "needs_confirmation"
+
+
+# --- service description from the case header ---------------------------------------------
+
+def test_service_fact_created_from_verbatim_header_quote(tmp_path, acme_llm):
+    snap = run_case(ACME_DIR, date(2026, 9, 25), acme_llm(), tmp_path / "c")
+    svc = [f for f in snap.facts if f.topic == "service_description"]
+    assert len(svc) == 1
+    f = svc[0]
+    assert f.source_type == "case_header" and f.applies_to == "this_customer"
+    assert f.file == "00_START_HERE.txt" and f.certainty == "stated"
+    assert f.quote == "Service: AI operations assistant for customer-service workflows"
+    v = snap.verdicts["service_description"]
+    assert v.status == "PROPOSED"
+    assert v.value == "AI operations assistant for customer-service workflows"
+
+
+def test_service_fact_not_created_when_quote_not_verbatim(tmp_path, acme_llm):
+    inner = acme_llm()
+
+    class Spy:
+        model = inner.model
+
+        def complete_json(self, system, user, schema):
+            out = inner.complete_json(system, user, schema)
+            if user.startswith("KEY: identify_case"):
+                out = out.model_copy(update={"service_quote": "Service: an invented line"})
+            return out
+
+    snap = run_case(ACME_DIR, date(2026, 9, 25), Spy(), tmp_path / "c")
+    assert not [f for f in snap.facts if f.topic == "service_description"]

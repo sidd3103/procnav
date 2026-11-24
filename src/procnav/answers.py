@@ -10,10 +10,18 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
+from .blockers import (
+    DERIVED_BLOCKERS,
+    DERIVED_DEPENDENCY,
+    DERIVED_RULES,
+    Blocker,
+    dependencies_for,
+    group_blockers,
+)
 from .cache import JsonCache, cache_key
 from .extract import PROMPT_VERSION, LLMOut, _complete, _short
 from .llm import LLMClient
-from .models import Fact, Verdict
+from .models import Dependency, Fact, Verdict
 from .requirements import RequirementResult, Status
 
 T = TypeVar("T", bound=BaseModel)
@@ -155,6 +163,57 @@ def _user_prompt(
     return "\n".join(lines)
 
 
+def _label(t: str, verdicts: dict[str, Verdict]) -> str:
+    v = verdicts.get(t)
+    if v is None:
+        return f"{t}: UNKNOWN"
+    return f"{t}: {v.status}" + (f" {v.value}" if v.value else "")
+
+
+def _derived_answer(topics: list[str], verdicts: dict[str, Verdict], blockers: list[Blocker],
+                    dependencies: list[Dependency]) -> tuple[str, list[str]]:
+    """Deterministic draft for requirements answered by a derived verdict. (text, quotes)"""
+    lines: list[str] = []
+    quotes: list[str] = []
+    covered: set[str] = set()
+
+    def quote(q: str | None) -> None:
+        if q and q not in quotes:
+            quotes.append(q)
+
+    for t in topics:
+        v = verdicts.get(t)
+        if v is None or v.rule not in DERIVED_RULES:
+            continue
+        covered.add(t)
+        if v.rule == DERIVED_BLOCKERS:
+            groups = {i: g for i, g in group_blockers(blockers).items() if i != t}
+            lines.append(f"Items that may delay approval ({len(groups)}):" if groups
+                         else "No blockers found in the case files.")
+            for item, group in groups.items():
+                reasons = ", ".join(b.reason.replace("_", " ") for b in group)
+                chains = " | ".join(" → ".join(b.chain) for b in group)
+                lines.append(f"- {item} ({reasons}): {chains}")
+                for b in group:
+                    if b.reason != "caveat_before_milestone":  # caveat text is not a file quote
+                        quote(b.quote)
+        elif v.rule == DERIVED_DEPENDENCY:
+            deps = dependencies_for(t, dependencies)
+            src = "; ".join(f'"{d.quote}" ({d.file})' for d in deps)
+            lines.append(f"{t}: {v.value}." + (f" Source: {src}." if src else ""))
+            on = [x for d in deps for x in d.depends_on_topics]
+            on = list(dict.fromkeys(on))
+            if on:
+                lines.append("Current status: " + "; ".join(_label(x, verdicts) for x in on))
+            covered |= set(on)
+            for d in deps:
+                quote(d.quote)
+    rest = [_label(t, verdicts) for t in topics if t not in covered]
+    if rest:
+        lines.append("Also: " + "; ".join(rest))
+    return "\n".join(lines), quotes
+
+
 def draft_answer(
     result: RequirementResult,
     verdicts: dict[str, Verdict],
@@ -163,12 +222,15 @@ def draft_answer(
     llm: LLMClient,
     cache: JsonCache,
     as_of: date | None = None,
+    blockers: list[Blocker] | None = None,
+    dependencies: list[Dependency] | None = None,
 ) -> DraftAnswer:
     req = result.req
     open_a = _open_assumptions(result, verdicts, facts_by_id)
 
-    def make(answer: str, cited: list[str], quotes: list[str], errors: list[str]) -> DraftAnswer:
-        answer = with_caveats(answer, req.topics, verdicts)
+    def make(answer: str, cited: list[str], quotes: list[str], errors: list[str],
+             caveat_topics: list[str] | None = None) -> DraftAnswer:
+        answer = with_caveats(answer, caveat_topics or req.topics, verdicts)
         return DraftAnswer(req_id=req.id, answer=answer, cited=cited, evidence_quotes=quotes,
                            owner=owner, open_assumptions=open_a, status=result.status,
                            citation_errors=errors)
@@ -176,6 +238,12 @@ def draft_answer(
     if all((verdicts.get(t) is None or verdicts[t].status == "UNKNOWN") for t in req.topics):
         detail = "; ".join(open_a) or "no information in case files"
         return make(f"Not yet known. Owner: {owner}. Open: {detail}", [], [], [])
+
+    if any((v := verdicts.get(t)) is not None and v.rule in DERIVED_RULES for t in req.topics):
+        text, quotes = _derived_answer(req.topics, verdicts, blockers or [], dependencies or [])
+        listed = [b.item for b in blockers or []] if any(
+            verdicts[t].rule == DERIVED_BLOCKERS for t in req.topics if t in verdicts) else []
+        return make(text, [], quotes, [], caveat_topics=list(dict.fromkeys(req.topics + listed)))
 
     allowed_ids = [i for i in _allowed_ids(result, verdicts) if i in facts_by_id]
     allowed = [facts_by_id[i] for i in allowed_ids]

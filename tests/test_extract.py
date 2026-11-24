@@ -256,6 +256,29 @@ def test_identify_case(cache):
     assert llm.calls == 1
 
 
+def test_identify_case_returns_service_and_quote(cache):
+    files = [mkfile(text="Service: AI assistant for support\n", path="00_START.txt")]
+    out = CaseOut(customer="Acme Bank", supplier="Vendor Co", service="AI assistant for support",
+                  service_quote="Service: AI assistant for support")
+    info = identify_case(files, FakeLLM({"identify_case": out}), cache, case="CASE_1")
+    assert info.service == "AI assistant for support"
+    assert info.service_quote == "Service: AI assistant for support"
+    # cached path keeps the service too
+    again = identify_case(files, FakeLLM({}), cache, case="CASE_1")
+    assert again == info
+
+
+def test_identify_prompt_asks_for_service_with_verbatim_quote():
+    from procnav.extract import IDENTIFY_SYSTEM
+    low = IDENTIFY_SYSTEM.lower()
+    assert "service" in low and "service_quote" in low and "verbatim" in low
+
+
+def test_identify_service_defaults_empty():
+    co = CaseOut.model_validate({"customer": "A", "supplier": "B"})
+    assert co.service == "" and co.service_quote == ""
+
+
 def _req(id_, text, topics=None):
     return Requirement(id=id_, text=text, requester=None, topics=topics or [], source_file="q.csv",
                        quote=None, draft_answer=None, from_customer=False, group=None)

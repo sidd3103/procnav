@@ -15,12 +15,24 @@ from pydantic import BaseModel
 
 from .answers import DraftAnswer, draft_answer
 from .chase import ChaseMessage, draft_chase
-from .blockers import Blocker, find_blockers
+from .blockers import (
+    Blocker,
+    derive_approval_blockers,
+    derive_from_dependencies,
+    find_blockers,
+    group_blockers,
+)
 from .cache import JsonCache
-from .extract import extract_file, identify_case, map_new_topics, map_questions_checked
+from .extract import (
+    CaseInfo,
+    extract_file,
+    identify_case,
+    map_new_topics,
+    map_questions_checked,
+)
 from .llm import LLMClient
-from .loader import Person, load_case, parse_people, parse_questionnaire
-from .models import Dependency, Fact, OpenDecision, Requirement, Verdict
+from .loader import CaseFile, Person, load_case, parse_people, parse_questionnaire
+from .models import Dependency, Fact, OpenDecision, Rank, Requirement, Verdict
 from .owners import assign_decision_owner, assign_owner
 from .reconcile import reconcile_all
 from .requirements import (
@@ -129,14 +141,6 @@ def _next_steps(
     return steps
 
 
-def group_blockers(blockers: list[Blocker]) -> dict[str, list[Blocker]]:
-    """Blockers grouped by item (sorted), each group sorted by reason."""
-    out: dict[str, list[Blocker]] = {}
-    for b in sorted(blockers, key=lambda b: (b.item, b.reason)):
-        out.setdefault(b.item, []).append(b)
-    return out
-
-
 def _other_examples(facts: list[Fact], reqs: list[Requirement], deps: list[Dependency],
                     decisions: list[OpenDecision]) -> dict[str, list[str]]:
     """Every `other:*` topic id in the run, with up to 2 example texts (facts first)."""
@@ -183,6 +187,26 @@ def _apply_topic_map(mapping: dict[str, list[str]], facts: list[Fact], reqs: lis
     return facts, reqs, deps, decisions
 
 
+SERVICE_TOPIC = "service_description"
+
+
+def _service_fact(info: CaseInfo, files: list[CaseFile], case: str) -> Fact | None:
+    """One fact for the proposed service, only when identify's quote is verbatim in a file."""
+    q = info.service_quote
+    if not info.service or not q:
+        return None
+    for f in sorted(files, key=lambda f: f.path):
+        if q in f.text:
+            line = f.text[:f.text.index(q)].count("\n") + 1
+            return Fact(
+                id=f"{Path(f.path).with_suffix('').as_posix()}#S1", file=f.path, line=line,
+                topic=SERVICE_TOPIC, claim=f"Proposed service: {info.service}",
+                value=info.service, applies_to="this_customer", certainty="stated", date=None,
+                speaker=None, quote=q, valid_until=None, rank=Rank.CUSTOMER,
+                source_type="case_header", case=case, customer=info.customer)
+    return None
+
+
 def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
              cache_dir: str | Path) -> Snapshot:
     case_dir = Path(case_dir)
@@ -202,6 +226,9 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
     decisions: list[OpenDecision] = []
     failed: list[tuple[str, str]] = []
     dropped: list[str] = []
+    svc = _service_fact(info, files, case)
+    if svc is not None:
+        facts.append(svc)
     for f in files:
         q = parse_questionnaire(f)
         p = parse_people(f)
@@ -248,6 +275,11 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
         verdicts[t] = resolve_topic(t, [], as_of)
     verdicts = dict(sorted(verdicts.items()))
 
+    # case-level answers derived deterministically from dependencies and the blocker list
+    verdicts = derive_from_dependencies(verdicts, deps)
+    results = evaluate(reqs, verdicts, decisions)
+    blockers = find_blockers(verdicts, results, deps, as_of)
+    verdicts = derive_approval_blockers(verdicts, blockers)
     results = evaluate(reqs, verdicts, decisions)
     blockers = find_blockers(verdicts, results, deps, as_of)
     results = apply_blockers(results, blockers)
@@ -259,7 +291,7 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
     answers = [
         draft_answer(r, verdicts, facts_by_id,
                      owners[r.req.topics[0]] if r.req.topics else "Unassigned", llm, cache,
-                     as_of=as_of)
+                     as_of=as_of, blockers=blockers, dependencies=deps)
         for r in results
     ]
 

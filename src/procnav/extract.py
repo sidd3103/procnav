@@ -44,6 +44,8 @@ class CaseInfo(BaseModel):
     customer: str
     supplier: str
     case: str = ""
+    service: str = ""
+    service_quote: str = ""
 
 
 def _lower(v: object) -> object:
@@ -151,6 +153,8 @@ _ITEM_LISTS = (("facts", "fact", FactOut), ("requirements", "requirement", ReqOu
 class CaseOut(LLMOut):
     customer: str
     supplier: str
+    service: str = ""
+    service_quote: str = ""
 
 
 class MapItem(LLMOut):
@@ -293,6 +297,10 @@ IDENTIFY_SYSTEM = """You identify the parties in a vendor-security / procurement
 folder. You are given each file's path and its opening text. Return:
 - customer: the organisation whose review this is (the buyer asking the questions).
 - supplier: the organisation answering the review (the vendor).
+- service: the proposed service / product under review and its intended use, as written \
+(empty if no file states it).
+- service_quote: the exact line stating the service, copied verbatim from one file (empty if \
+none).
 Use the names as written in the files. Folder and file names are hints only; prefer content."""
 
 MAP_SYSTEM = """You map questionnaire questions to topic ids. For each requirement id, list \
@@ -429,6 +437,11 @@ def rank_for(source_type: str, applies_to: str) -> Rank:
 
 # ---------------------------------------------------------------- public API
 
+def _case_info(co: CaseOut, case: str) -> CaseInfo:
+    return CaseInfo(customer=co.customer, supplier=co.supplier, case=case,
+                    service=co.service.strip(), service_quote=co.service_quote.strip())
+
+
 def identify_case(files: list[CaseFile], llm: LLMClient, cache: JsonCache,
                   case: str = "") -> CaseInfo:
     # keyed on exactly what the prompt shows, so edits past the preview do not re-identify
@@ -437,8 +450,7 @@ def identify_case(files: list[CaseFile], llm: LLMClient, cache: JsonCache,
     cached = cache.get(key)
     if cached is not None:
         try:
-            co = CaseOut.model_validate(cached)
-            return CaseInfo(customer=co.customer, supplier=co.supplier, case=case)
+            return _case_info(CaseOut.model_validate(cached), case)
         except ValueError:
             pass
     parts = ["KEY: identify_case"]
@@ -448,7 +460,7 @@ def identify_case(files: list[CaseFile], llm: LLMClient, cache: JsonCache,
     if co is None:
         raise RuntimeError(f"identify_case failed: {_short(err)}")
     cache.put(key, co.model_dump())
-    return CaseInfo(customer=co.customer, supplier=co.supplier, case=case)
+    return _case_info(co, case)
 
 
 def extract_file(f: CaseFile, info: CaseInfo, llm: LLMClient, cache: JsonCache) -> ExtractedFile:

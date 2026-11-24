@@ -157,7 +157,8 @@ def test_reason_prefers_caveat_without_prefix(snap):
 def test_reason_unknown_and_more_count(snap):
     rows = view.question_rows(snap)
     assert _row(rows, "Q-010")["reason"] == "nobody has stated incident response"
-    assert _row(rows, "Q-001")["reason"] == "nobody has stated service description"
+    assert _row(rows, "Q-001")["reason"] == ("service description: AI operations assistant for "
+                                             "customer-service workflows (unconfirmed)")
     q9 = _row(rows, "Q-009")["reason"]  # iam_access UNKNOWN; encryption topics are PROPOSED
     assert q9 == "nobody has stated iam access"
     q13 = _row(rows, "Q-026")["reason"]
