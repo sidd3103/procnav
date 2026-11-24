@@ -1,13 +1,16 @@
-"""`procnav run <case_dir>`: run the pipeline and print the five sections as plain text."""
+"""`procnav run <case_dir>`: run the pipeline and print the five sections as plain text.
+`procnav eval <runs_dir> <case> --key <file>`: score the latest saved run against an answer key."""
 from __future__ import annotations
 
 import argparse
 import sys
 from datetime import date
+from pathlib import Path
 
 from pydantic import BaseModel
 
 from .diff import diff
+from .evals import AnswerKey, render_checks, score
 from .llm import LLMClient, OpenAIClient
 from . import view
 from .pipeline import Snapshot, load_latest, run_case, save_snapshot
@@ -118,7 +121,14 @@ def main(argv: list[str] | None = None) -> int:
                      help="YYYY-MM-DD (default: today)")
     run.add_argument("--cache", default=".procnav_cache")
     run.add_argument("--runs", default="runs")
+    ev = sub.add_parser("eval", help="score the latest saved run against an answer key")
+    ev.add_argument("runs_dir")
+    ev.add_argument("case")
+    ev.add_argument("--key", required=True)
     args = ap.parse_args(argv)
+
+    if args.cmd == "eval":
+        return _eval(args.runs_dir, args.case, args.key)
 
     try:
         llm = CountingLLM(OpenAIClient.from_env())
@@ -131,6 +141,17 @@ def main(argv: list[str] | None = None) -> int:
     save_snapshot(snap, args.runs)
     print(render(snap, changes, llm.calls))
     return 0
+
+
+def _eval(runs_dir: str, case: str, key_path: str) -> int:
+    snap = load_latest(runs_dir, case)
+    if snap is None:
+        print(f"error: no run for {case} in {runs_dir}", file=sys.stderr)
+        return 1
+    key = AnswerKey.model_validate_json(Path(key_path).read_text(encoding="utf-8"))
+    checks = score(snap, key)
+    print(render_checks(checks))
+    return 0 if all(c.passed for c in checks) else 1
 
 
 if __name__ == "__main__":
