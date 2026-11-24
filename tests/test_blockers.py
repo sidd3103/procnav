@@ -117,3 +117,19 @@ def test_unreadable_expiry_with_embedded_date_is_still_undated():
                         caveats=["expires on unreadable date 'after 2027-01-01 maybe'"])}
     bs = run(v, [], [dep("m1", "milestone", "Pilot", d=date(2026, 6, 1))])
     assert [(b.item, b.reason) for b in bs] == [("insurance", "caveat_before_milestone")]
+
+
+def test_dependency_subject_requirement_is_blocked_too():
+    from procnav.requirements import apply_blockers
+    deps = [dep("d1", "blocked_until", "DPA", ["subprocessors"])]
+    verdicts = {"subprocessors": V("subprocessors", "UNKNOWN", None), "dpa": V("dpa", "PROPOSED")}
+    reqs = [R("Q-020", ["dpa"]), R("Q-x", ["insurance"])]
+    bs = run(verdicts, reqs, deps)
+    assert bs[0].subject == "dpa"
+    out = apply_blockers(evaluate(reqs, verdicts, []), bs)
+    assert [r.status for r in out] == ["blocked", "unknown"]
+
+
+def test_dependency_subject_not_blocked_once_dependencies_verified():
+    deps = [dep("d1", "blocked_until", "DPA", ["subprocessors"])]
+    assert run({"subprocessors": V("subprocessors")}, [R("Q-020", ["dpa"])], deps) == []

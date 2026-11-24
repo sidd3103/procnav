@@ -113,8 +113,9 @@ def evaluate(
 def apply_blockers(
     results: list[RequirementResult], blockers: list[Blocker]
 ) -> list[RequirementResult]:
-    """Return copies with status 'blocked' for requirements touching a blocked topic."""
-    items = {b.item for b in blockers}
+    """Return copies with status 'blocked' for requirements touching a blocked topic, or the
+    subject of an explicit dependency that is still blocked (e.g. a question about the DPA)."""
+    items = {b.item for b in blockers} | {b.subject for b in blockers if b.subject}
     return [
         r.model_copy(update={"status": "blocked"}) if items & set(r.req.topics) else r
         for r in results

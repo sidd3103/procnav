@@ -39,3 +39,22 @@
 21. **New information = editing files, then Re-run, with scripted edits ready.** The same path handles unscripted edits.
 22. **"As-of" date is a setting.** The case's "today" is ambiguous, and insurance expiry depends on it.
 23. **Every fact shows applicability, freshness, authority, provenance and scope.** These are the graders' stated criteria.
+
+## Cross-file reasoning (added after the model audit, 2026-11-24)
+24. **Sharper boundary: the LLM judges what text *means*; code owns *status*.** "The LLM never reasons" was never true, because extraction already decides applies_to, certainty and topic. Code fails at meaning: exact string comparison turned "AWS Canada" vs "Canada" into a CONFLICT and filed a payload-capture line under trace retention. Code keeps policy (ranking, freshness, expiry, VERIFIED/sendable, verbatim quotes), because that has to be deterministic and auditable.
+25. **Per-topic reconciliation: one LLM call per topic whose facts come from ≥ 2 files.** It labels each fact on-topic (yes/no/unclear) and each cross-file pair same / more specific / compatible / contradicts / unclear. Code turns the labels into a `Reconciliation`, and `resolve_topic` decides what changes. Missing or unclear labels change nothing (fail closed). A failed call is listed and the topic resolves as before. About 6–10 calls per case, all cached.
+    *Alt:* word containment ("Canada" ⊂ "AWS Canada"). Cheap, but "OpenAI" ⊂ "OpenAI and Anthropic" is a real contradiction.
+26. **Asymmetric trust.** A label that makes the outcome *more* cautious applies directly: "contradicts" on equal-looking values raises a CONFLICT, even over evidence. A label that makes it *less* cautious is capped and shown: clearing a string conflict gives at most PROPOSED ("sources agree (reconciled)", with both wordings in the hints), and an off-topic fact is listed under excluded. The reconciler can never produce VERIFIED or sendable, so its worst mistake sends an item to human review.
+27. **Case-level questions are answered by code from the run.** "What blocks the DPA" comes from the explicit dependency, "what will delay approval" from the blocker list, and both drafts are deterministic with the source quotes. The proposed service comes from the cover file via the identify step, kept only if its quote is verbatim in a file.
+28. **Answer key + scorer.** Hand-labelled per case (`evals/answer_key/`): allowed statuses, must / must-not substrings per question, expected topic statuses, and regression checks (no "remain open", no prior-customer names, trace retention never built from a payload line). `procnav eval runs <case> --key …` prints the failures and passed/total.
+
+## Model
+29. **Claude Haiku 5.5 via OpenRouter (`PROCNAV_MODEL`).** On real runs of both cases it beat gpt-4.1-mini and Sonnet 5.5 on the review checklist at about ¼ of mini's cost. It was stable across runs except for one Northstar flip, which reconciliation now targets. The code default stays unchanged, and the model is a setting.
+    *Answer-key scores after this change (Haiku 5.5, as-of 2026-09-25, fresh cache):* Acme 90/94, Northstar 89/91. Earlier saved runs from the previous pipeline score 75–80/94 and 77/91 (as-of 2026-11-24, so not strictly comparable). Still failing: Acme `model_fallback` is a CONFLICT, because the reconciler left "disable if residency requires" vs "OFF unless approved" unlabelled and failed closed. `pen_test_remediation` shows VERIFIED "open in original report" (accurate as a past state, but it reads as remediation being verified). One Northstar Q-008 draft drops the "Feb 2026" date.
+
+## Deliberately not built
+- **Request kinds / deliverables model.** Questions map to topics well enough. A second taxonomy doubles the mapping surface for little gain in the demo.
+- **Passed-milestone detection.** The demo runs as-of 2026-09-25, before every milestone. It needs a policy decision (what a passed pilot date means) rather than code.
+- **Draft checker (second LLM grading drafts).** The scorer plus code-side citation checks cover it. A checker LLM adds cost and its own errors.
+- **Double extraction / voting.** Doubles cost. Instability is better handled where it shows (reconciliation, answer-key regressions).
+- **LangGraph / agents.** The pipeline is a fixed DAG and has no branching for an agent to decide. The natural next stage is a chase-and-reply loop: send chase messages, ingest replies as new files, re-run.

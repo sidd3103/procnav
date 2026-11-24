@@ -18,6 +18,7 @@ class Blocker(BaseModel):
     reason: Literal["explicit_dependency", "caveat_before_milestone", "asked_hard_gap"]
     chain: list[str]
     quote: str | None = None
+    subject: str | None = None  # explicit_dependency: topic id of what is blocked ("dpa")
 
 
 def _expiry(caveat: str) -> tuple[bool, date | None]:
@@ -59,7 +60,8 @@ def find_blockers(
             if st == "VERIFIED":
                 continue
             chain = [f"{t} {st}", dep.subject] + ([primary.subject] if primary else [])
-            out.append(Blocker(item=t, reason="explicit_dependency", chain=chain, quote=dep.quote))
+            out.append(Blocker(item=t, reason="explicit_dependency", chain=chain, quote=dep.quote,
+                               subject=get_topic(dep.subject).id))
 
     for t, v in verdicts.items():
         for cav in v.caveats:

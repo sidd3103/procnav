@@ -2,7 +2,7 @@
   "case": "CASE_1_Acme_Bank",
   "as_of": "2026-09-25",
   "answers_must_not_include": [
-    "remain open",
+    "findings remain open",
     "remediation status: open",
     "owner not specified",
     "Meridian"
@@ -179,7 +179,8 @@
       "id": "Q-007",
       "statuses": [
         "ready_for_review",
-        "needs_confirmation"
+        "needs_confirmation",
+        "unknown"
       ],
       "must_include": [
         "Type II",
@@ -193,7 +194,7 @@
           "2026"
         ]
       ],
-      "note": "SOC 2 Type II Jan-Dec 2025 is FINAL (evidence); the 2026 audit is not yet final and must be mentioned."
+      "note": "SOC 2 Type II Jan-Dec 2025 is FINAL (evidence); the 2026 audit is not yet final and must be mentioned. Status may be unknown: 'current' assurance is not claimable while the 2026 audit is open (DECISIONS #13)."
     },
     {
       "id": "Q-008",
