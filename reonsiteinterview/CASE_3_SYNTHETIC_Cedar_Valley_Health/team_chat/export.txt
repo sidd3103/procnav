@@ -1,0 +1,6 @@
+[Nov 12, 2026] Priya: Cedar Valley wants PHI log retention. What do we tell them?
+[Nov 12, 2026] Anthony: PHI-bearing app logs are kept 30 days for Cedar Valley, then purged.
+[Nov 13, 2026] Mina: BAA can't be signed until subprocessors and key management are confirmed.
+[Nov 13, 2026] Priya: do we have the subprocessor list for this deployment?
+[Nov 13, 2026] Mina: not yet. Don't send the generic list.
+[Nov 14, 2026] Anthony: ISO recertification audit is booked for February.

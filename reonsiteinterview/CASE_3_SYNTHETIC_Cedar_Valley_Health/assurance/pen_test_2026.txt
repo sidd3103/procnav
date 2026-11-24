@@ -1,0 +1,3 @@
+External penetration test of the clinical documentation platform - Mar 2026.
+No Critical findings. One High finding was OPEN in the original report:
+H-01 session fixation on the clinician portal.

@@ -15,7 +15,8 @@ _ROWS = [
      ["encryption", "security", "keys", "rest", "storage", "cryptography", "infrastructure"]),
     ("soc2", PW, "security", "SOC 2 attestation status and report availability.",
      ["soc2", "security", "evidence", "audit", "compliance", "attestation"]),
-    ("pen_test", PW, "security", "Penetration testing program and cadence.",
+    ("pen_test", PW, "security", "Penetration tests: each test's date, scope and findings as reported, and the "
+     "testing program and cadence.",
      ["pen test", "security", "evidence", "vulnerability", "testing"]),
     ("insurance", PW, "legal", "Cyber and liability insurance coverage.",
      ["insurance", "evidence", "coverage", "legal", "finance", "security"]),

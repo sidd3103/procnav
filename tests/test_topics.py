@@ -96,3 +96,9 @@ def test_soc2_current_folds_into_soc2():
     assert "soc2_current" not in SEED
     for raw in ["soc2_current", "SOC 2 current", "other:soc2_current"]:
         assert get_topic(raw) is SEED["soc2"], raw
+
+
+def test_pen_test_covers_the_latest_tests_findings():
+    # the reconciler judges "about this topic" from this text; findings must fit it
+    d = SEED["pen_test"].description
+    assert "date, scope and findings" in d and "program" in d

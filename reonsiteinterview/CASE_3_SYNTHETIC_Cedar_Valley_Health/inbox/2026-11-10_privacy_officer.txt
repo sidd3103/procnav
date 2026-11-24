@@ -1,0 +1,7 @@
+From: Daniel Reyes, Privacy Officer, Cedar Valley Health
+Date: Nov 10, 2026
+We need a signed BAA before any PHI is processed.
+Please list every subprocessor that touches PHI, confirm PHI is never used to train models, and state retention for PHI in logs.
+PHI must stay in the United States, for storage and for model processing.
+Our clinical leadership is deciding whether clinicians' free-text notes are in scope for the pilot or only structured fields. That changes what PHI you receive.
+Every AI-drafted summary must be reviewed by a clinician before it reaches the chart.

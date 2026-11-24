@@ -1,0 +1,1 @@
+No SOC 2 report covers the clinical documentation platform. ISO 27001 is the assurance offered for it.

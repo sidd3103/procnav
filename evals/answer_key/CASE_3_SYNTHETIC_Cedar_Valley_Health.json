@@ -1,0 +1,155 @@
+{
+  "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+  "as_of": "2026-12-07",
+  "_about": "Synthetic case written by us. Every expectation below comes from a fact planted in the case files.",
+  "answers_must_not_include": [
+    "Riverbend",
+    "available on request",
+    "14 days",
+    "us-east-1"
+  ],
+  "questions": [
+    {
+      "id": "HSA-01",
+      "statuses": ["unknown", "blocked", "needs_confirmation"],
+      "must_not_include": ["will not process PHI", "no PHI will", "does not process PHI"],
+      "note": "PHI scope depends on the customer's open decision: free-text clinician notes in scope or only structured fields."
+    },
+    {
+      "id": "HSA-02",
+      "statuses": ["blocked", "unknown", "needs_confirmation"],
+      "must_include": ["subprocessor"],
+      "note": "Chat (Legal): BAA can't be signed until subprocessors and key management are confirmed. The questionnaire draft 'Yes' is unsourced."
+    },
+    {
+      "id": "HSA-03",
+      "statuses": ["needs_confirmation", "blocked", "unknown"],
+      "must_include": ["TLS", "AES-256", ["key management", "keys", "customer-managed"]],
+      "note": "TLS 1.2+ / AES-256 from the generic overview (platform-wide, needs confirmation); customer-managed keys under discussion, not confirmed."
+    },
+    {
+      "id": "HSA-04",
+      "statuses": ["blocked"],
+      "must_include": ["27001", ["Dec 31, 2026", "2026-12-31", "December 31, 2026"]],
+      "must_not_include": ["available on request"],
+      "note": "ISO 27001 certificate valid until Dec 31, 2026, before the Jan 12, 2027 go-live -> blocker. No SOC 2 covers the service; the draft 'SOC 2 available on request' comes from another clinic."
+    },
+    {
+      "id": "HSA-05",
+      "statuses": ["unknown", "blocked"],
+      "must_not_include": ["14 days"],
+      "note": "Real CONFLICT: chat says PHI-bearing app logs 30 days, the config draft says 90 days. The draft '14 days' is the prior clinic's."
+    },
+    {
+      "id": "HSA-06",
+      "statuses": ["unknown", "blocked"],
+      "note": "No subprocessor list for this deployment yet (Legal: don't send the generic list)."
+    },
+    {
+      "id": "HSA-07",
+      "statuses": ["needs_confirmation", "blocked"],
+      "must_include": [["zero data retention", "zero-data-retention", "zero retention"]],
+      "note": "Config draft: OpenAI only under a zero data retention agreement (proposed)."
+    },
+    {
+      "id": "HSA-08",
+      "statuses": ["needs_confirmation", "blocked"],
+      "must_include": ["clinician"],
+      "note": "Config draft: a clinician approves every drafted summary (proposed); the customer requires it."
+    },
+    {
+      "id": "HSA-09",
+      "statuses": ["needs_confirmation", "unknown", "blocked"],
+      "must_include": ["72"],
+      "note": "Generic overview: confirmed breaches notified within 72 hours (platform-wide, needs confirmation)."
+    },
+    {
+      "id": "HSA-10",
+      "statuses": ["unknown", "blocked"],
+      "note": "Nothing in the folder describes audit logging of access to PHI."
+    },
+    {
+      "id": "HSA-11",
+      "statuses": ["blocked", "unknown", "needs_confirmation"],
+      "must_include": ["us-east-2"],
+      "note": "Storage AWS us-east-2 (draft, proposed); where model processing runs is not stated. us-east-1 is the generic default, not this customer's."
+    },
+    {
+      "id": "HSA-12",
+      "statuses": ["needs_confirmation", "blocked"],
+      "must_include": ["subprocessors"],
+      "note": "Answered from the blocker list."
+    }
+  ],
+  "topics": [
+    {
+      "topic": "retention_app_logs",
+      "statuses": ["CONFLICT"],
+      "used_files_exclude": ["prior_deals", "platform_overview"],
+      "note": "Chat 30 days vs draft 90 days, both about this customer: a real conflict. Generic 30 days and the prior clinic's 14 days are hints only."
+    },
+    {
+      "topic": "pen_test_remediation",
+      "statuses": ["VERIFIED"],
+      "value_includes": [["remediated"]],
+      "note": "The retest letter is evidence that H-01 was remediated: the contrast to Acme."
+    },
+    {
+      "topic": "pen_test",
+      "statuses": ["VERIFIED"],
+      "value_includes": [["Mar 2026", "March 2026", "2026-03"]],
+      "note": "The heading date qualifies the findings."
+    },
+    {
+      "topic": "soc2",
+      "statuses": ["UNKNOWN"],
+      "note": "No SOC 2 covers the service. ISO 27001 must not be filed as SOC 2."
+    },
+    {
+      "topic": "model_providers",
+      "statuses": ["PROPOSED"],
+      "value_includes": [["OpenAI"]],
+      "used_files_exclude": ["platform_overview", "prior_deals"]
+    },
+    {
+      "topic": "model_fallback",
+      "statuses": ["PROPOSED"],
+      "value_includes": [["no fallback", "disabled", "none"]],
+      "used_files_exclude": ["prior_deals"]
+    },
+    {
+      "topic": "storage_location",
+      "statuses": ["PROPOSED"],
+      "value_includes": [["us-east-2"]],
+      "used_files_exclude": ["platform_overview"]
+    },
+    {
+      "topic": "inference_location",
+      "statuses": ["UNKNOWN"],
+      "note": "Asked by the Privacy Officer; never stated."
+    },
+    {
+      "topic": "subprocessors",
+      "statuses": ["UNKNOWN"]
+    },
+    {
+      "topic": "human_oversight",
+      "statuses": ["PROPOSED"]
+    },
+    {
+      "topic": "provider_training_retention",
+      "statuses": ["PROPOSED"]
+    },
+    {
+      "topic": "personal_info_scope",
+      "statuses": ["UNKNOWN", "PROPOSED"]
+    }
+  ],
+  "decisions": [
+    {
+      "match": ["notes"],
+      "decider": "customer",
+      "note": "Privacy Officer: 'Our clinical leadership is deciding whether clinicians' free-text notes are in scope'."
+    }
+  ]
+}

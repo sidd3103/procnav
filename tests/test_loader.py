@@ -91,3 +91,42 @@ def test_unreadable_file_skipped(tmp_path):
         bad.chmod(0o644)
     assert [f.path for f in files] == ["ok.txt"]
     assert skipped == ["bad.txt"]
+
+
+def _csv(path, text):
+    return CaseFile(path=path, text=text, sha256="0" * 64)
+
+
+def test_aliased_questionnaire_headers_parse_like_exact_ones():
+    aliased = _csv("assessment.csv",
+                   "Ref,Domain,Requirement,Vendor response,Status\n"
+                   "HSA-01,Privacy,Is PHI encrypted at rest?,AES-256,Draft\n")
+    exact = _csv("q.csv", "id,section,question,draft_answer,status\n"
+                          "HSA-01,Privacy,Is PHI encrypted at rest?,AES-256,Draft\n")
+    a, e = parse_questionnaire(aliased), parse_questionnaire(exact)
+    assert a is not None and e is not None
+    assert [r.model_dump(exclude={"source_file"}) for r in a] == \
+        [r.model_dump(exclude={"source_file"}) for r in e]
+    [r] = a
+    assert (r.id, r.section, r.text, r.draft_answer) == (
+        "HSA-01", "Privacy", "Is PHI encrypted at rest?", "AES-256")
+
+
+def test_other_questionnaire_aliases():
+    q = parse_questionnaire(_csv("c.csv", "Control ID,Category,Control description,Answer\n"
+                                          "C-1,Ops,Describe backups.,Daily\n"))
+    assert q is not None and (q[0].id, q[0].section, q[0].text, q[0].draft_answer) == (
+        "C-1", "Ops", "Describe backups.", "Daily")
+
+
+def test_exact_header_wins_over_alias():
+    q = parse_questionnaire(_csv("q.csv", "id,question,requirement,response,draft_answer\n"
+                                          "Q-1,Real question?,other,resp,draft\n"))
+    assert q is not None and q[0].text == "Real question?" and q[0].draft_answer == "draft"
+
+
+def test_aliased_people_headers():
+    p = parse_people(_csv("team.csv", "Name,Role,Expertise\nDana,CISO liaison,security; HIPAA\n"))
+    assert p is not None
+    [d] = p
+    assert (d.name, d.role, d.knowledge) == ("Dana", "CISO liaison", "security; HIPAA")

@@ -1,0 +1,6 @@
+SYNTHETIC CASE - written by the procnav team to test adaptability. Not real customer material.
+Cedar Valley Health (fictional regional hospital network) - security and privacy assessment
+Supplier: Lantern AI Technologies Inc.
+Service: AI documentation assistant that drafts discharge summaries for clinician review
+Target go-live: Jan 12, 2027 (first two inpatient wards).
+The folder mixes customer asks, internal chat, drafts, generic docs, evidence and another clinic's answers.

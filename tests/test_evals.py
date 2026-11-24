@@ -123,14 +123,27 @@ def test_cli_eval_no_run_is_error(tmp_path, capsys):
     assert rc != 0 and "no run" in capsys.readouterr().err
 
 
+def _questionnaire_ids(case_dir):
+    """Ids of the case's own non-template questionnaire rows, read like the pipeline does."""
+    from procnav.loader import load_case, parse_questionnaire
+    from procnav.requirements import template_flags
+    files, _ = load_case(case_dir)
+    rows = [r for f in files for r in (parse_questionnaire(f) or [])]
+    return {r.id for r, t in zip(rows, template_flags(rows)) if not t}
+
+
 def test_answer_key_files_parse_and_cover_every_question():
     from pathlib import Path
-    keys = sorted((Path(__file__).resolve().parents[1] / "evals" / "answer_key").glob("*.json"))
-    assert len(keys) == 2
-    for p in keys:
-        k = AnswerKey.model_validate_json(p.read_text(encoding="utf-8"))
+    root = Path(__file__).resolve().parents[1]
+    cases = sorted(p for p in (root / "reonsiteinterview").glob("CASE_*") if p.is_dir())
+    keys = {p.stem: p for p in (root / "evals" / "answer_key").glob("*.json")}
+    assert sorted(keys) == [c.name for c in cases]  # one key per case folder
+    for case in cases:
+        k = AnswerKey.model_validate_json(keys[case.name].read_text(encoding="utf-8"))
+        assert k.case == case.name
         ids = {q.id for q in k.questions if q.id}
-        assert ids == {f"Q-{i:03d}" for i in range(1, 24)}, p.name
+        expected = _questionnaire_ids(case)
+        assert expected and ids == expected, case.name
         assert all(q.statuses for q in k.questions) and all(t.statuses for t in k.topics)
 
 

@@ -51,15 +51,46 @@ def load_case(root: str | Path) -> tuple[list[CaseFile], list[str]]:
     return files, skipped
 
 
+# Generic header spellings (lower-cased) -> the canonical column the parsers read.
+# A canonical header written exactly always wins over an alias of it.
+_HEADER_ALIASES = {
+    "question": ["question", "requirement", "control", "item", "control description"],
+    "id": ["id", "ref", "reference", "control id"],
+    "section": ["section", "domain", "category"],
+    "draft_answer": ["draft_answer", "vendor response", "response", "answer"],
+    "person": ["person", "name"],
+    "likely_knowledge": ["likely_knowledge", "expertise", "knowledge"],
+}
+_ALIAS_TO_CANONICAL = {a: c for c, aliases in _HEADER_ALIASES.items() for a in aliases}
+
+
+def _canonical_headers(headers: list[str]) -> dict[str, str]:
+    """{original header: canonical name}; the first header per canonical name, by alias order."""
+    norm = {h: h.strip().lower() for h in headers}
+    out: dict[str, str] = {}
+    taken: set[str] = set()
+    for canon, aliases in _HEADER_ALIASES.items():
+        for a in aliases:
+            h = next((h for h, n in norm.items() if n == a and h not in out), None)
+            if h is not None:
+                out[h] = canon
+                taken.add(canon)
+                break
+    for h, n in norm.items():
+        if h not in out and n not in taken and n not in _ALIAS_TO_CANONICAL:
+            out[h] = n
+    return out
+
+
 def _rows(f: CaseFile, required: set[str]) -> list[dict[str, str]] | None:
     if not f.path.lower().endswith(".csv"):
         return None
     reader = csv.DictReader(io.StringIO(f.text.lstrip("\ufeff")))
-    header = {h.strip().lower() for h in (reader.fieldnames or [])}
-    if not required <= header:
+    names = _canonical_headers([h for h in (reader.fieldnames or []) if h is not None])
+    if not required <= set(names.values()):
         return None
     return [
-        {k.strip().lower(): (v or "").strip() for k, v in row.items() if k is not None}
+        {names[k]: (v or "").strip() for k, v in row.items() if k in names}
         for row in reader
     ]
 

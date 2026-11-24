@@ -1,0 +1,13 @@
+Ref,Domain,Requirement,Vendor response,Status
+HSA-01,Privacy,Describe what PHI the service will process.,,Open
+HSA-02,Legal,Can you sign our Business Associate Agreement (BAA) before go-live?,Yes,Draft
+HSA-03,Security,Describe encryption of PHI in transit and at rest and key management.,,Open
+HSA-04,Assurance,Provide a current ISO 27001 certificate or SOC 2 Type II report.,SOC 2 available on request,Draft
+HSA-05,Privacy,State retention of PHI in application logs.,14 days,Draft
+HSA-06,Privacy,List subprocessors that may access PHI.,,Open
+HSA-07,AI,Can model providers retain or train on PHI?,,Open
+HSA-08,AI,Are AI-drafted clinical outputs reviewed by a clinician before use?,,Open
+HSA-09,Security,Describe breach notification timelines.,,Open
+HSA-10,Security,Describe audit logging of user access to PHI.,,Open
+HSA-11,Privacy,Confirm PHI is stored and processed only in the United States.,,Open
+HSA-12,Procurement,What could delay go-live readiness?,,Open
