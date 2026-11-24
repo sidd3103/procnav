@@ -75,7 +75,9 @@ if not cases:
     st.error(f"No case folders found under {CASES}")
     st.stop()
 case = st.sidebar.selectbox("Case", cases, key="case")
-as_of = st.sidebar.date_input("As of", value=date.today(), key="as_of")
+s, prev = view.latest_two(RUNS, case)
+# default to the date the saved run used, so a Re-run reproduces it (e.g. the demo's 2026-09-25)
+as_of = st.sidebar.date_input("As of", value=s.as_of if s else date.today(), key="as_of")
 calls: dict[str, int] = st.session_state.setdefault("llm_calls", {})
 
 if st.sidebar.button("Re-run", key="rerun", type="primary"):
@@ -85,12 +87,12 @@ if st.sidebar.button("Re-run", key="rerun", type="primary"):
             snap = run_case(CASES / case, as_of, llm, CACHE)
         save_snapshot(snap, RUNS)
         calls[case] = llm.calls
+        s, prev = view.latest_two(RUNS, case)
     except Exception as e:  # noqa: BLE001 - shown to the user, never a traceback
         st.error(f"Re-run failed: {e}")
 if case in calls:
     st.sidebar.caption(f"LLM calls: {calls[case]} (last re-run)")
 
-s, prev = view.latest_two(RUNS, case)
 if s is None:
     st.info("No saved run for this case yet. Press Re-run in the sidebar.")
     st.stop()
@@ -104,6 +106,10 @@ total = len(s.required)
 for col, status in zip(st.columns(4), reversed(view.STATUS_LABELS)):
     icon, label = view.STATUS_LABELS[status]
     col.metric(f"{icon} {label}", f"{qcounts[label]} / {total}")
+st.caption("**Required:** every question and customer ask (Required tab) · "
+           "**Known:** ✅ Ready for Legal + 🟡 Drafted, needs sign-off · "
+           "**Unresolved:** ❔ Missing information + ⛔ Blocks launch · "
+           "**Blocking:** Blocking tab · **Next:** Next steps tab")
 
 with st.expander("What changed since last run", expanded=prev is not None):
     if prev is None:
@@ -112,10 +118,20 @@ with st.expander("What changed since last run", expanded=prev is not None):
         changes = diff(prev, s)
         st.markdown("\n".join(f"- {esc(c)}" for c in changes) if changes else "No changes")
 
+src_rows = view.source_rows(s)
+with st.expander(f"Sources ({len(src_rows)} files): how each file was judged"):
+    st.dataframe(
+        [{"File": r["file"], "Source type": r["source_type"], "Rank": r["rank"],
+          "Extracted": r["extracted"], "Applies to": r["applies_to"], "Note": r["note"]}
+         for r in src_rows], hide_index=True, width="stretch")
+    st.caption("Rank decides which facts can answer a topic: evidence > customer-specific > "
+               "generic > other customer (hints only). Questionnaire and people files are "
+               "parsed in code; guidance files hold nothing to extract.")
+
 # ---------------------------------------------------------------- tabs
 
 t_q, t_block, t_chase, t_ev = st.tabs(
-    ["Questions", "Blocks launch", "Who to chase", "Evidence by topic"])
+    ["Required", "Blocking", "Next steps", "Known: evidence by topic"])
 
 with t_q:
     rows = view.question_rows(s)
@@ -193,6 +209,14 @@ with t_chase:
                 st.caption(f"cites: {', '.join(ch['cited'])}")
             for e in ch["citation_errors"]:
                 st.markdown(f":red[citation issue:] {esc(e)}")
+    st.subheader("Open decisions")
+    decs = view.decision_rows(s)
+    if not decs:
+        st.markdown("None")
+    for d in decs:
+        topics = f" · affects {esc(', '.join(d['topics']))}" if d["topics"] else ""
+        st.markdown(f"- **{d['decider']} decides:** {esc(d['text'])}{topics}  \n"
+                    f"  :gray[“{esc(d['quote'])}” — `{d['file']}`]")
 
 with t_ev:
     order = list(STATUS_ICON)

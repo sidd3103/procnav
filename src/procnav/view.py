@@ -5,10 +5,11 @@ Owners are suggestions only (routing is a human decision).
 """
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from .models import Verdict
+from .models import Rank, Verdict
 from .pipeline import Snapshot, group_blockers
 from .requirements import RequirementResult, _topic_status
 
@@ -241,3 +242,56 @@ def question_detail(s: Snapshot, req_id: str) -> Row | None:
         "stale_draft": r.stale_draft, "quote": r.req.quote, "source_file": r.req.source_file,
         "decisions": decisions, "topics": list(r.req.topics),
     }
+
+
+# ---------------------------------------------------------------- sources & decisions
+
+RANK_ORDER = ["evidence", "customer-specific", "generic", "other customer", "—"]
+_RANK_NAME = {Rank.EVIDENCE: "evidence", Rank.CUSTOMER: "customer-specific",
+              Rank.GENERIC: "generic", Rank.OTHER_CUSTOMER: "other customer"}
+
+
+def source_rows(s: Snapshot) -> list[Row]:
+    """One row per loaded file: how extraction judged it (source type, rank, applicability).
+
+    Files with no facts (parsed in code, or nothing extracted) show "—" and sort last.
+    """
+    by_file: dict[str, list] = {}
+    for f in s.facts:
+        by_file.setdefault(f.file, []).append(f)
+    failed = dict(s.failed_files)
+    counts: dict[str, Counter] = {}
+    for r in s.required:
+        counts.setdefault(r.req.source_file, Counter())["asks" if r.req.from_customer
+                                                       else "questions"] += 1
+    for d in s.dependencies:
+        counts.setdefault(d.file, Counter())[
+            "milestones" if d.kind == "milestone" else "dependencies"] += 1
+    for o in s.open_decisions:
+        counts.setdefault(o.file, Counter())["decisions"] += 1
+    rows: list[Row] = []
+    for path in sorted(s.files):
+        fs = by_file.get(path, [])
+        c = Counter({"facts": len(fs)}) + counts.get(path, Counter())
+        parts = [f"{n} {k if n > 1 else k.removesuffix('s').replace('dependencie', 'dependency')}"
+                 for k in ("facts", "asks", "questions", "dependencies", "milestones",
+                           "decisions") if (n := c[k])]
+        types = Counter(f.source_type for f in fs)
+        rank = _RANK_NAME[max(f.rank for f in fs)] if fs else "—"
+        rows.append({
+            "file": path,
+            "source_type": types.most_common(1)[0][0] if fs else "—",
+            "rank": rank,
+            "facts": len(fs),
+            "extracted": ", ".join(parts) or "nothing",
+            "applies_to": ", ".join(sorted({f.applies_to for f in fs})),
+            "note": f"failed: {failed[path]}" if path in failed else "",
+        })
+    rows.sort(key=lambda r: (RANK_ORDER.index(r["rank"]), r["file"]))
+    return rows
+
+
+def decision_rows(s: Snapshot) -> list[Row]:
+    """Open decisions: what is undecided, who decides, which topics wait on it."""
+    return [{"text": d.text, "decider": d.decider, "topics": list(d.affected_topics),
+             "quote": d.quote, "file": d.file} for d in s.open_decisions]

@@ -10,7 +10,7 @@ from procnav.llm import FakeLLM, OpenAIClient
 from procnav.pipeline import run_case, save_snapshot
 
 APP = str(Path(__file__).resolve().parents[1] / "app.py")
-TABS = ["Questions", "Blocks launch", "Who to chase", "Evidence by topic"]
+TABS = ["Required", "Blocking", "Next steps", "Known: evidence by topic"]
 METRICS = ["Ready for Legal", "Drafted, needs sign-off", "Missing information", "Blocks launch"]
 CASE = ACME_DIR.name
 
@@ -27,6 +27,10 @@ def env(tmp_path, monkeypatch):
 
 def _app():
     return AppTest.from_file(APP, default_timeout=30)
+
+
+def _questions_df(at):
+    return next(d.value for d in at.dataframe if "Status" in d.value.columns)
 
 
 def _texts(at):
@@ -65,16 +69,16 @@ def test_filter_to_blocks_launch(saved):
     at = _app().run()
     at.multiselect(key="q_status").set_value(["Blocks launch"]).run()
     assert not at.exception
-    df = at.dataframe[0].value
+    df = _questions_df(at)
     assert len(df) and all("Blocks launch" in v for v in df["Status"])
 
 
 def test_template_rows_hidden_until_toggled(saved):
     at = _app().run()
-    ids = list(at.dataframe[0].value["ID"])
+    ids = list(_questions_df(at)["ID"])
     assert "Q-024" not in ids
     at.toggle(key="q_templates").set_value(True).run()
-    assert "Q-024" in list(at.dataframe[0].value["ID"])
+    assert "Q-024" in list(_questions_df(at)["ID"])
 
 
 def test_no_saved_run_shows_hint(env):
@@ -108,3 +112,21 @@ def test_rerun_saves_snapshot_and_shows_changes(env, monkeypatch):
     assert len(list((runs / CASE).glob("*.json"))) == 2
     assert "No changes" in _texts(at)
     assert "LLM calls: 0" in _texts(at)
+
+
+def test_brief_legend_sources_and_decisions(saved):
+    at = _app().run()
+    t = _texts(at)
+    for word in ("Required", "Known", "Unresolved", "Blocking", "Next"):
+        assert word in t
+    assert any(e.label.startswith("Sources") for e in at.expander)
+    src = next(d.value for d in at.dataframe if "Rank" in d.value.columns)
+    ranks = dict(zip(src["File"], src["Rank"]))
+    assert ranks["04_knowledge/prior_customer_answers_CONTEXT_ONLY.md"] == "other customer"
+    assert "Open decisions" in [h.value for h in at.subheader]
+    assert "Anthropic fallback" in t
+
+
+def test_as_of_defaults_to_latest_run(saved):
+    at = _app().run()
+    assert at.date_input(key="as_of").value == date(2026, 9, 25)

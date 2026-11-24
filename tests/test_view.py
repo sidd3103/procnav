@@ -216,3 +216,36 @@ def test_question_detail(snap):
 def test_blocking_rows_list_blocked_questions(snap):
     ins = next(r for r in view.blocking_rows(snap) if r["item"] == "insurance")
     assert {"Q-021", "Q-024"} <= set(ins["questions"])
+
+
+# --- sources and open decisions -----------------------------------------------------------
+
+def test_source_rows_show_how_each_file_was_judged(snap):
+    rows = {r["file"]: r for r in view.source_rows(snap)}
+    assert set(rows) == set(snap.files)
+    prior = rows["04_knowledge/prior_customer_answers_CONTEXT_ONLY.md"]
+    assert prior["rank"] == "other customer" and prior["facts"] > 0
+    assert "other_customer" in prior["applies_to"]
+    assert rows["05_evidence/insurance_status.txt"]["rank"] == "evidence"
+    mail = rows["01_customer/customer_correspondence.txt"]
+    assert "ask" in mail["extracted"] and "milestone" in mail["extracted"]
+    assert "facts" in rows["03_internal/internal_messages.txt"]["extracted"]
+    assert rows["06_reference/customer_review_guidance.txt"]["extracted"] == "nothing"
+    q = rows["02_questionnaires/vendor_risk_questionnaire.csv"]
+    assert q["facts"] == 0 and q["source_type"] == "—"
+    ranks = [view.RANK_ORDER.index(r["rank"]) for r in view.source_rows(snap)]
+    assert ranks == sorted(ranks)  # evidence first, files without facts last
+
+
+def test_source_rows_mark_failed_files(snap):
+    s = snap.model_copy(update={"failed_files": [("03_internal/internal_messages.txt", "boom")]})
+    row = next(r for r in view.source_rows(s) if r["file"] == "03_internal/internal_messages.txt")
+    assert row["note"] == "failed: boom"
+
+
+def test_decision_rows(snap):
+    rows = view.decision_rows(snap)
+    assert len(rows) == len(snap.open_decisions) > 0
+    r = rows[0]
+    assert set(r) >= {"text", "decider", "topics", "quote", "file"}
+    assert r["decider"] in {"customer", "internal"}
