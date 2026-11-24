@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from datetime import date, timedelta
 
-from .models import Fact, Rank, Verdict
+from .models import Fact, Rank, Reconciliation, Verdict
 from .topics import get_topic
 
 EXPIRY_WINDOW_DAYS = 30
@@ -77,7 +77,18 @@ def _caveats_for(used: list[Fact], as_of: date) -> list[str]:
     return out
 
 
-def resolve_topic(topic_id: str, facts: list[Fact], as_of: date) -> Verdict:
+def _cross_file_pairs(cands: list[Fact]):
+    for i, a in enumerate(cands):
+        for b in cands[i + 1:]:
+            if a.file != b.file:
+                yield a, b
+
+
+def resolve_topic(topic_id: str, facts: list[Fact], as_of: date,
+                  recon: Reconciliation | None = None) -> Verdict:
+    """Verdict for one topic. `recon` (optional LLM meaning labels) is trusted asymmetrically:
+    it may raise a CONFLICT or drop an off-topic fact freely, but clearing a string-level
+    conflict is capped at PROPOSED and shown in the hints. It never yields VERIFIED."""
     facts = sorted(facts, key=lambda f: (f.file, f.line or 0, f.id))
     topic = get_topic(topic_id)
     per_customer = topic.scope == "per_customer"
@@ -91,6 +102,9 @@ def resolve_topic(topic_id: str, facts: list[Fact], as_of: date) -> Verdict:
         if f.applies_to == "other_customer" or f.rank == Rank.OTHER_CUSTOMER:
             hints.append(f"other customer: {_val(f)} ({f.file})")
             excluded.append((f.id, "other customer"))
+        elif recon is not None and f.id in recon.off_topic:
+            hints.append(f"not about this topic (reconciled): {_val(f)} ({f.file})")
+            excluded.append((f.id, "not about this topic (reconciled)"))
         elif f.certainty == "absent":
             absents.append(f)
         elif not _has_value(f):
@@ -150,8 +164,26 @@ def resolve_topic(topic_id: str, facts: list[Fact], as_of: date) -> Verdict:
 
     # CONFLICT only between different files whose (merged) values differ
     merged = _merge_by_file(cands)
-    if len({norm for norm, _ in merged.values()}) > 1:
-        return verdict("CONFLICT", None, cands, "conflicting values at same rank")
+    value_conflict = len({norm for norm, _ in merged.values()}) > 1
+    pairs = list(_cross_file_pairs(cands))
+    if value_conflict:
+        differing = [(a, b) for a, b in pairs
+                     if normalize_value(_val(a)) != normalize_value(_val(b))]
+        cleared = (recon is not None and differing
+                   and all(frozenset({a.id, b.id}) in recon.agree for a, b in differing))
+        if not cleared:
+            return verdict("CONFLICT", None, cands, "conflicting values at same rank")
+        for a, b in differing:
+            hints.append(f"reconciled as agreeing: {_val(a)} ({a.file}) ~ {_val(b)} ({b.file})")
+        value = _pick([shown for _, shown in merged.values()])
+        return verdict("PROPOSED", value, cands, "sources agree (reconciled)")
+    if recon is not None:
+        contra = [(a, b) for a, b in pairs if frozenset({a.id, b.id}) in recon.contradict]
+        if contra:
+            for a, b in contra:
+                hints.append(f"reconciled as contradicting: {a.claim} ({a.file}) vs "
+                             f"{b.claim} ({b.file})")
+            return verdict("CONFLICT", None, cands, "sources contradict (reconciled)")
 
     value = _pick([shown for _, shown in merged.values()])
 
@@ -164,8 +196,10 @@ def resolve_topic(topic_id: str, facts: list[Fact], as_of: date) -> Verdict:
     return verdict("PROPOSED", value, cands, "unverified source")
 
 
-def resolve_all(facts: list[Fact], as_of: date) -> dict[str, Verdict]:
+def resolve_all(facts: list[Fact], as_of: date,
+                recon: dict[str, Reconciliation] | None = None) -> dict[str, Verdict]:
     by_topic: dict[str, list[Fact]] = {}
     for f in facts:
         by_topic.setdefault(f.topic, []).append(f)
-    return {t: resolve_topic(t, fs, as_of) for t, fs in by_topic.items()}
+    recon = recon or {}
+    return {t: resolve_topic(t, fs, as_of, recon.get(t)) for t, fs in by_topic.items()}

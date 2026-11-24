@@ -269,3 +269,43 @@ def test_append_line_reextracts_one_file_and_skips_identify(tmp_path):
     extraction = [k for k in calls if not k.startswith(other)]
     assert extraction == ["03_internal/internal_messages.txt"]
     assert "identify_case" not in calls and "map_questions" not in calls
+
+
+# --- reconciliation in the pipeline -------------------------------------------------------
+
+def _recon_spy(inner, labels: dict[str, dict]):
+    calls = []
+
+    class Spy:
+        model = inner.model
+
+        def complete_json(self, system, user, schema):
+            key = user.split("\n", 1)[0].removeprefix("KEY:").strip()
+            if key.startswith("reconcile "):
+                calls.append(key)
+                topic = key.removeprefix("reconcile ")
+                if topic in labels:
+                    return schema.model_validate(labels[topic])
+            return inner.complete_json(system, user, schema)
+
+    return Spy(), calls
+
+
+def test_pipeline_reconciles_multi_file_topics(tmp_path, acme_llm):
+    chat, draft = ("03_internal/internal_messages#F1",
+                   "04_knowledge/customer_specific_configuration_DRAFT#F4")
+    spy, calls = _recon_spy(acme_llm(), {"retention_app_logs": {"pairs": [
+        {"a": chat, "b": draft, "relation": "contradicts"}]}})
+    snap = run_case(ACME_DIR, date(2026, 9, 25), spy, tmp_path / "c")
+    assert "reconcile retention_app_logs" in calls and "reconcile storage_location" in calls
+    assert "reconcile dpa" not in calls  # single-file topics are not reconciled
+    v = snap.verdicts["retention_app_logs"]
+    assert v.status == "CONFLICT" and v.rule == "sources contradict (reconciled)"
+
+
+def test_pipeline_reconcile_failure_is_listed_and_topic_unchanged(tmp_path, acme_llm):
+    base = run_case(ACME_DIR, date(2026, 9, 25), acme_llm(), tmp_path / "a")
+    snap = run_case(ACME_DIR, date(2026, 9, 25),
+                    acme_llm(fail_paths=("reconcile storage_location",)), tmp_path / "b")
+    assert [p for p, _ in snap.failed_files] == ["reconcile:storage_location"]
+    assert snap.verdicts["storage_location"] == base.verdicts["storage_location"]

@@ -11,6 +11,7 @@ PER_CUSTOMER = [
     "personal_info_scope", "tool_actions", "human_oversight",
     "provider_training_retention", "dpa", "evaluation", "prompt_injection",
     "provenance", "soc2_current",
+    "trace_payload_capture", "service_description", "submission_approval", "approval_blockers",
 ]
 
 
@@ -55,3 +56,21 @@ def test_get_topic_unknown():
 ])
 def test_get_topic_normalises_before_seed_match(raw, expected):
     assert get_topic(raw).id == expected
+
+
+def test_retention_traces_excludes_payload_capture():
+    d = SEED["retention_traces"].description.lower()
+    assert "how long" in d and "not whether payloads are captured" in d
+
+
+def test_human_oversight_excludes_questionnaire_signoff():
+    d = SEED["human_oversight"].description.lower()
+    assert "inside the product" in d and "questionnaire" in d
+
+
+@pytest.mark.parametrize("tid,area", [
+    ("trace_payload_capture", "ai"), ("service_description", "commercial"),
+    ("submission_approval", "legal"), ("approval_blockers", "procurement"),
+])
+def test_new_case_level_topics(tid, area):
+    assert SEED[tid].area == area

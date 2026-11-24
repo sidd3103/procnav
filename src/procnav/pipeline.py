@@ -1,7 +1,7 @@
 """End-to-end run over one case folder, plus snapshot save/load.
 
 Order: load -> identify -> parse questionnaire/people in code -> extract every other file
--> map questionnaire topics -> build requirements -> resolve -> evaluate -> blockers ->
+-> map questionnaire topics -> build requirements -> map new topics -> reconcile -> resolve -> evaluate -> blockers ->
 owners/next steps -> draft answers. The Snapshot holds no timestamps, so an unchanged
 folder produces an identical Snapshot; the run time lives only in the saved filename.
 """
@@ -22,6 +22,7 @@ from .llm import LLMClient
 from .loader import Person, load_case, parse_people, parse_questionnaire
 from .models import Dependency, Fact, OpenDecision, Requirement, Verdict
 from .owners import assign_decision_owner, assign_owner
+from .reconcile import reconcile_all
 from .requirements import (
     RequirementResult,
     apply_blockers,
@@ -235,7 +236,11 @@ def run_case(case_dir: str | Path, as_of: date, llm: LLMClient,
         failed.append(("map_topics", topics_err))
     facts, reqs, deps, decisions = _apply_topic_map(mapping, facts, reqs, deps, decisions)
 
-    verdicts = resolve_all(facts, as_of)
+    # cross-file meaning labels per topic (LLM); resolve decides what they change
+    recon, recon_failed = reconcile_all(facts, llm, cache)
+    failed += recon_failed
+
+    verdicts = resolve_all(facts, as_of, recon)
     referenced = {t for r in reqs for t in r.topics}
     referenced |= {t for d in deps for t in d.depends_on_topics}
     referenced |= {t for d in decisions for t in d.affected_topics}

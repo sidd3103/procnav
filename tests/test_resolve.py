@@ -363,3 +363,119 @@ def test_absence_not_superseded_by_facts_from_its_own_file():
     assert v.status == "VERIFIED" and v.value == "two medium findings open"
     assert "no evidence: This file contains no remediation evidence." in v.caveats
     assert not v.sendable
+
+
+# --- reconciliation hook (LLM labels meaning; code decides; asymmetric trust) -------------
+
+from procnav.models import Reconciliation  # noqa: E402
+
+
+def _pair(a, b):
+    return frozenset({a.id, b.id})
+
+
+def _storage_pair():
+    a = F("storage_location", "AWS Canada", file="a.md")
+    b = F("storage_location", "Canada", file="b.md")
+    return a, b
+
+
+def test_recon_agree_clears_string_conflict_capped_at_proposed():
+    a, b = _storage_pair()
+    v = resolve_topic("storage_location", [a, b], AS_OF,
+                      Reconciliation(agree={_pair(a, b)}))
+    assert v.status == "PROPOSED" and v.value == "AWS Canada"
+    assert v.rule == "sources agree (reconciled)"
+    assert any("AWS Canada" in h and "Canada (b.md)" in h and "a.md" in h for h in v.hints)
+    assert not v.sendable
+
+
+def test_recon_contradicts_unclear_or_no_label_keeps_conflict():
+    a, b = _storage_pair()
+    for recon in (Reconciliation(contradict={_pair(a, b)}), Reconciliation(), None):
+        v = resolve_topic("storage_location", [a, b], AS_OF, recon)
+        assert v.status == "CONFLICT" and v.rule == "conflicting values at same rank"
+
+
+def test_recon_partial_agreement_keeps_conflict():
+    a, b = _storage_pair()
+    c = F("storage_location", "US", file="c.md")
+    v = resolve_topic("storage_location", [a, b, c], AS_OF,
+                      Reconciliation(agree={_pair(a, b)}))
+    assert v.status == "CONFLICT"
+
+
+def test_recon_provider_contradiction_stays_conflict():
+    a = F("model_providers", "OpenAI", file="a.md")
+    b = F("model_providers", "OpenAI and Anthropic", file="b.md")
+    v = resolve_topic("model_providers", [a, b], AS_OF,
+                      Reconciliation(contradict={_pair(a, b)}))
+    assert v.status == "CONFLICT"
+
+
+def test_recon_agree_on_evidence_never_verified():
+    a = F("soc2", "SOC 2 Type II, Jan-Dec 2025", Rank.EVIDENCE, file="a.txt")
+    b = F("soc2", "SOC 2 Type II", Rank.EVIDENCE, file="b.txt")
+    v = resolve_topic("soc2", [a, b], AS_OF, Reconciliation(agree={_pair(a, b)}))
+    assert v.status == "PROPOSED" and not v.sendable
+    assert v.value == "SOC 2 Type II, Jan-Dec 2025"
+
+
+def test_recon_off_topic_fact_excluded():
+    good = F("retention_traces", "30 days", file="a.md")
+    payload = F("retention_traces", "payloads redacted", file="b.md", claim="payload capture")
+    v = resolve_topic("retention_traces", [good, payload], AS_OF,
+                      Reconciliation(off_topic={payload.id}))
+    assert v.status == "PROPOSED" and v.value == "30 days"
+    assert (payload.id, "not about this topic (reconciled)") in v.excluded
+    assert any("payloads redacted" in h and "b.md" in h for h in v.hints)
+
+
+def test_recon_none_and_empty_match_current_output():
+    a, b = _storage_pair()
+    c = F("retention_app_logs", "14 days", file="x.md")
+    for fs, tid in (([a, b], "storage_location"), ([c], "retention_app_logs")):
+        base = resolve_topic(tid, fs, AS_OF)
+        assert resolve_topic(tid, fs, AS_OF, None) == base
+        assert resolve_topic(tid, fs, AS_OF, Reconciliation()) == base
+
+
+def test_recon_contradicts_on_equal_values_raises_conflict():
+    a = F("retention_app_logs", "30 days", file="a.md", claim="30 days")
+    b = F("retention_app_logs", "30 days", file="b.md", claim="30 days, this customer only")
+    assert resolve_topic("retention_app_logs", [a, b], AS_OF).status == "PROPOSED"
+    v = resolve_topic("retention_app_logs", [a, b], AS_OF,
+                      Reconciliation(contradict={_pair(a, b)}))
+    assert v.status == "CONFLICT" and v.value is None
+    assert v.rule == "sources contradict (reconciled)"
+    assert any("this customer only" in h and "a.md" in h and "b.md" in h for h in v.hints)
+
+
+def test_recon_contradicts_downgrades_verified_evidence():
+    a = F("soc2", "SOC 2 Type II", Rank.EVIDENCE, file="a.txt")
+    b = F("soc2", "SOC 2 Type II", Rank.EVIDENCE, file="b.txt", claim="Type II, draft only")
+    assert resolve_topic("soc2", [a, b], AS_OF).status == "VERIFIED"
+    v = resolve_topic("soc2", [a, b], AS_OF, Reconciliation(contradict={_pair(a, b)}))
+    assert v.status == "CONFLICT" and not v.sendable
+
+
+def test_recon_contradicts_lower_ranked_fact_no_conflict():
+    top = F("soc2", "SOC 2 Type II", Rank.EVIDENCE, file="a.txt")
+    low = F("soc2", "SOC 2 Type II", Rank.CUSTOMER, file="chat.txt")
+    v = resolve_topic("soc2", [top, low], AS_OF, Reconciliation(contradict={_pair(top, low)}))
+    assert v.status == "VERIFIED"
+
+
+def test_recon_same_file_contradiction_ignored():
+    a = F("retention_app_logs", "30 days", file="a.md", line=1)
+    b = F("retention_app_logs", "30 days", file="a.md", line=2)
+    v = resolve_topic("retention_app_logs", [a, b], AS_OF,
+                      Reconciliation(contradict={_pair(a, b)}))
+    assert v.status == "PROPOSED"
+
+
+def test_resolve_all_passes_topic_reconciliation():
+    a, b = _storage_pair()
+    out = resolve_all([a, b], AS_OF, {"storage_location": Reconciliation(agree={_pair(a, b)})})
+    assert out["storage_location"].status == "PROPOSED"
+    assert resolve_all([a, b], AS_OF)["storage_location"].status == "CONFLICT"

@@ -24,6 +24,14 @@ def test_real_acme_owners():
     assert assign_owner(SEED["model_fallback"], p) in {"Parsa", "Anthony"}
 
 
+def test_real_acme_owners_new_topics():
+    p = people()
+    assert assign_owner(SEED["trace_payload_capture"], p) in {"Parsa", "Anthony"}
+    assert assign_owner(SEED["service_description"], p) == "Jai"
+    assert assign_owner(SEED["submission_approval"], p) == "Mina"
+    assert assign_owner(SEED["approval_blockers"], p) == "Jai"
+
+
 def test_tie_goes_to_first_and_zero_overlap_is_unassigned():
     ps = [Person(name="A", role="x", knowledge="widgets"), Person(name="B", role="y", knowledge="widgets")]
     t = get_topic("widgets thing")

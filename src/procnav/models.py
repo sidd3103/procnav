@@ -92,3 +92,14 @@ class Topic(BaseModel):
     scope: Literal["platform_wide", "per_customer"]
     area: str
     keywords: list[str]
+
+
+class Reconciliation(BaseModel):
+    """Per-topic meaning labels from the reconciler. Code decides what they change.
+
+    off_topic: fact ids not about the topic. agree / contradict: unordered pairs of fact ids
+    (from different files) whose values say the same thing / contradict each other.
+    """
+    off_topic: set[str] = set()
+    agree: set[frozenset[str]] = set()
+    contradict: set[frozenset[str]] = set()

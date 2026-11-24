@@ -48,6 +48,8 @@ def acme_responder(fail_paths: tuple[str, ...] = ()):
             ids = re.findall(r"^- (other:\S+?):", user, flags=re.MULTILINE)
             return schema.model_validate(
                 {"mappings": [{"topic_id": i, "map_to": ["new"]} for i in ids]})
+        if key.startswith("reconcile "):  # default: no labels, topics resolve as before
+            return schema.model_validate({})
         if key.startswith("answer:"):
             ids = re.findall(r"^- id=(\S+) ", user, flags=re.MULTILINE)
             return schema.model_validate({
