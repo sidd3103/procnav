@@ -1,0 +1,3101 @@
+{
+  "case": "CASE_1_Acme_Bank",
+  "as_of": "2026-09-25",
+  "customer": "ACME NATIONAL BANK",
+  "required": [
+    {
+      "req": {
+        "id": "Q-001",
+        "text": "Describe the proposed service and intended customer use.",
+        "requester": null,
+        "topics": [
+          "service_description"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Supplier",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "service_description: PROPOSED AI operations assistant for customer-service workflows"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "01_customer/customer_correspondence#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-002",
+        "text": "Will personal information be processed? Describe categories.",
+        "requester": null,
+        "topics": [
+          "personal_info_scope"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "personal_info_scope: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "01_customer/customer_correspondence#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-003",
+        "text": "Describe storage locations and processing/inference locations separately.",
+        "requester": null,
+        "topics": [
+          "storage_location",
+          "inference_location"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "storage_location: PROPOSED AWS ca-central-1 for supplier persistence",
+        "inference_location: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "03_internal/internal_messages#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-004",
+        "text": "State retention for source files, prompts, responses, logs and traces.",
+        "requester": null,
+        "topics": [
+          "retention_source_files",
+          "retention_prompts_responses",
+          "retention_app_logs",
+          "retention_traces"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": "30 days?",
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": "newer internal source may differ"
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "retention_source_files: PROPOSED workspace lifetime",
+        "retention_prompts_responses: UNKNOWN",
+        "retention_app_logs: PROPOSED 14 days",
+        "retention_traces: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "retention_prompts_responses: unknown",
+        "retention_traces: unknown"
+      ],
+      "stale_draft": "unsourced draft '30 days?'; contradicts retention_source_files='workspace lifetime', retention_app_logs='14 days'",
+      "depends_on_decisions": [
+        "04_knowledge/customer_specific_configuration_DRAFT#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-005",
+        "text": "List subprocessors that may access customer content.",
+        "requester": null,
+        "topics": [
+          "subprocessors"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "subprocessors: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-006",
+        "text": "Describe cross-border transfers.",
+        "requester": null,
+        "topics": [
+          "cross_border"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "cross_border: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "cross_border: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-007",
+        "text": "Provide current SOC 2 or equivalent assurance.",
+        "requester": null,
+        "topics": [
+          "soc2"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "soc2: VERIFIED SOC 2 Type II, Jan-Dec 2025, final"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-008",
+        "text": "Provide latest penetration test and remediation status.",
+        "requester": null,
+        "topics": [
+          "pen_test",
+          "pen_test_remediation"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "pen_test: VERIFIED no Critical or High findings, Feb 2026 test; two Medium findings open in original report, Feb 2026 test; M-01 internal service-token scope, Medium, open in original report, Feb 2026 test; M-02 rate-limit bypass under retry pattern, Medium, open in original report, Feb 2026 test",
+        "pen_test_remediation: PROPOSED remediated"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-009",
+        "text": "Describe encryption, IAM and privileged production access.",
+        "requester": null,
+        "topics": [
+          "encryption_in_transit",
+          "encryption_at_rest",
+          "iam_access"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "encryption_in_transit: PROPOSED TLS 1.2+, Apr 2026 overview",
+        "encryption_at_rest: PROPOSED AES-256 primary databases/object storage, Apr 2026 overview",
+        "iam_access: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "iam_access: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-010",
+        "text": "Describe incident response and notification approach.",
+        "requester": null,
+        "topics": [
+          "incident_response"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "incident_response: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "incident_response: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-011",
+        "text": "State approved RTO/RPO and supporting evidence.",
+        "requester": null,
+        "topics": [
+          "rto_rpo"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": "24h / 24h?",
+        "from_customer": false,
+        "group": null,
+        "section": "Resilience",
+        "note": "may be stale/customer-specific"
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "rto_rpo: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "rto_rpo: unknown"
+      ],
+      "stale_draft": "unsourced draft '24h / 24h?'",
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-012",
+        "text": "List model providers used for this customer configuration.",
+        "requester": null,
+        "topics": [
+          "model_providers"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": "OpenAI + Anthropic?",
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": "generic vs customer-specific conflict"
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "model_providers: PROPOSED OpenAI"
+      ],
+      "open_assumptions": [],
+      "stale_draft": "unsourced draft 'OpenAI + Anthropic?'",
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-013",
+        "text": "Can providers retain or train on customer content?",
+        "requester": null,
+        "topics": [
+          "provider_training_retention"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "provider_training_retention: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "provider_training_retention: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-014",
+        "text": "Describe model routing/fallback for this customer.",
+        "requester": null,
+        "topics": [
+          "model_fallback"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "model_fallback: CONFLICT"
+      ],
+      "open_assumptions": [
+        "model_fallback: conflict"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "03_internal/internal_messages#O1",
+        "04_knowledge/customer_specific_configuration_DRAFT#O2"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-015",
+        "text": "Can AI call tools/APIs and take external actions?",
+        "requester": null,
+        "topics": [
+          "tool_actions"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "tool_actions: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "tool_actions: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-016",
+        "text": "Describe human approval boundaries.",
+        "requester": null,
+        "topics": [
+          "human_oversight"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "human_oversight: PROPOSED human confirms customer-facing actions"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-017",
+        "text": "Describe prompt-injection and untrusted-document controls.",
+        "requester": null,
+        "topics": [
+          "prompt_injection"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "prompt_injection: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "prompt_injection: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-018",
+        "text": "Describe evaluation methodology and known limitations.",
+        "requester": null,
+        "topics": [
+          "evaluation"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "evaluation: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "evaluation: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-019",
+        "text": "Describe provenance, citations and uncertainty handling.",
+        "requester": null,
+        "topics": [
+          "provenance"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "provenance: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "provenance: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-020",
+        "text": "What technical facts block DPA completion?",
+        "requester": null,
+        "topics": [
+          "dpa"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Legal",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "dpa: PROPOSED blocked until subprocessors, cross_border are confirmed"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-021",
+        "text": "Provide insurance evidence and expiry.",
+        "requester": null,
+        "topics": [
+          "insurance"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Procurement",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "insurance: VERIFIED CAD 5,000,000"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-022",
+        "text": "Identify information likely to delay approval.",
+        "requester": null,
+        "topics": [
+          "approval_blockers"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Procurement",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "approval_blockers: PROPOSED 7 items may delay approval: cross_border, inference_location, insurance, personal_info_scope, retention_prompts_responses, retention_traces, subprocessors"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-023",
+        "text": "Which responses require human approval before external submission?",
+        "requester": null,
+        "topics": [
+          "submission_approval"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Governance",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "submission_approval: PROPOSED every response needs human approval before submission"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-024",
+        "text": "Control 24: provide the customer-specific answer, supporting evidence, accountable owner, and any unresolved assumption or exception.",
+        "requester": null,
+        "topics": [
+          "insurance",
+          "approval_blockers"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": "template:Procurement",
+        "section": "Procurement",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "insurance: VERIFIED CAD 5,000,000",
+        "approval_blockers: PROPOSED 7 items may delay approval: cross_border, inference_location, insurance, personal_info_scope, retention_prompts_responses, retention_traces, subprocessors"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-025",
+        "text": "Control 25: provide the customer-specific answer, supporting evidence, accountable owner, and any unresolved assumption or exception.",
+        "requester": null,
+        "topics": [
+          "personal_info_scope",
+          "storage_location",
+          "inference_location",
+          "retention_source_files",
+          "retention_prompts_responses",
+          "retention_app_logs",
+          "retention_traces",
+          "subprocessors",
+          "cross_border"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": "template:Privacy",
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "personal_info_scope: UNKNOWN",
+        "storage_location: PROPOSED AWS ca-central-1 for supplier persistence",
+        "inference_location: UNKNOWN",
+        "retention_source_files: PROPOSED workspace lifetime",
+        "retention_prompts_responses: UNKNOWN",
+        "retention_app_logs: PROPOSED 14 days",
+        "retention_traces: UNKNOWN",
+        "subprocessors: UNKNOWN",
+        "cross_border: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "personal_info_scope: unknown",
+        "inference_location: unknown",
+        "retention_prompts_responses: unknown",
+        "retention_traces: unknown",
+        "subprocessors: unknown",
+        "cross_border: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "01_customer/customer_correspondence#O1",
+        "03_internal/internal_messages#O1",
+        "04_knowledge/customer_specific_configuration_DRAFT#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-026",
+        "text": "Control 26: provide the customer-specific answer, supporting evidence, accountable owner, and any unresolved assumption or exception.",
+        "requester": null,
+        "topics": [
+          "soc2",
+          "pen_test",
+          "pen_test_remediation",
+          "encryption_in_transit",
+          "encryption_at_rest",
+          "iam_access",
+          "incident_response"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": "template:Security",
+        "section": "Security",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "soc2: VERIFIED SOC 2 Type II, Jan-Dec 2025, final",
+        "pen_test: VERIFIED no Critical or High findings, Feb 2026 test; two Medium findings open in original report, Feb 2026 test; M-01 internal service-token scope, Medium, open in original report, Feb 2026 test; M-02 rate-limit bypass under retry pattern, Medium, open in original report, Feb 2026 test",
+        "pen_test_remediation: PROPOSED remediated",
+        "encryption_in_transit: PROPOSED TLS 1.2+, Apr 2026 overview",
+        "encryption_at_rest: PROPOSED AES-256 primary databases/object storage, Apr 2026 overview",
+        "iam_access: UNKNOWN",
+        "incident_response: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "iam_access: unknown",
+        "incident_response: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "Q-027",
+        "text": "Control 27: provide the customer-specific answer, supporting evidence, accountable owner, and any unresolved assumption or exception.",
+        "requester": null,
+        "topics": [
+          "model_providers",
+          "provider_training_retention",
+          "model_fallback",
+          "tool_actions",
+          "human_oversight",
+          "prompt_injection",
+          "evaluation",
+          "provenance"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": "template:AI Risk",
+        "section": "AI Risk",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "model_providers: PROPOSED OpenAI",
+        "provider_training_retention: UNKNOWN",
+        "model_fallback: CONFLICT",
+        "tool_actions: UNKNOWN",
+        "human_oversight: PROPOSED human confirms customer-facing actions",
+        "prompt_injection: UNKNOWN",
+        "evaluation: UNKNOWN",
+        "provenance: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "provider_training_retention: unknown",
+        "model_fallback: conflict",
+        "tool_actions: unknown",
+        "prompt_injection: unknown",
+        "evaluation: unknown",
+        "provenance: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "03_internal/internal_messages#O1",
+        "04_knowledge/customer_specific_configuration_DRAFT#O2"
+      ]
+    },
+    {
+      "req": {
+        "id": "Q-028",
+        "text": "Control 28: provide the customer-specific answer, supporting evidence, accountable owner, and any unresolved assumption or exception.",
+        "requester": null,
+        "topics": [
+          "rto_rpo"
+        ],
+        "source_file": "02_questionnaires/vendor_risk_questionnaire.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": "template:Resilience",
+        "section": "Resilience",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "rto_rpo: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "rto_rpo: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R1",
+        "text": "Provide a complete supplier profile.",
+        "requester": "Marcus",
+        "topics": [],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "Complete supplier profile",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R2",
+        "text": "Provide a technology risk assessment.",
+        "requester": "Marcus",
+        "topics": [],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "technology risk assessment",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R3",
+        "text": "Provide security evidence.",
+        "requester": "Marcus",
+        "topics": [],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "security evidence",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R4",
+        "text": "Provide an AI governance intake.",
+        "requester": "Marcus",
+        "topics": [],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "AI governance intake",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R5",
+        "text": "Answer for the configuration Acme would actually receive.",
+        "requester": "Marcus",
+        "topics": [
+          "service_description"
+        ],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "Answer for the configuration Acme would actually receive.",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "service_description: PROPOSED AI operations assistant for customer-service workflows"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "01_customer/customer_correspondence#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R6",
+        "text": "If an answer is unknown, identify the owner rather than guessing.",
+        "requester": "Marcus",
+        "topics": [],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "If unknown, identify the owner rather than guessing.",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R7",
+        "text": "Clarify the personal-information scope.",
+        "requester": "Elena",
+        "topics": [
+          "personal_info_scope"
+        ],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "Clarify personal-information scope",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "personal_info_scope: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "01_customer/customer_correspondence#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R8",
+        "text": "Clarify whether content leaves Canada during processing.",
+        "requester": "Elena",
+        "topics": [
+          "inference_location",
+          "cross_border"
+        ],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "whether content leaves Canada during processing",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "inference_location: UNKNOWN",
+        "cross_border: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "inference_location: unknown",
+        "cross_border: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "03_internal/internal_messages#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R9",
+        "text": "Clarify retention by data type.",
+        "requester": "Elena",
+        "topics": [
+          "retention_app_logs",
+          "retention_traces",
+          "retention_source_files",
+          "retention_prompts_responses"
+        ],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "retention by data type",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "retention_app_logs: PROPOSED 14 days",
+        "retention_traces: UNKNOWN",
+        "retention_source_files: PROPOSED workspace lifetime",
+        "retention_prompts_responses: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "retention_traces: unknown",
+        "retention_prompts_responses: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "04_knowledge/customer_specific_configuration_DRAFT#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "01_customer/customer_correspondence#R10",
+        "text": "Clarify subprocessors with content access.",
+        "requester": "Elena",
+        "topics": [
+          "subprocessors"
+        ],
+        "source_file": "01_customer/customer_correspondence.txt",
+        "quote": "subprocessors with content access",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "subprocessors: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    }
+  ],
+  "verdicts": {
+    "approval_blockers": {
+      "topic": "approval_blockers",
+      "status": "PROPOSED",
+      "value": "7 items may delay approval: cross_border, inference_location, insurance, personal_info_scope, retention_prompts_responses, retention_traces, subprocessors",
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "derived from blocker list",
+      "caveats": [],
+      "sendable": false
+    },
+    "cross_border": {
+      "topic": "cross_border",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "dpa": {
+      "topic": "dpa",
+      "status": "PROPOSED",
+      "value": "blocked until subprocessors, cross_border are confirmed",
+      "used": [],
+      "excluded": [],
+      "hints": [
+        "DPA blocked until subprocessors and cross-border transfers are confirmed. (03_internal/internal_messages.txt)"
+      ],
+      "rule": "derived from dependency",
+      "caveats": [],
+      "sendable": false
+    },
+    "encryption_at_rest": {
+      "topic": "encryption_at_rest",
+      "status": "PROPOSED",
+      "value": "AES-256 primary databases/object storage, Apr 2026 overview",
+      "used": [
+        "04_knowledge/general_or_older_reference#F5"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "generic platform fact: needs confirmation",
+      "caveats": [],
+      "sendable": false
+    },
+    "encryption_in_transit": {
+      "topic": "encryption_in_transit",
+      "status": "PROPOSED",
+      "value": "TLS 1.2+, Apr 2026 overview",
+      "used": [
+        "04_knowledge/general_or_older_reference#F4"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "generic platform fact: needs confirmation",
+      "caveats": [],
+      "sendable": false
+    },
+    "evaluation": {
+      "topic": "evaluation",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "human_oversight": {
+      "topic": "human_oversight",
+      "status": "PROPOSED",
+      "value": "human confirms customer-facing actions",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F7"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "iam_access": {
+      "topic": "iam_access",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "incident_response": {
+      "topic": "incident_response",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "inference_location": {
+      "topic": "inference_location",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "insurance": {
+      "topic": "insurance",
+      "status": "VERIFIED",
+      "value": "CAD 5,000,000",
+      "used": [
+        "05_evidence/insurance_status#F1"
+      ],
+      "excluded": [
+        [
+          "05_evidence/insurance_status#F2",
+          "absence: Renewal of the current insurance certificate is pending."
+        ]
+      ],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [
+        "no evidence: Renewal of the current insurance certificate is pending.",
+        "expires 2026-10-01"
+      ],
+      "sendable": false
+    },
+    "model_fallback": {
+      "topic": "model_fallback",
+      "status": "CONFLICT",
+      "value": null,
+      "used": [
+        "03_internal/internal_messages#F3",
+        "04_knowledge/customer_specific_configuration_DRAFT#F3"
+      ],
+      "excluded": [
+        [
+          "03_internal/internal_messages#F2",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "generic: enabled (03_internal/internal_messages.txt)"
+      ],
+      "rule": "conflicting values at same rank",
+      "caveats": [
+        "open decision (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.",
+        "open decision (internal): Whether the Anthropic fallback is enabled, which is conditional on approval."
+      ],
+      "sendable": false
+    },
+    "model_providers": {
+      "topic": "model_providers",
+      "status": "PROPOSED",
+      "value": "OpenAI",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F2"
+      ],
+      "excluded": [
+        [
+          "04_knowledge/general_or_older_reference#F1",
+          "generic source on per-customer topic"
+        ],
+        [
+          "04_knowledge/prior_customer_answers_CONTEXT_ONLY#F1",
+          "other customer"
+        ]
+      ],
+      "hints": [
+        "generic: OpenAI and Anthropic, Apr 2026 overview (04_knowledge/general_or_older_reference.md)",
+        "other customer: OpenAI, Anthropic (04_knowledge/prior_customer_answers_CONTEXT_ONLY.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "other:primary_aws_region": {
+      "topic": "other:primary_aws_region",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [
+        [
+          "04_knowledge/general_or_older_reference#F3",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "generic: Canada, Apr 2026 overview (04_knowledge/general_or_older_reference.md)"
+      ],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "other:vendor_onboarding": {
+      "topic": "other:vendor_onboarding",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "pen_test": {
+      "topic": "pen_test",
+      "status": "VERIFIED",
+      "value": "no Critical or High findings, Feb 2026 test; two Medium findings open in original report, Feb 2026 test; M-01 internal service-token scope, Medium, open in original report, Feb 2026 test; M-02 rate-limit bypass under retry pattern, Medium, open in original report, Feb 2026 test",
+      "used": [
+        "05_evidence/pen_test_summary#F1",
+        "05_evidence/pen_test_summary#F2",
+        "05_evidence/pen_test_summary#F3",
+        "05_evidence/pen_test_summary#F4"
+      ],
+      "excluded": [
+        [
+          "03_internal/internal_messages#F4",
+          "outranked by higher rank"
+        ]
+      ],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [],
+      "sendable": true
+    },
+    "pen_test_remediation": {
+      "topic": "pen_test_remediation",
+      "status": "PROPOSED",
+      "value": "remediated",
+      "used": [
+        "03_internal/internal_messages#F5"
+      ],
+      "excluded": [
+        [
+          "03_internal/internal_messages#F6",
+          "absence: Evidence of the pen test remediation is needed but not provided."
+        ],
+        [
+          "05_evidence/pen_test_summary#F5",
+          "absence: The file contains no evidence that the penetration test findings were remediated."
+        ]
+      ],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [
+        "no evidence: Evidence of the pen test remediation is needed but not provided.",
+        "no evidence: The file contains no evidence that the penetration test findings were remediated."
+      ],
+      "sendable": false
+    },
+    "personal_info_scope": {
+      "topic": "personal_info_scope",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "prompt_injection": {
+      "topic": "prompt_injection",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "provenance": {
+      "topic": "provenance",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "provider_training_retention": {
+      "topic": "provider_training_retention",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "retention_app_logs": {
+      "topic": "retention_app_logs",
+      "status": "PROPOSED",
+      "value": "14 days",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F4"
+      ],
+      "excluded": [
+        [
+          "03_internal/internal_messages#F1",
+          "generic source on per-customer topic"
+        ],
+        [
+          "04_knowledge/general_or_older_reference#F2",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "generic: 14 days (03_internal/internal_messages.txt)",
+        "generic: 30 days, Apr 2026 overview (04_knowledge/general_or_older_reference.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "retention_prompts_responses": {
+      "topic": "retention_prompts_responses",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "retention_source_files": {
+      "topic": "retention_source_files",
+      "status": "PROPOSED",
+      "value": "workspace lifetime",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F6"
+      ],
+      "excluded": [
+        [
+          "04_knowledge/prior_customer_answers_CONTEXT_ONLY#F2",
+          "other customer"
+        ]
+      ],
+      "hints": [
+        "other customer: 90 days (04_knowledge/prior_customer_answers_CONTEXT_ONLY.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [
+        "open decision (internal): Customer-specific retention for source files is still to be determined."
+      ],
+      "sendable": false
+    },
+    "retention_traces": {
+      "topic": "retention_traces",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "rto_rpo": {
+      "topic": "rto_rpo",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "service_description": {
+      "topic": "service_description",
+      "status": "PROPOSED",
+      "value": "AI operations assistant for customer-service workflows",
+      "used": [
+        "00_START_HERE#S1"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [
+        "open decision (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts."
+      ],
+      "sendable": false
+    },
+    "soc2": {
+      "topic": "soc2",
+      "status": "VERIFIED",
+      "value": "SOC 2 Type II, Jan-Dec 2025, final",
+      "used": [
+        "05_evidence/soc2_status#F1"
+      ],
+      "excluded": [
+        [
+          "05_evidence/soc2_status#F2",
+          "absence: The 2026 SOC 2 audit is not yet final."
+        ]
+      ],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [
+        "no evidence: The 2026 SOC 2 audit is not yet final."
+      ],
+      "sendable": false
+    },
+    "storage_location": {
+      "topic": "storage_location",
+      "status": "PROPOSED",
+      "value": "AWS ca-central-1 for supplier persistence",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F1"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "submission_approval": {
+      "topic": "submission_approval",
+      "status": "PROPOSED",
+      "value": "every response needs human approval before submission",
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "derived from review policy",
+      "caveats": [],
+      "sendable": false
+    },
+    "subprocessors": {
+      "topic": "subprocessors",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "tool_actions": {
+      "topic": "tool_actions",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "trace_payload_capture": {
+      "topic": "trace_payload_capture",
+      "status": "PROPOSED",
+      "value": "disabled",
+      "used": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F5"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    }
+  },
+  "facts": [
+    {
+      "id": "00_START_HERE#S1",
+      "file": "00_START_HERE.txt",
+      "line": 4,
+      "topic": "service_description",
+      "claim": "Proposed service: AI operations assistant for customer-service workflows",
+      "value": "AI operations assistant for customer-service workflows",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Service: AI operations assistant for customer-service workflows",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "case_header",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F1",
+      "file": "03_internal/internal_messages.txt",
+      "line": 1,
+      "topic": "retention_app_logs",
+      "claim": "Enterprise app logs should be retained for 14 days now.",
+      "value": "14 days",
+      "applies_to": "generic",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "enterprise app logs should be 14d now.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F2",
+      "file": "03_internal/internal_messages.txt",
+      "line": 4,
+      "topic": "model_fallback",
+      "claim": "Fallback model is enabled globally.",
+      "value": "enabled",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "globally yes",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F3",
+      "file": "03_internal/internal_messages.txt",
+      "line": 4,
+      "topic": "model_fallback",
+      "claim": "For Acme, the fallback is probably disabled if residency or legal requires it.",
+      "value": "disabled for this customer",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "for Acme probably disable if residency/legal requires it",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F4",
+      "file": "03_internal/internal_messages.txt",
+      "line": 5,
+      "topic": "pen_test",
+      "claim": "The Feb pen test had 2 medium findings.",
+      "value": "2 medium findings, Feb pen test",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "Feb pen test had 2 mediums",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F5",
+      "file": "03_internal/internal_messages.txt",
+      "line": 5,
+      "topic": "pen_test_remediation",
+      "claim": "The pen test findings were remediated later.",
+      "value": "remediated",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "remediated later",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "03_internal/internal_messages#F6",
+      "file": "03_internal/internal_messages.txt",
+      "line": 5,
+      "topic": "pen_test_remediation",
+      "claim": "Evidence of the pen test remediation is needed but not provided.",
+      "value": "remediation evidence not provided",
+      "applies_to": "this_customer",
+      "certainty": "absent",
+      "date": null,
+      "speaker": "Anthony",
+      "quote": "but need evidence",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F1",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 2,
+      "topic": "storage_location",
+      "claim": "Supplier persistence for the proposed ACME deployment is planned on AWS ca-central-1.",
+      "value": "AWS ca-central-1 for supplier persistence",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "AWS ca-central-1 for supplier persistence.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F2",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 3,
+      "topic": "model_providers",
+      "claim": "OpenAI is the proposed primary inference provider for this customer's deployment.",
+      "value": "OpenAI",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "OpenAI primary inference",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F3",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 3,
+      "topic": "model_fallback",
+      "claim": "Anthropic fallback is intended to be disabled unless approved.",
+      "value": "disabled unless approved",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Anthropic fallback intended OFF unless approved.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F4",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 4,
+      "topic": "retention_app_logs",
+      "claim": "App logs are intended to be retained for 14 days.",
+      "value": "14 days",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "App logs intended 14 days.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F5",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 4,
+      "topic": "trace_payload_capture",
+      "claim": "Observability payload capture is intended to be disabled.",
+      "value": "disabled",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Observability payload capture intended OFF.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F6",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 5,
+      "topic": "retention_source_files",
+      "claim": "Source files currently persist for workspace lifetime.",
+      "value": "workspace lifetime",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Source files currently persist for workspace lifetime",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#F7",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md",
+      "line": 6,
+      "topic": "human_oversight",
+      "claim": "A human confirms customer-facing actions.",
+      "value": "human confirms customer-facing actions",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Human confirms customer-facing actions.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/general_or_older_reference#F1",
+      "file": "04_knowledge/general_or_older_reference.md",
+      "line": 2,
+      "topic": "model_providers",
+      "claim": "OpenAI and Anthropic may be used, per the Apr 2026 general platform overview.",
+      "value": "OpenAI and Anthropic, Apr 2026 overview",
+      "applies_to": "generic",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "OpenAI and Anthropic may be used",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/general_or_older_reference#F2",
+      "file": "04_knowledge/general_or_older_reference.md",
+      "line": 2,
+      "topic": "retention_app_logs",
+      "claim": "Standard application logs are kept for 30 days, per the Apr 2026 general platform overview.",
+      "value": "30 days, Apr 2026 overview",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Standard application logs: 30 days.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/general_or_older_reference#F3",
+      "file": "04_knowledge/general_or_older_reference.md",
+      "line": 3,
+      "topic": "other:primary_aws_region",
+      "claim": "The primary AWS region is Canada, per the Apr 2026 general platform overview.",
+      "value": "Canada, Apr 2026 overview",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Primary AWS region Canada.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/general_or_older_reference#F4",
+      "file": "04_knowledge/general_or_older_reference.md",
+      "line": 3,
+      "topic": "encryption_in_transit",
+      "claim": "Data in transit uses TLS 1.2 or higher, per the Apr 2026 general platform overview.",
+      "value": "TLS 1.2+, Apr 2026 overview",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "TLS 1.2+",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/general_or_older_reference#F5",
+      "file": "04_knowledge/general_or_older_reference.md",
+      "line": 3,
+      "topic": "encryption_at_rest",
+      "claim": "AES-256 encryption is used for primary databases and object storage, per the Apr 2026 general platform overview.",
+      "value": "AES-256 primary databases/object storage, Apr 2026 overview",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "AES-256 primary databases/object storage",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/prior_customer_answers_CONTEXT_ONLY#F1",
+      "file": "04_knowledge/prior_customer_answers_CONTEXT_ONLY.md",
+      "line": 2,
+      "topic": "model_providers",
+      "claim": "Meridian Retail used OpenAI and Anthropic.",
+      "value": "OpenAI, Anthropic",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Meridian used OpenAI + Anthropic",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "04_knowledge/prior_customer_answers_CONTEXT_ONLY#F2",
+      "file": "04_knowledge/prior_customer_answers_CONTEXT_ONLY.md",
+      "line": 2,
+      "topic": "retention_source_files",
+      "claim": "Meridian Retail source-file retention is 90 days.",
+      "value": "90 days",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "90-day source-file retention",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/insurance_status#F1",
+      "file": "05_evidence/insurance_status.txt",
+      "line": 1,
+      "topic": "insurance",
+      "claim": "Cyber / Technology E&O coverage is CAD 5,000,000.",
+      "value": "CAD 5,000,000",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Cyber / Technology E&O: CAD 5,000,000.",
+      "valid_until": "2026-10-01",
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/insurance_status#F2",
+      "file": "05_evidence/insurance_status.txt",
+      "line": 1,
+      "topic": "insurance",
+      "claim": "Renewal of the current insurance certificate is pending.",
+      "value": "renewal pending",
+      "applies_to": "generic",
+      "certainty": "absent",
+      "date": null,
+      "speaker": null,
+      "quote": "Renewal pending.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/pen_test_summary#F1",
+      "file": "05_evidence/pen_test_summary.txt",
+      "line": 2,
+      "topic": "pen_test",
+      "claim": "The external penetration test had no Critical or High findings.",
+      "value": "no Critical or High findings, Feb 2026 test",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "No Critical or High findings",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/pen_test_summary#F2",
+      "file": "05_evidence/pen_test_summary.txt",
+      "line": 2,
+      "topic": "pen_test",
+      "claim": "Two Medium findings were open in the original penetration test report.",
+      "value": "two Medium findings open in original report, Feb 2026 test",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Two Medium findings were OPEN in the original report",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/pen_test_summary#F3",
+      "file": "05_evidence/pen_test_summary.txt",
+      "line": 3,
+      "topic": "pen_test",
+      "claim": "Medium finding M-01 concerns internal service-token scope and was open in the original report.",
+      "value": "M-01 internal service-token scope, Medium, open in original report, Feb 2026 test",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "M-01 internal service-token scope",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/pen_test_summary#F4",
+      "file": "05_evidence/pen_test_summary.txt",
+      "line": 3,
+      "topic": "pen_test",
+      "claim": "Medium finding M-02 concerns a rate-limit bypass under the retry pattern and was open in the original report.",
+      "value": "M-02 rate-limit bypass under retry pattern, Medium, open in original report, Feb 2026 test",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "M-02 rate-limit bypass under retry pattern",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/pen_test_summary#F5",
+      "file": "05_evidence/pen_test_summary.txt",
+      "line": 4,
+      "topic": "pen_test_remediation",
+      "claim": "The file contains no evidence that the penetration test findings were remediated.",
+      "value": "no remediation evidence",
+      "applies_to": "generic",
+      "certainty": "absent",
+      "date": null,
+      "speaker": null,
+      "quote": "This file contains no remediation evidence.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/soc2_status#F1",
+      "file": "05_evidence/soc2_status.txt",
+      "line": 1,
+      "topic": "soc2",
+      "claim": "Lantern AI has a final SOC 2 Type II report covering Jan-Dec 2025.",
+      "value": "SOC 2 Type II, Jan-Dec 2025, final",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "SOC 2 Type II, Jan-Dec 2025: FINAL",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    },
+    {
+      "id": "05_evidence/soc2_status#F2",
+      "file": "05_evidence/soc2_status.txt",
+      "line": 1,
+      "topic": "soc2",
+      "claim": "The 2026 SOC 2 audit is not yet final.",
+      "value": "2026 audit not final",
+      "applies_to": "generic",
+      "certainty": "absent",
+      "date": null,
+      "speaker": null,
+      "quote": "2026 audit is not yet final",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_1_Acme_Bank",
+      "customer": "ACME NATIONAL BANK",
+      "valid_until_raw": null
+    }
+  ],
+  "blockers": [
+    {
+      "item": "cross_border",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "cross_border UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "whether content leaves Canada during processing",
+      "subject": null
+    },
+    {
+      "item": "cross_border",
+      "reason": "explicit_dependency",
+      "chain": [
+        "cross_border UNKNOWN",
+        "DPA",
+        "October production pilot"
+      ],
+      "quote": "DPA blocked until subprocessors and cross-border transfers are confirmed.",
+      "subject": "dpa"
+    },
+    {
+      "item": "inference_location",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "inference_location UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "whether content leaves Canada during processing",
+      "subject": null
+    },
+    {
+      "item": "insurance",
+      "reason": "caveat_before_milestone",
+      "chain": [
+        "insurance expires 2026-10-01",
+        "October production pilot"
+      ],
+      "quote": "expires 2026-10-01",
+      "subject": null
+    },
+    {
+      "item": "personal_info_scope",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "personal_info_scope UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "Clarify personal-information scope",
+      "subject": null
+    },
+    {
+      "item": "retention_prompts_responses",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "retention_prompts_responses UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "retention by data type",
+      "subject": null
+    },
+    {
+      "item": "retention_traces",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "retention_traces UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "retention by data type",
+      "subject": null
+    },
+    {
+      "item": "subprocessors",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "subprocessors UNKNOWN",
+        "October production pilot"
+      ],
+      "quote": "subprocessors with content access",
+      "subject": null
+    },
+    {
+      "item": "subprocessors",
+      "reason": "explicit_dependency",
+      "chain": [
+        "subprocessors UNKNOWN",
+        "DPA",
+        "October production pilot"
+      ],
+      "quote": "DPA blocked until subprocessors and cross-border transfers are confirmed.",
+      "subject": "dpa"
+    }
+  ],
+  "next_steps": [
+    {
+      "owner": "Mina",
+      "items": [
+        "BLOCKER cross_border (asked_hard_gap, explicit_dependency): cross_border UNKNOWN → October production pilot | cross_border UNKNOWN → DPA → October production pilot",
+        "BLOCKER personal_info_scope (asked_hard_gap): personal_info_scope UNKNOWN → October production pilot",
+        "BLOCKER subprocessors (asked_hard_gap, explicit_dependency): subprocessors UNKNOWN → October production pilot | subprocessors UNKNOWN → DPA → October production pilot",
+        "cross_border: UNKNOWN — needed by Q-006, Q-025, 01_customer/customer_correspondence#R8",
+        "dpa: PROPOSED blocked until subprocessors, cross_border are confirmed — needed by Q-020",
+        "personal_info_scope: UNKNOWN — needed by Q-002, Q-025, 01_customer/customer_correspondence#R7",
+        "submission_approval: PROPOSED every response needs human approval before submission — needed by Q-023",
+        "subprocessors: UNKNOWN — needed by Q-005, Q-025, 01_customer/customer_correspondence#R10"
+      ],
+      "kind": "internal",
+      "topics": [
+        "cross_border",
+        "personal_info_scope",
+        "subprocessors",
+        "dpa",
+        "submission_approval"
+      ]
+    },
+    {
+      "owner": "Parsa",
+      "items": [
+        "BLOCKER inference_location (asked_hard_gap): inference_location UNKNOWN → October production pilot",
+        "BLOCKER retention_prompts_responses (asked_hard_gap): retention_prompts_responses UNKNOWN → October production pilot",
+        "evaluation: UNKNOWN — needed by Q-018, Q-027",
+        "human_oversight: PROPOSED human confirms customer-facing actions — needed by Q-016, Q-027",
+        "inference_location: UNKNOWN — needed by Q-003, Q-025, 01_customer/customer_correspondence#R8",
+        "model_fallback: CONFLICT [caveats: open decision (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.; open decision (internal): Whether the Anthropic fallback is enabled, which is conditional on approval.] — needed by Q-014, Q-027",
+        "model_providers: PROPOSED OpenAI — needed by Q-012, Q-027",
+        "prompt_injection: UNKNOWN — needed by Q-017, Q-027",
+        "provenance: UNKNOWN — needed by Q-019, Q-027",
+        "provider_training_retention: UNKNOWN — needed by Q-013, Q-027",
+        "retention_prompts_responses: UNKNOWN — needed by Q-004, Q-025, 01_customer/customer_correspondence#R9",
+        "tool_actions: UNKNOWN — needed by Q-015, Q-027",
+        "trace_payload_capture: PROPOSED disabled",
+        "decide (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it. (affects model_fallback, inference_location)",
+        "decide (internal): Whether the Anthropic fallback is enabled, which is conditional on approval. (affects model_fallback)"
+      ],
+      "kind": "internal",
+      "topics": [
+        "inference_location",
+        "retention_prompts_responses",
+        "evaluation",
+        "human_oversight",
+        "model_fallback",
+        "model_providers",
+        "prompt_injection",
+        "provenance",
+        "provider_training_retention",
+        "tool_actions",
+        "trace_payload_capture"
+      ]
+    },
+    {
+      "owner": "Anthony",
+      "items": [
+        "BLOCKER retention_traces (asked_hard_gap): retention_traces UNKNOWN → October production pilot",
+        "encryption_at_rest: PROPOSED AES-256 primary databases/object storage, Apr 2026 overview — needed by Q-009, Q-026",
+        "encryption_in_transit: PROPOSED TLS 1.2+, Apr 2026 overview — needed by Q-009, Q-026",
+        "iam_access: UNKNOWN — needed by Q-009, Q-026",
+        "incident_response: UNKNOWN — needed by Q-010, Q-026",
+        "pen_test_remediation: PROPOSED remediated [caveats: no evidence: Evidence of the pen test remediation is needed but not provided.; no evidence: The file contains no evidence that the penetration test findings were remediated.] — needed by Q-008, Q-026",
+        "retention_app_logs: PROPOSED 14 days — needed by Q-004, Q-025, 01_customer/customer_correspondence#R9",
+        "retention_source_files: PROPOSED workspace lifetime [caveats: open decision (internal): Customer-specific retention for source files is still to be determined.] — needed by Q-004, Q-025, 01_customer/customer_correspondence#R9",
+        "retention_traces: UNKNOWN — needed by Q-004, Q-025, 01_customer/customer_correspondence#R9",
+        "rto_rpo: UNKNOWN — needed by Q-011, Q-028",
+        "soc2: VERIFIED SOC 2 Type II, Jan-Dec 2025, final [caveats: no evidence: The 2026 SOC 2 audit is not yet final.] — needed by Q-007, Q-026",
+        "storage_location: PROPOSED AWS ca-central-1 for supplier persistence — needed by Q-003, Q-025",
+        "decide (internal): Customer-specific retention for source files is still to be determined. (affects retention_source_files)"
+      ],
+      "kind": "internal",
+      "topics": [
+        "retention_traces",
+        "encryption_at_rest",
+        "encryption_in_transit",
+        "iam_access",
+        "incident_response",
+        "pen_test_remediation",
+        "retention_app_logs",
+        "retention_source_files",
+        "rto_rpo",
+        "soc2",
+        "storage_location"
+      ]
+    },
+    {
+      "owner": "Sam",
+      "items": [
+        "BLOCKER insurance (caveat_before_milestone): insurance expires 2026-10-01 → October production pilot",
+        "insurance: VERIFIED CAD 5,000,000 [caveats: no evidence: Renewal of the current insurance certificate is pending.; expires 2026-10-01] — needed by Q-021, Q-024"
+      ],
+      "kind": "internal",
+      "topics": [
+        "insurance"
+      ]
+    },
+    {
+      "owner": "Jai",
+      "items": [
+        "approval_blockers: PROPOSED 7 items may delay approval: cross_border, inference_location, insurance, personal_info_scope, retention_prompts_responses, retention_traces, subprocessors — needed by Q-022, Q-024",
+        "service_description: PROPOSED AI operations assistant for customer-service workflows [caveats: open decision (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts.] — needed by Q-001, 01_customer/customer_correspondence#R5"
+      ],
+      "kind": "internal",
+      "topics": [
+        "approval_blockers",
+        "service_description"
+      ]
+    },
+    {
+      "owner": "Unassigned",
+      "items": [
+        "other:primary_aws_region: UNKNOWN",
+        "other:vendor_onboarding: UNKNOWN"
+      ],
+      "kind": "internal",
+      "topics": [
+        "other:primary_aws_region",
+        "other:vendor_onboarding"
+      ]
+    },
+    {
+      "owner": "Customer Procurement",
+      "items": [
+        "decide (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts. (affects service_description, personal_info_scope)"
+      ],
+      "kind": "customer_decision",
+      "topics": [
+        "service_description",
+        "personal_info_scope"
+      ]
+    }
+  ],
+  "answers": [
+    {
+      "req_id": "Q-001",
+      "answer": "The proposed service is an AI operations assistant for customer-service workflows (proposed value, unconfirmed; source 00_START_HERE#S1). Open decision: whether the pilot stays synthetic-only or includes real customer-support transcripts, not yet decided with the customer. Intended customer use beyond the service description: not confirmed in the allowed facts. Suggested internal owner (routing suggestion, not confirmed): Jai.\nCaveats: open decision (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts.",
+      "cited": [
+        "00_START_HERE#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI operations assistant for customer-service workflows"
+      ],
+      "owner": "Jai",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-002",
+      "answer": "Not yet known. Owner: Mina. Open: personal_info_scope: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-003",
+      "answer": "Storage location: PROPOSED, UNCONFIRMED value 'AWS ca-central-1 for supplier persistence' (source: customer-specific configuration draft). Processing/inference location: UNKNOWN; not yet confirmed and no allowed evidence specifies it. Suggested internal owner for routing (proposed, not confirmed): Anthony.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F1"
+      ],
+      "evidence_quotes": [
+        "AWS ca-central-1 for supplier persistence."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-004",
+      "answer": "Source files: proposed value 'workspace lifetime' (unconfirmed/proposed); the source states that source files currently persist for workspace lifetime, and customer-specific retention for source files is still an open internal decision. App logs: proposed 14 days (unconfirmed; the source describes it as intended). Prompts and responses: retention not yet confirmed (unknown). Traces: retention not yet confirmed (unknown). Suggested internal owner for this answer, as a proposed routing suggestion only: Anthony.\nCaveats: open decision (internal): Customer-specific retention for source files is still to be determined.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F6",
+        "04_knowledge/customer_specific_configuration_DRAFT#F4"
+      ],
+      "evidence_quotes": [
+        "Source files currently persist for workspace lifetime",
+        "App logs intended 14 days."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "retention_prompts_responses: unknown",
+        "retention_traces: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-005",
+      "answer": "Not yet known. Owner: Mina. Open: subprocessors: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-006",
+      "answer": "Not yet known. Owner: Mina. Open: cross_border: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "cross_border: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-007",
+      "answer": "The most recent confirmed assurance is a SOC 2 Type II report covering Jan-Dec 2025, marked final. The 2026 SOC 2 audit is not yet final, so no current-period assurance is confirmed as of 2026-09-25. Because the report covers a period that ended in 2025, it should not be described as current assurance. Suggested internal owner (proposed, not confirmed): Anthony.\nCaveats: no evidence: The 2026 SOC 2 audit is not yet final.",
+      "cited": [
+        "05_evidence/soc2_status#F1"
+      ],
+      "evidence_quotes": [
+        "SOC 2 Type II, Jan-Dec 2025: FINAL"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-008",
+      "answer": "Latest penetration test: Feb 2026. Per the Feb 2026 test, there were no Critical or High findings. Two Medium findings (M-01 internal service-token scope; M-02 rate-limit bypass under retry pattern) were open in the original Feb 2026 report. Remediation status: an internal message states the findings were 'remediated later', but no evidence of remediation is provided in the file, so remediation is unconfirmed and the 'remediated' status is only a proposed value, not verified. Status of the findings as of today (2026-09-25): not confirmed. Suggested internal owner (routing suggestion, not confirmed): Anthony, proposed for remediation evidence follow-up.\nCaveats: no evidence: Evidence of the pen test remediation is needed but not provided.; no evidence: The file contains no evidence that the penetration test findings were remediated.",
+      "cited": [
+        "05_evidence/pen_test_summary#F1",
+        "05_evidence/pen_test_summary#F2",
+        "05_evidence/pen_test_summary#F3",
+        "05_evidence/pen_test_summary#F4",
+        "03_internal/internal_messages#F5"
+      ],
+      "evidence_quotes": [
+        "No Critical or High findings",
+        "Two Medium findings were OPEN in the original report",
+        "M-01 internal service-token scope",
+        "M-02 rate-limit bypass under retry pattern",
+        "remediated later"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-009",
+      "answer": "Encryption in transit: proposed as TLS 1.2+ (unconfirmed/proposed; sourced from an Apr 2026 overview). Encryption at rest: proposed as AES-256 for primary databases and object storage (unconfirmed/proposed; sourced from an Apr 2026 overview). IAM and privileged production access: not yet confirmed; no allowed facts were provided, so the IAM model and privileged access controls are unknown. Suggested internal owner for routing: Anthony (proposed routing suggestion, not confirmed).",
+      "cited": [
+        "04_knowledge/general_or_older_reference#F4",
+        "04_knowledge/general_or_older_reference#F5"
+      ],
+      "evidence_quotes": [
+        "TLS 1.2+",
+        "AES-256 primary databases/object storage"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "iam_access: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-010",
+      "answer": "Not yet known. Owner: Anthony. Open: incident_response: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "incident_response: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-011",
+      "answer": "Not yet known. Owner: Anthony. Open: rto_rpo: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "rto_rpo: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-012",
+      "answer": "Proposed, unconfirmed: OpenAI is listed as the primary inference model provider for this customer configuration, based only on a draft customer-specific configuration document. No other model providers are identified in the allowed facts. This value is not confirmed. Suggested internal owner (routing suggestion, not confirmed): Parsa.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F2"
+      ],
+      "evidence_quotes": [
+        "OpenAI primary inference"
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-013",
+      "answer": "Not yet known. Owner: Parsa. Open: provider_training_retention: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "provider_training_retention: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-014",
+      "answer": "Model routing/fallback for this customer is unresolved; the topic is in conflict with no confirmed value. Open internal decisions: whether the Anthropic fallback is disabled for Acme if residency or legal requires it, and whether the Anthropic fallback is enabled, which is conditional on approval. Open assumption: conflict between 'disabled for this customer' and 'disabled unless approved'. No allowed facts are available to confirm a routing or fallback configuration. Suggested internal owner: Parsa (routing suggestion, proposed, not confirmed).\nCaveats: open decision (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.; open decision (internal): Whether the Anthropic fallback is enabled, which is conditional on approval.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "model_fallback: conflict between disabled for this customer vs disabled unless approved"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-015",
+      "answer": "Not yet known. Owner: Parsa. Open: tool_actions: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "tool_actions: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-016",
+      "answer": "Proposed, unconfirmed: human confirms customer-facing actions. This value comes from a draft customer-specific configuration document and is not confirmed. The boundary for which actions count as customer-facing is not defined in the allowed facts. Suggested internal owner for routing (not confirmed): Parsa.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F7"
+      ],
+      "evidence_quotes": [
+        "Human confirms customer-facing actions."
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-017",
+      "answer": "Not yet known. Owner: Parsa. Open: prompt_injection: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "prompt_injection: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-018",
+      "answer": "Not yet known. Owner: Parsa. Open: evaluation: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "evaluation: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-019",
+      "answer": "Not yet known. Owner: Parsa. Open: provenance: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "provenance: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-020",
+      "answer": "dpa: blocked until subprocessors, cross_border are confirmed. Source: \"DPA blocked until subprocessors and cross-border transfers are confirmed.\" (03_internal/internal_messages.txt).\nCurrent status: subprocessors: UNKNOWN; cross_border: UNKNOWN",
+      "cited": [],
+      "evidence_quotes": [
+        "DPA blocked until subprocessors and cross-border transfers are confirmed."
+      ],
+      "owner": "Mina",
+      "open_assumptions": [],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-021",
+      "answer": "Insurance coverage stated in the allowed facts: Cyber / Technology E&O of CAD 5,000,000 (fact 05_evidence/insurance_status#F1). Expiry: the current insurance certificate expires 2026-10-01. As of today (2026-09-25) this certificate is still in effect but expires in 6 days; it is not yet expired. Renewal of the current insurance certificate is pending, so the expiry date and renewal status are unconfirmed and no renewed certificate evidence is available. Suggested internal owner for follow-up: Sam (proposed routing, not confirmed).\nCaveats: expires 2026-10-01; no evidence: Renewal of the current insurance certificate is pending.",
+      "cited": [
+        "05_evidence/insurance_status#F1"
+      ],
+      "evidence_quotes": [
+        "Cyber / Technology E&O: CAD 5,000,000."
+      ],
+      "owner": "Sam",
+      "open_assumptions": [],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-022",
+      "answer": "Items that may delay approval (7):\n- cross_border (asked hard gap, explicit dependency): cross_border UNKNOWN → October production pilot | cross_border UNKNOWN → DPA → October production pilot\n- inference_location (asked hard gap): inference_location UNKNOWN → October production pilot\n- insurance (caveat before milestone): insurance expires 2026-10-01 → October production pilot\n- personal_info_scope (asked hard gap): personal_info_scope UNKNOWN → October production pilot\n- retention_prompts_responses (asked hard gap): retention_prompts_responses UNKNOWN → October production pilot\n- retention_traces (asked hard gap): retention_traces UNKNOWN → October production pilot\n- subprocessors (asked hard gap, explicit dependency): subprocessors UNKNOWN → October production pilot | subprocessors UNKNOWN → DPA → October production pilot\nCaveats: expires 2026-10-01; no evidence: Renewal of the current insurance certificate is pending.",
+      "cited": [],
+      "evidence_quotes": [
+        "whether content leaves Canada during processing",
+        "DPA blocked until subprocessors and cross-border transfers are confirmed.",
+        "Clarify personal-information scope",
+        "retention by data type",
+        "subprocessors with content access"
+      ],
+      "owner": "Jai",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-023",
+      "answer": "Every response needs human approval before external submission; nothing is sent automatically.\nConfirm first (drafted from unconfirmed or conflicting sources): Q-001, Q-003, Q-004, Q-008, Q-009, Q-012, Q-014, Q-016\nNot answerable yet (the owner must supply it): Q-002, Q-005, Q-006, Q-010, Q-011, Q-013, Q-015, Q-017, Q-018, Q-019\nEvidence-backed (Legal still reviews the wording): Q-007, Q-020, Q-021, Q-022",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-024",
+      "answer": "Items that may delay approval (7):\n- cross_border (asked hard gap, explicit dependency): cross_border UNKNOWN → October production pilot | cross_border UNKNOWN → DPA → October production pilot\n- inference_location (asked hard gap): inference_location UNKNOWN → October production pilot\n- insurance (caveat before milestone): insurance expires 2026-10-01 → October production pilot\n- personal_info_scope (asked hard gap): personal_info_scope UNKNOWN → October production pilot\n- retention_prompts_responses (asked hard gap): retention_prompts_responses UNKNOWN → October production pilot\n- retention_traces (asked hard gap): retention_traces UNKNOWN → October production pilot\n- subprocessors (asked hard gap, explicit dependency): subprocessors UNKNOWN → October production pilot | subprocessors UNKNOWN → DPA → October production pilot\nAlso: insurance: VERIFIED CAD 5,000,000\nCaveats: expires 2026-10-01; no evidence: Renewal of the current insurance certificate is pending.",
+      "cited": [],
+      "evidence_quotes": [
+        "whether content leaves Canada during processing",
+        "DPA blocked until subprocessors and cross-border transfers are confirmed.",
+        "Clarify personal-information scope",
+        "retention by data type",
+        "subprocessors with content access"
+      ],
+      "owner": "Sam",
+      "open_assumptions": [],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-025",
+      "answer": "Customer-specific answer for Control 25 (draft, not confirmed). Storage location: AWS ca-central-1 for supplier persistence (PROPOSED, unconfirmed). Source file retention: workspace lifetime (stated in the draft configuration; customer-specific retention is still an open internal decision, so this is not confirmed). App log retention: 14 days (PROPOSED, unconfirmed). Unknowns and open assumptions: personal information scope, inference location, prompt/response retention, trace retention, subprocessors and cross-border transfers are not yet confirmed. Unresolved exceptions: customer-specific source file retention is still to be determined. Accountable owner: suggested internal owner Mina (routing suggestion, proposed, not confirmed).\nCaveats: open decision (internal): Customer-specific retention for source files is still to be determined.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F1",
+        "04_knowledge/customer_specific_configuration_DRAFT#F6",
+        "04_knowledge/customer_specific_configuration_DRAFT#F4"
+      ],
+      "evidence_quotes": [
+        "AWS ca-central-1 for supplier persistence.",
+        "Source files currently persist for workspace lifetime",
+        "App logs intended 14 days."
+      ],
+      "owner": "Mina",
+      "open_assumptions": [
+        "personal_info_scope: unknown",
+        "inference_location: unknown",
+        "retention_prompts_responses: unknown",
+        "retention_traces: unknown",
+        "subprocessors: unknown",
+        "cross_border: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-026",
+      "answer": "Customer-specific answer (draft, not approved): SOC 2 Type II covering Jan-Dec 2025 is final (05_evidence/soc2_status#F1); the 2026 SOC 2 audit is not yet final. Penetration test (Feb 2026): no Critical or High findings; two Medium findings (M-01 internal service-token scope; M-02 rate-limit bypass under retry pattern) were open in the original report of the Feb 2026 test. Remediation of these findings is unconfirmed: an internal message mentions 'remediated later' but the file contains no evidence of remediation. Encryption in transit TLS 1.2+ and at rest AES-256 for primary databases/object storage are PROPOSED values from an Apr 2026 overview, not confirmed. IAM access: unknown. Incident response: unknown. Unresolved: pen test remediation evidence, IAM access details, incident response details, and 2026 SOC 2 status. Accountable owner: proposed as Anthony (routing suggestion, not confirmed).\nCaveats: no evidence: Evidence of the pen test remediation is needed but not provided.; no evidence: The 2026 SOC 2 audit is not yet final.; no evidence: The file contains no evidence that the penetration test findings were remediated.",
+      "cited": [
+        "05_evidence/soc2_status#F1",
+        "05_evidence/pen_test_summary#F1",
+        "05_evidence/pen_test_summary#F2",
+        "05_evidence/pen_test_summary#F3",
+        "05_evidence/pen_test_summary#F4",
+        "03_internal/internal_messages#F5",
+        "04_knowledge/general_or_older_reference#F4",
+        "04_knowledge/general_or_older_reference#F5"
+      ],
+      "evidence_quotes": [
+        "SOC 2 Type II, Jan-Dec 2025: FINAL",
+        "No Critical or High findings",
+        "Two Medium findings were OPEN in the original report",
+        "M-01 internal service-token scope",
+        "M-02 rate-limit bypass under retry pattern",
+        "remediated later",
+        "TLS 1.2+",
+        "AES-256 primary databases/object storage"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "iam_access: unknown",
+        "incident_response: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-027",
+      "answer": "Customer-specific answer (draft, not confirmed): Primary inference provider is proposed as OpenAI (unconfirmed/proposed). Human oversight: a human confirms customer-facing actions (stated in the draft configuration). Unresolved: provider training/retention terms are unknown; model fallback is in conflict (disabled for this customer vs. disabled unless approved, and the Anthropic fallback enablement is conditional on approval, an open internal decision); tool actions, prompt injection handling, evaluation, and provenance are unknown. Supporting evidence: draft customer-specific configuration only; no confirmed evidence for the remaining items. Accountable owner: proposed as Parsa (routing suggestion, not confirmed). Status is not asserted here.\nCaveats: open decision (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.; open decision (internal): Whether the Anthropic fallback is enabled, which is conditional on approval.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F2",
+        "04_knowledge/customer_specific_configuration_DRAFT#F7"
+      ],
+      "evidence_quotes": [
+        "OpenAI primary inference",
+        "Human confirms customer-facing actions."
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "provider_training_retention: unknown",
+        "model_fallback: conflict between disabled for this customer vs disabled unless approved",
+        "tool_actions: unknown",
+        "prompt_injection: unknown",
+        "evaluation: unknown",
+        "provenance: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "Q-028",
+      "answer": "Not yet known. Owner: Anthony. Open: rto_rpo: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "rto_rpo: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R1",
+      "answer": "Not yet known. Owner: Unassigned. Open: no information in case files",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Unassigned",
+      "open_assumptions": [],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R2",
+      "answer": "Not yet known. Owner: Unassigned. Open: no information in case files",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Unassigned",
+      "open_assumptions": [],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R3",
+      "answer": "Not yet known. Owner: Unassigned. Open: no information in case files",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Unassigned",
+      "open_assumptions": [],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R4",
+      "answer": "Not yet known. Owner: Unassigned. Open: no information in case files",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Unassigned",
+      "open_assumptions": [],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R5",
+      "answer": "The service description is 'AI operations assistant for customer-service workflows' (stated in 00_START_HERE#S1). Open decision (customer): whether the pilot stays synthetic-only or includes real customer-support transcripts is not yet resolved. No other configuration details are confirmed in the allowed facts.\nCaveats: open decision (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts.",
+      "cited": [
+        "00_START_HERE#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI operations assistant for customer-service workflows"
+      ],
+      "owner": "Jai",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R6",
+      "answer": "Not yet known. Owner: Unassigned. Open: no information in case files",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Unassigned",
+      "open_assumptions": [],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R7",
+      "answer": "Not yet known. Owner: Mina. Open: personal_info_scope: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R8",
+      "answer": "Not yet known. Owner: Parsa. Open: inference_location: unknown; cross_border: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Parsa",
+      "open_assumptions": [
+        "inference_location: unknown",
+        "cross_border: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R9",
+      "answer": "Retention by data type (no status implied; all values as of 2026-09-25):\n- App logs: 14 days, PROPOSED and unconfirmed (source: customer-specific configuration draft).\n- Traces: not yet confirmed (unknown).\n- Source files: workspace lifetime, stated in the customer-specific configuration draft as the current behaviour; customer-specific retention for source files is still an open internal decision, so this is not a confirmed commitment.\n- Prompts and responses: not yet confirmed (unknown).\nSuggested internal owner for this item: Anthony (proposed routing suggestion, not confirmed).\nCaveats: open decision (internal): Customer-specific retention for source files is still to be determined.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F4",
+        "04_knowledge/customer_specific_configuration_DRAFT#F6"
+      ],
+      "evidence_quotes": [
+        "App logs intended 14 days.",
+        "Source files currently persist for workspace lifetime"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "retention_traces: unknown",
+        "retention_prompts_responses: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "01_customer/customer_correspondence#R10",
+      "answer": "Not yet known. Owner: Mina. Open: subprocessors: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    }
+  ],
+  "failed_files": [],
+  "skipped_files": [
+    ".DS_Store"
+  ],
+  "dropped_quotes": [],
+  "supplier": "Lantern AI Technologies Inc.",
+  "files": {
+    "00_START_HERE.txt": "168cee724f43fe440654d6cb375c2bbb2c48188745c1dc525cdfc99a2ba27e46",
+    "01_customer/customer_correspondence.txt": "47c45a47c7170a9295d2a8ac35daa5e079e2b4df857309597e7d1adab0d34301",
+    "02_questionnaires/vendor_risk_questionnaire.csv": "609b01682046cb1485f2c159ae8e36b25bc7a2e97f7c0c948fe962ecec4a1067",
+    "03_internal/internal_messages.txt": "184345f0c89368a1dbf3f5710be90eef14e8db9bea31bb6b630e7d42780be708",
+    "04_knowledge/customer_specific_configuration_DRAFT.md": "95d85aa25ad8fcc0415b774fb9412eb79ebe06d972b78333577add42659acde7",
+    "04_knowledge/general_or_older_reference.md": "718e23e5c2e4848a52ff83be132471874eadedb29609e1486ef9d5494dc5fb9e",
+    "04_knowledge/prior_customer_answers_CONTEXT_ONLY.md": "e6a9766cac810a001562bb928e2dd82f69494a5949834e335cedbfcee7dd71db",
+    "05_evidence/insurance_status.txt": "7692eb574604ab2adab0b1cb926418826021b52ecf8a482171ac25ea99750dba",
+    "05_evidence/pen_test_summary.txt": "978f466d987cc62da384285a75a80c7a955776b3fb15ba415d9bc78e45150267",
+    "05_evidence/soc2_status.txt": "66be97caee93f7529f16ffc6f0737c06265c1e697e3986b71cf7270e48c02496",
+    "06_reference/customer_review_guidance.txt": "12c26213a7613fd811cae3d93924a31d6bac50e0e1731a6707aa9c0ef07b14c9",
+    "07_people/ownership.csv": "7d5b82fdb3d1e5c306f3218d9f6603f7422874ec7d5ea6fa2516f40671d940ce",
+    "08_context_to_filter/README.txt": "5c7b20872642552d5ab5337a5c380d97df3862046aaa7bc3e6cfe9737f30d833",
+    "08_context_to_filter/how_to_think_about_scope.txt": "3bd609c664b36b377bcacb01bb1167201cd87ac7fdbe8cf61c7f78f793e74660"
+  },
+  "owners": {
+    "approval_blockers": "Jai",
+    "cross_border": "Mina",
+    "dpa": "Mina",
+    "encryption_at_rest": "Anthony",
+    "encryption_in_transit": "Anthony",
+    "evaluation": "Parsa",
+    "human_oversight": "Parsa",
+    "iam_access": "Anthony",
+    "incident_response": "Anthony",
+    "inference_location": "Parsa",
+    "insurance": "Sam",
+    "model_fallback": "Parsa",
+    "model_providers": "Parsa",
+    "other:primary_aws_region": "Unassigned",
+    "other:vendor_onboarding": "Unassigned",
+    "pen_test": "Anthony",
+    "pen_test_remediation": "Anthony",
+    "personal_info_scope": "Mina",
+    "prompt_injection": "Parsa",
+    "provenance": "Parsa",
+    "provider_training_retention": "Parsa",
+    "retention_app_logs": "Anthony",
+    "retention_prompts_responses": "Parsa",
+    "retention_source_files": "Anthony",
+    "retention_traces": "Anthony",
+    "rto_rpo": "Anthony",
+    "service_description": "Jai",
+    "soc2": "Anthony",
+    "storage_location": "Anthony",
+    "submission_approval": "Mina",
+    "subprocessors": "Mina",
+    "tool_actions": "Parsa",
+    "trace_payload_capture": "Parsa"
+  },
+  "dependencies": [
+    {
+      "id": "01_customer/customer_correspondence#D1",
+      "kind": "milestone",
+      "subject": "October production pilot",
+      "depends_on_topics": [
+        "other:vendor_onboarding"
+      ],
+      "date": null,
+      "quote": "October production pilot is agreed in principle, subject to vendor onboarding.",
+      "file": "01_customer/customer_correspondence.txt"
+    },
+    {
+      "id": "03_internal/internal_messages#D1",
+      "kind": "blocked_until",
+      "subject": "DPA",
+      "depends_on_topics": [
+        "subprocessors",
+        "cross_border"
+      ],
+      "date": null,
+      "quote": "DPA blocked until subprocessors and cross-border transfers are confirmed.",
+      "file": "03_internal/internal_messages.txt"
+    }
+  ],
+  "open_decisions": [
+    {
+      "id": "01_customer/customer_correspondence#O1",
+      "text": "Whether the pilot stays synthetic-only or includes real customer-support transcripts.",
+      "decider": "customer",
+      "affected_topics": [
+        "service_description",
+        "personal_info_scope"
+      ],
+      "quote": "The team is deciding whether the pilot stays synthetic-only or includes real customer-support transcripts.",
+      "file": "01_customer/customer_correspondence.txt"
+    },
+    {
+      "id": "03_internal/internal_messages#O1",
+      "text": "Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.",
+      "decider": "internal",
+      "affected_topics": [
+        "model_fallback",
+        "inference_location"
+      ],
+      "quote": "Not finalized.",
+      "file": "03_internal/internal_messages.txt"
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#O1",
+      "text": "Customer-specific retention for source files is still to be determined.",
+      "decider": "internal",
+      "affected_topics": [
+        "retention_source_files"
+      ],
+      "quote": "customer-specific retention TBD",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md"
+    },
+    {
+      "id": "04_knowledge/customer_specific_configuration_DRAFT#O2",
+      "text": "Whether the Anthropic fallback is enabled, which is conditional on approval.",
+      "decider": "internal",
+      "affected_topics": [
+        "model_fallback"
+      ],
+      "quote": "Anthropic fallback intended OFF unless approved.",
+      "file": "04_knowledge/customer_specific_configuration_DRAFT.md"
+    }
+  ],
+  "chases": [
+    {
+      "owner": "Anthony",
+      "kind": "internal",
+      "message": "Anthony, consolidated chase for the vendor-procurement case. Already known (PROPOSED = unconfirmed): AES-256 at rest and TLS 1.2+ in transit are PROPOSED from the Apr 2026 overview; app logs 14 days is PROPOSED; source files persist for workspace lifetime (PROPOSED), and customer-specific source-file retention is still undecided; supplier persistence in AWS ca-central-1 is PROPOSED; SOC 2 Type II Jan-Dec 2025 is final, but the 2026 SOC 2 audit is not yet final; pen test remediation is PROPOSED only, with no evidence on file. Needed from you: (1) retention_traces, which blocks the October production pilot; (2) IAM access details; (3) incident response details; (4) RTO/RPO values; (5) evidence that the pen test findings were remediated; (6) your decision on customer-specific source-file retention; (7) confirmation of the app log retention and the encryption settings above.\nCaveats: no evidence: Evidence of the pen test remediation is needed but not provided.; no evidence: The 2026 SOC 2 audit is not yet final.; no evidence: The file contains no evidence that the penetration test findings were remediated.; open decision (internal): Customer-specific retention for source files is still to be determined.",
+      "cited": [
+        "04_knowledge/general_or_older_reference#F5",
+        "04_knowledge/general_or_older_reference#F4",
+        "04_knowledge/customer_specific_configuration_DRAFT#F4",
+        "04_knowledge/customer_specific_configuration_DRAFT#F6",
+        "04_knowledge/customer_specific_configuration_DRAFT#F1",
+        "05_evidence/soc2_status#F1",
+        "03_internal/internal_messages#F5"
+      ],
+      "evidence_quotes": [
+        "AES-256 primary databases/object storage",
+        "TLS 1.2+",
+        "App logs intended 14 days.",
+        "Source files currently persist for workspace lifetime",
+        "AWS ca-central-1 for supplier persistence.",
+        "SOC 2 Type II, Jan-Dec 2025: FINAL",
+        "remediated later"
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Customer Procurement",
+      "kind": "customer_decision",
+      "message": "Hello Customer Procurement, we need your decision on one open item for the vendor procurement case: does the pilot stay synthetic-only, or does it include real customer-support transcripts? The service description is currently recorded as an AI operations assistant for customer-service workflows (stated in the case intake), and the personal information scope cannot be set until this is decided. Please reply with your choice: synthetic-only or real customer-support transcripts.",
+      "cited": [
+        "00_START_HERE#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI operations assistant for customer-service workflows"
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Jai",
+      "kind": "internal",
+      "message": "Hi Jai, the service is recorded as an AI operations assistant for customer-service workflows (00_START_HERE#S1). Approval blockers: seven items are PROPOSED as possible delays (unconfirmed): cross_border, inference_location, insurance, personal_info_scope, retention_prompts_responses, retention_traces, subprocessors. Please confirm the status of each, needed for Q-022 and Q-024. Service description: whether the pilot stays synthetic-only or includes real customer-support transcripts is an open customer decision. Please get the customer to decide, needed for Q-001 and 01_customer/customer_correspondence#R5. Thanks.\nCaveats: open decision (customer): Whether the pilot stays synthetic-only or includes real customer-support transcripts.",
+      "cited": [
+        "00_START_HERE#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI operations assistant for customer-service workflows"
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Mina",
+      "kind": "internal",
+      "message": "Hi Mina, three open items are blocking the October production pilot on the vendor procurement case, and all three are still unknown: cross-border transfers, personal information scope and subprocessors. Please confirm each one. For cross-border transfers, tell us whether personal data would move outside the current jurisdiction and where. For personal information scope, tell us which personal information is in scope. For subprocessors, tell us which third parties would process the data. The DPA is only a proposed position, not confirmed, and it is proposed as blocked until subprocessors and cross-border transfers are confirmed. A lead to check, not a confirmed fact, is 03_internal/internal_messages.txt. Also, the proposed rule that every response needs human approval before submission is unconfirmed, and nothing in this message approves or signs off any response.",
+      "cited": [],
+      "evidence_quotes": [],
+      "citation_errors": []
+    },
+    {
+      "owner": "Parsa",
+      "kind": "internal",
+      "message": "Hi Parsa, chasing open items on the vendor-procurement case. Already known: the stated rule is that a human confirms customer-facing actions. Proposed, unconfirmed: OpenAI as primary inference, and payload capture intended OFF. Blockers for the October production pilot: we still need inference location and retention for prompts and responses. Also still open: evaluation, prompt injection, provenance, provider training retention, and tool actions. Please confirm the proposed OpenAI primary and payload-capture settings. Please also decide whether the Anthropic fallback is enabled (this is conditional on approval) and whether it is disabled for Acme if residency or legal requires it. Thanks.\nCaveats: open decision (internal): Whether the Anthropic fallback is disabled for Acme if residency or legal requires it.; open decision (internal): Whether the Anthropic fallback is enabled, which is conditional on approval.",
+      "cited": [
+        "04_knowledge/customer_specific_configuration_DRAFT#F7",
+        "04_knowledge/customer_specific_configuration_DRAFT#F2",
+        "04_knowledge/customer_specific_configuration_DRAFT#F5"
+      ],
+      "evidence_quotes": [
+        "Human confirms customer-facing actions.",
+        "OpenAI primary inference",
+        "Observability payload capture intended OFF."
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Sam",
+      "kind": "internal",
+      "message": "Hi Sam, the current insurance cover is recorded as CAD 5,000,000 (Cyber / Technology E&O), but it expires on 2026-10-01 and the renewal certificate is still pending. This is a blocker for the October production pilot. Please send us the renewed insurance certificate, or confirm the renewal date and expected coverage, so we can close this item before 2026-10-01.\nCaveats: expires 2026-10-01; no evidence: Renewal of the current insurance certificate is pending.",
+      "cited": [
+        "05_evidence/insurance_status#F1"
+      ],
+      "evidence_quotes": [
+        "Cyber / Technology E&O: CAD 5,000,000."
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Unassigned",
+      "kind": "internal",
+      "message": "Hello, we are following up on two open items for the vendor procurement case, and we do not yet have confirmed values for either. 1) Primary AWS region: please confirm the primary AWS region for this procurement. An April 2026 Canada overview document may be a lead to check, but it is not confirmed. 2) Vendor onboarding: please provide the current status of vendor onboarding and any details needed to complete it. Thank you.",
+      "cited": [],
+      "evidence_quotes": [],
+      "citation_errors": []
+    }
+  ],
+  "new_topics": [
+    "other:primary_aws_region",
+    "other:vendor_onboarding"
+  ]
+}

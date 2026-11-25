@@ -1,0 +1,2238 @@
+{
+  "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+  "as_of": "2026-12-07",
+  "customer": "Cedar Valley Health",
+  "required": [
+    {
+      "req": {
+        "id": "HSA-01",
+        "text": "Describe what PHI the service will process.",
+        "requester": null,
+        "topics": [
+          "personal_info_scope",
+          "service_description"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "personal_info_scope: UNKNOWN",
+        "service_description: PROPOSED AI documentation assistant that drafts discharge summaries for cl"
+      ],
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "inbox/2026-11-10_privacy_officer#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "HSA-02",
+        "text": "Can you sign our Business Associate Agreement (BAA) before go-live?",
+        "requester": null,
+        "topics": [
+          "dpa"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": "Yes",
+        "from_customer": false,
+        "group": null,
+        "section": "Legal",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "dpa: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "dpa: unknown"
+      ],
+      "stale_draft": "unsourced draft 'Yes'",
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-03",
+        "text": "Describe encryption of PHI in transit and at rest and key management.",
+        "requester": null,
+        "topics": [
+          "encryption_in_transit",
+          "encryption_at_rest"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "encryption_in_transit: PROPOSED TLS 1.2+",
+        "encryption_at_rest: PROPOSED AES-256"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "vendor_docs/cedar_valley_config_DRAFT#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "HSA-04",
+        "text": "Provide a current ISO 27001 certificate or SOC 2 Type II report.",
+        "requester": null,
+        "topics": [
+          "soc2"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": "SOC 2 available on request",
+        "from_customer": false,
+        "group": null,
+        "section": "Assurance",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "soc2: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "soc2: unknown"
+      ],
+      "stale_draft": "unsourced draft 'SOC 2 available on request'",
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-05",
+        "text": "State retention of PHI in application logs.",
+        "requester": null,
+        "topics": [
+          "retention_app_logs"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": "14 days",
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "retention_app_logs: CONFLICT"
+      ],
+      "open_assumptions": [
+        "retention_app_logs: conflict"
+      ],
+      "stale_draft": "unsourced draft '14 days'",
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-06",
+        "text": "List subprocessors that may access PHI.",
+        "requester": null,
+        "topics": [
+          "subprocessors"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "subprocessors: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-07",
+        "text": "Can model providers retain or train on PHI?",
+        "requester": null,
+        "topics": [
+          "provider_training_retention"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "provider_training_retention: PROPOSED zero data retention agreement"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-08",
+        "text": "Are AI-drafted clinical outputs reviewed by a clinician before use?",
+        "requester": null,
+        "topics": [
+          "human_oversight"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "AI",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "human_oversight: PROPOSED clinician approves every drafted summary before filing"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-09",
+        "text": "Describe breach notification timelines.",
+        "requester": null,
+        "topics": [
+          "incident_response"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "incident_response: PROPOSED 72 hours"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-10",
+        "text": "Describe audit logging of user access to PHI.",
+        "requester": null,
+        "topics": [
+          "iam_access"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Security",
+        "note": null
+      },
+      "status": "unknown",
+      "topic_verdicts": [
+        "iam_access: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "iam_access: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-11",
+        "text": "Confirm PHI is stored and processed only in the United States.",
+        "requester": null,
+        "topics": [
+          "storage_location",
+          "inference_location"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Privacy",
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "storage_location: PROPOSED AWS us-east-2",
+        "inference_location: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "HSA-12",
+        "text": "What could delay go-live readiness?",
+        "requester": null,
+        "topics": [
+          "approval_blockers"
+        ],
+        "source_file": "hospital_security_assessment.csv",
+        "quote": null,
+        "draft_answer": null,
+        "from_customer": false,
+        "group": null,
+        "section": "Procurement",
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "approval_blockers: PROPOSED 8 items may delay approval: dpa, encryption_at_rest, inference_location, other:audit_logging, other:iso27001_certification, retention_app_logs, soc2, subprocessors"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-03_ciso_request#R1",
+        "text": "Provide a current ISO 27001 certificate or SOC 2 Type II report covering the service before go-live.",
+        "requester": "Ruth Okafor",
+        "topics": [
+          "soc2"
+        ],
+        "source_file": "inbox/2026-11-03_ciso_request.txt",
+        "quote": "a current ISO 27001 certificate or SOC 2 Type II report covering the service",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "soc2: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "soc2: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-03_ciso_request#R2",
+        "text": "Provide the latest penetration test with remediation evidence.",
+        "requester": "Ruth Okafor",
+        "topics": [
+          "pen_test",
+          "pen_test_remediation"
+        ],
+        "source_file": "inbox/2026-11-03_ciso_request.txt",
+        "quote": "the latest penetration test with remediation evidence",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "ready_for_review",
+      "topic_verdicts": [
+        "pen_test: VERIFIED no Critical findings, Mar 2026 test; open High finding H-01 session fixation on clinician portal, Mar 2026 test",
+        "pen_test_remediation: VERIFIED no open findings, Mar 2026 test"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-03_ciso_request#R3",
+        "text": "Confirm encryption of PHI in transit and at rest, including who manages the keys.",
+        "requester": "Ruth Okafor",
+        "topics": [
+          "encryption_in_transit",
+          "encryption_at_rest"
+        ],
+        "source_file": "inbox/2026-11-03_ciso_request.txt",
+        "quote": "encryption of PHI in transit and at rest, including who manages the keys",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "encryption_in_transit: PROPOSED TLS 1.2+",
+        "encryption_at_rest: PROPOSED AES-256"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": [
+        "vendor_docs/cedar_valley_config_DRAFT#O1"
+      ]
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-03_ciso_request#R4",
+        "text": "Provide audit logging of user access to PHI.",
+        "requester": "Ruth Okafor",
+        "topics": [
+          "other:audit_logging"
+        ],
+        "source_file": "inbox/2026-11-03_ciso_request.txt",
+        "quote": "audit logging of user access to PHI",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "other:audit_logging: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "other:audit_logging: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-03_ciso_request#R5",
+        "text": "Provide the breach notification timeline.",
+        "requester": "Ruth Okafor",
+        "topics": [
+          "incident_response"
+        ],
+        "source_file": "inbox/2026-11-03_ciso_request.txt",
+        "quote": "your breach notification timeline",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "incident_response: PROPOSED 72 hours"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R1",
+        "text": "Provide a signed BAA before any PHI is processed.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "dpa"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "We need a signed BAA before any PHI is processed.",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "dpa: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "dpa: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R2",
+        "text": "List every subprocessor that touches PHI.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "subprocessors"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "Please list every subprocessor that touches PHI",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "subprocessors: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R3",
+        "text": "Confirm PHI is never used to train models.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "provider_training_retention"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "confirm PHI is never used to train models",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "provider_training_retention: PROPOSED zero data retention agreement"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R4",
+        "text": "State the retention period for PHI in logs.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "retention_app_logs"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "state retention for PHI in logs",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "retention_app_logs: CONFLICT"
+      ],
+      "open_assumptions": [
+        "retention_app_logs: conflict"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R5",
+        "text": "Keep PHI in the United States for both storage and model processing.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "storage_location",
+          "inference_location"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "PHI must stay in the United States, for storage and for model processing.",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "blocked",
+      "topic_verdicts": [
+        "storage_location: PROPOSED AWS us-east-2",
+        "inference_location: UNKNOWN"
+      ],
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    },
+    {
+      "req": {
+        "id": "inbox/2026-11-10_privacy_officer#R6",
+        "text": "Ensure every AI-drafted summary is reviewed by a clinician before it reaches the chart.",
+        "requester": "Daniel Reyes",
+        "topics": [
+          "human_oversight"
+        ],
+        "source_file": "inbox/2026-11-10_privacy_officer.txt",
+        "quote": "Every AI-drafted summary must be reviewed by a clinician before it reaches the chart.",
+        "draft_answer": null,
+        "from_customer": true,
+        "group": null,
+        "section": null,
+        "note": null
+      },
+      "status": "needs_confirmation",
+      "topic_verdicts": [
+        "human_oversight: PROPOSED clinician approves every drafted summary before filing"
+      ],
+      "open_assumptions": [],
+      "stale_draft": null,
+      "depends_on_decisions": []
+    }
+  ],
+  "verdicts": {
+    "approval_blockers": {
+      "topic": "approval_blockers",
+      "status": "PROPOSED",
+      "value": "8 items may delay approval: dpa, encryption_at_rest, inference_location, other:audit_logging, other:iso27001_certification, retention_app_logs, soc2, subprocessors",
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "derived from blocker list",
+      "caveats": [],
+      "sendable": false
+    },
+    "dpa": {
+      "topic": "dpa",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [
+        [
+          "prior_deals/riverbend_clinic_answers_2025#F1",
+          "other customer"
+        ]
+      ],
+      "hints": [
+        "other customer: BAA signed (prior_deals/riverbend_clinic_answers_2025.md)"
+      ],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "encryption_at_rest": {
+      "topic": "encryption_at_rest",
+      "status": "PROPOSED",
+      "value": "AES-256",
+      "used": [
+        "vendor_docs/platform_overview#F5"
+      ],
+      "excluded": [
+        [
+          "vendor_docs/cedar_valley_config_DRAFT#F6",
+          "no value stated"
+        ]
+      ],
+      "hints": [
+        "open: Customer-managed encryption keys are under discussion and not confirmed. (vendor_docs/cedar_valley_config_DRAFT.md)"
+      ],
+      "rule": "generic platform fact: needs confirmation",
+      "caveats": [
+        "open decision (internal): Whether to use customer-managed encryption keys is still under discussion."
+      ],
+      "sendable": false
+    },
+    "encryption_in_transit": {
+      "topic": "encryption_in_transit",
+      "status": "PROPOSED",
+      "value": "TLS 1.2+",
+      "used": [
+        "vendor_docs/platform_overview#F4"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "generic platform fact: needs confirmation",
+      "caveats": [],
+      "sendable": false
+    },
+    "human_oversight": {
+      "topic": "human_oversight",
+      "status": "PROPOSED",
+      "value": "clinician approves every drafted summary before filing",
+      "used": [
+        "vendor_docs/cedar_valley_config_DRAFT#F7"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "iam_access": {
+      "topic": "iam_access",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "incident_response": {
+      "topic": "incident_response",
+      "status": "PROPOSED",
+      "value": "72 hours",
+      "used": [
+        "vendor_docs/platform_overview#F6"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "generic platform fact: needs confirmation",
+      "caveats": [],
+      "sendable": false
+    },
+    "inference_location": {
+      "topic": "inference_location",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "model_fallback": {
+      "topic": "model_fallback",
+      "status": "PROPOSED",
+      "value": "no fallback provider",
+      "used": [
+        "vendor_docs/cedar_valley_config_DRAFT#F3"
+      ],
+      "excluded": [
+        [
+          "prior_deals/riverbend_clinic_answers_2025#F3",
+          "other customer"
+        ]
+      ],
+      "hints": [
+        "other customer: Anthropic (prior_deals/riverbend_clinic_answers_2025.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "model_providers": {
+      "topic": "model_providers",
+      "status": "PROPOSED",
+      "value": "OpenAI only",
+      "used": [
+        "vendor_docs/cedar_valley_config_DRAFT#F1"
+      ],
+      "excluded": [
+        [
+          "prior_deals/riverbend_clinic_answers_2025#F2",
+          "other customer"
+        ],
+        [
+          "vendor_docs/platform_overview#F1",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "other customer: OpenAI (prior_deals/riverbend_clinic_answers_2025.md)",
+        "generic: OpenAI, Anthropic, Google (vendor_docs/platform_overview.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "other:audit_logging": {
+      "topic": "other:audit_logging",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "other:iso27001_certification": {
+      "topic": "other:iso27001_certification",
+      "status": "VERIFIED",
+      "value": "ISO/IEC 27001:2022",
+      "used": [
+        "assurance/iso27001_certificate#F1"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [
+        "expires 2026-12-31"
+      ],
+      "sendable": false
+    },
+    "other:iso27001_scope": {
+      "topic": "other:iso27001_scope",
+      "status": "VERIFIED",
+      "value": "clinical documentation platform",
+      "used": [
+        "assurance/iso27001_certificate#F2"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [],
+      "sendable": true
+    },
+    "other:iso_27001": {
+      "topic": "other:iso_27001",
+      "status": "PROPOSED",
+      "value": "ISO 27001",
+      "used": [
+        "assurance/assurance_note#F2"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "pen_test": {
+      "topic": "pen_test",
+      "status": "VERIFIED",
+      "value": "no Critical findings, Mar 2026 test; open High finding H-01 session fixation on clinician portal, Mar 2026 test",
+      "used": [
+        "assurance/pen_test_2026#F1",
+        "assurance/pen_test_2026#F2"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [],
+      "sendable": true
+    },
+    "pen_test_remediation": {
+      "topic": "pen_test_remediation",
+      "status": "VERIFIED",
+      "value": "no open findings, Mar 2026 test",
+      "used": [
+        "assurance/retest_letter_2026-05#F2"
+      ],
+      "excluded": [
+        [
+          "assurance/retest_letter_2026-05#F1",
+          "superseded by newer"
+        ]
+      ],
+      "hints": [],
+      "rule": "evidence, stated",
+      "caveats": [],
+      "sendable": true
+    },
+    "personal_info_scope": {
+      "topic": "personal_info_scope",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [],
+      "sendable": false
+    },
+    "provider_training_retention": {
+      "topic": "provider_training_retention",
+      "status": "PROPOSED",
+      "value": "zero data retention agreement",
+      "used": [
+        "vendor_docs/cedar_valley_config_DRAFT#F2"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "retention_app_logs": {
+      "topic": "retention_app_logs",
+      "status": "CONFLICT",
+      "value": null,
+      "used": [
+        "team_chat/export#F1",
+        "vendor_docs/cedar_valley_config_DRAFT#F5"
+      ],
+      "excluded": [
+        [
+          "prior_deals/riverbend_clinic_answers_2025#F4",
+          "other customer"
+        ],
+        [
+          "vendor_docs/platform_overview#F2",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "other customer: 14 days (prior_deals/riverbend_clinic_answers_2025.md)",
+        "generic: 30 days (vendor_docs/platform_overview.md)"
+      ],
+      "rule": "conflicting values at same rank",
+      "caveats": [],
+      "sendable": false
+    },
+    "service_description": {
+      "topic": "service_description",
+      "status": "PROPOSED",
+      "value": "AI documentation assistant that drafts discharge summaries for cl",
+      "used": [
+        "intake_summary#S1"
+      ],
+      "excluded": [],
+      "hints": [],
+      "rule": "unverified source",
+      "caveats": [
+        "open decision (customer): Whether clinicians' free-text notes are in scope for the pilot or only structured fields."
+      ],
+      "sendable": false
+    },
+    "soc2": {
+      "topic": "soc2",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [
+        [
+          "prior_deals/riverbend_clinic_answers_2025#F5",
+          "other customer"
+        ],
+        [
+          "assurance/assurance_note#F1",
+          "absence: No SOC 2 report covers the clinical documentation platform."
+        ]
+      ],
+      "hints": [
+        "other customer: available on request (prior_deals/riverbend_clinic_answers_2025.md)"
+      ],
+      "rule": "no usable facts",
+      "caveats": [
+        "no evidence: No SOC 2 report covers the clinical documentation platform."
+      ],
+      "sendable": false
+    },
+    "storage_location": {
+      "topic": "storage_location",
+      "status": "PROPOSED",
+      "value": "AWS us-east-2",
+      "used": [
+        "vendor_docs/cedar_valley_config_DRAFT#F4"
+      ],
+      "excluded": [
+        [
+          "vendor_docs/platform_overview#F3",
+          "generic source on per-customer topic"
+        ]
+      ],
+      "hints": [
+        "generic: AWS us-east-1 by default (vendor_docs/platform_overview.md)"
+      ],
+      "rule": "unverified source",
+      "caveats": [],
+      "sendable": false
+    },
+    "subprocessors": {
+      "topic": "subprocessors",
+      "status": "UNKNOWN",
+      "value": null,
+      "used": [],
+      "excluded": [
+        [
+          "team_chat/export#F2",
+          "absence: The subprocessor list for this deployment has not been provided."
+        ]
+      ],
+      "hints": [],
+      "rule": "no usable this-customer facts",
+      "caveats": [
+        "no evidence: The subprocessor list for this deployment has not been provided."
+      ],
+      "sendable": false
+    }
+  },
+  "facts": [
+    {
+      "id": "assurance/assurance_note#F1",
+      "file": "assurance/assurance_note.txt",
+      "line": 1,
+      "topic": "soc2",
+      "claim": "No SOC 2 report covers the clinical documentation platform.",
+      "value": "no SOC 2 report",
+      "applies_to": "this_customer",
+      "certainty": "absent",
+      "date": null,
+      "speaker": null,
+      "quote": "No SOC 2 report covers the clinical documentation platform.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/assurance_note#F2",
+      "file": "assurance/assurance_note.txt",
+      "line": 1,
+      "topic": "other:iso_27001",
+      "claim": "ISO 27001 is the assurance offered for the clinical documentation platform.",
+      "value": "ISO 27001",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "ISO 27001 is the assurance offered for it.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/iso27001_certificate#F1",
+      "file": "assurance/iso27001_certificate.txt",
+      "line": 1,
+      "topic": "other:iso27001_certification",
+      "claim": "Lantern AI Technologies Inc. holds an ISO/IEC 27001:2022 certificate.",
+      "value": "ISO/IEC 27001:2022",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "ISO/IEC 27001:2022 certificate",
+      "valid_until": "2026-12-31",
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/iso27001_certificate#F2",
+      "file": "assurance/iso27001_certificate.txt",
+      "line": 2,
+      "topic": "other:iso27001_scope",
+      "claim": "The ISO/IEC 27001 certificate scope is the clinical documentation platform.",
+      "value": "clinical documentation platform",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Scope: clinical documentation platform.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/pen_test_2026#F1",
+      "file": "assurance/pen_test_2026.txt",
+      "line": 2,
+      "topic": "pen_test",
+      "claim": "The external penetration test of the clinical documentation platform reported no Critical findings.",
+      "value": "no Critical findings, Mar 2026 test",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "No Critical findings.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/pen_test_2026#F2",
+      "file": "assurance/pen_test_2026.txt",
+      "line": 3,
+      "topic": "pen_test",
+      "claim": "The external penetration test of the clinical documentation platform reported one High finding, H-01 session fixation on the clinician portal, which was open in the original report.",
+      "value": "open High finding H-01 session fixation on clinician portal, Mar 2026 test",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "H-01 session fixation on the clinician portal.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/retest_letter_2026-05#F1",
+      "file": "assurance/retest_letter_2026-05.txt",
+      "line": 2,
+      "topic": "pen_test_remediation",
+      "claim": "Finding H-01 was retested on May 18, 2026 and is confirmed remediated.",
+      "value": "H-01 remediated",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": "2026-05-18",
+      "speaker": "tester",
+      "quote": "The tester retested H-01 on May 18, 2026 and confirms it is remediated.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "assurance/retest_letter_2026-05#F2",
+      "file": "assurance/retest_letter_2026-05.txt",
+      "line": 3,
+      "topic": "pen_test_remediation",
+      "claim": "No findings from the Mar 2026 test remain open.",
+      "value": "no open findings, Mar 2026 test",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": "2026-05-20",
+      "speaker": "tester",
+      "quote": "No findings from the Mar 2026 test remain open.",
+      "valid_until": null,
+      "rank": 4,
+      "source_type": "evidence",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "intake_summary#S1",
+      "file": "intake_summary.txt",
+      "line": 4,
+      "topic": "service_description",
+      "claim": "Proposed service: AI documentation assistant that drafts discharge summaries for cl",
+      "value": "AI documentation assistant that drafts discharge summaries for cl",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Service: AI documentation assistant that drafts discharge summaries for cl",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "case_header",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "prior_deals/riverbend_clinic_answers_2025#F1",
+      "file": "prior_deals/riverbend_clinic_answers_2025.md",
+      "line": 2,
+      "topic": "dpa",
+      "claim": "Riverbend Family Clinic signed a BAA.",
+      "value": "BAA signed",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Riverbend signed a BAA in Aug 2025",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "prior_deals/riverbend_clinic_answers_2025#F2",
+      "file": "prior_deals/riverbend_clinic_answers_2025.md",
+      "line": 2,
+      "topic": "model_providers",
+      "claim": "Riverbend Family Clinic used OpenAI as its model provider.",
+      "value": "OpenAI",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "used OpenAI with an Anthropic fallback",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "prior_deals/riverbend_clinic_answers_2025#F3",
+      "file": "prior_deals/riverbend_clinic_answers_2025.md",
+      "line": 2,
+      "topic": "model_fallback",
+      "claim": "Riverbend Family Clinic used Anthropic as fallback model provider.",
+      "value": "Anthropic",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "with an Anthropic fallback",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "prior_deals/riverbend_clinic_answers_2025#F4",
+      "file": "prior_deals/riverbend_clinic_answers_2025.md",
+      "line": 3,
+      "topic": "retention_app_logs",
+      "claim": "Riverbend Family Clinic kept PHI logs for 14 days.",
+      "value": "14 days",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "kept PHI logs 14 days",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "prior_deals/riverbend_clinic_answers_2025#F5",
+      "file": "prior_deals/riverbend_clinic_answers_2025.md",
+      "line": 3,
+      "topic": "soc2",
+      "claim": "Riverbend Family Clinic was told SOC 2 is available on request.",
+      "value": "available on request",
+      "applies_to": "other_customer",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "SOC 2 available on request",
+      "valid_until": null,
+      "rank": 1,
+      "source_type": "prior_customer",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "team_chat/export#F1",
+      "file": "team_chat/export.txt",
+      "line": 2,
+      "topic": "retention_app_logs",
+      "claim": "PHI-bearing app logs are kept 30 days for Cedar Valley, then purged.",
+      "value": "30 days for Cedar Valley",
+      "applies_to": "this_customer",
+      "certainty": "stated",
+      "date": "2026-11-12",
+      "speaker": "Anthony",
+      "quote": "PHI-bearing app logs are kept 30 days for Cedar Valley, then purged.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "team_chat/export#F2",
+      "file": "team_chat/export.txt",
+      "line": 5,
+      "topic": "subprocessors",
+      "claim": "The subprocessor list for this deployment has not been provided.",
+      "value": "subprocessor list for this deployment not provided",
+      "applies_to": "this_customer",
+      "certainty": "absent",
+      "date": "2026-11-13",
+      "speaker": "Mina",
+      "quote": "not yet. Don't send the generic list.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "internal_chat",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F1",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 2,
+      "topic": "model_providers",
+      "claim": "Models are OpenAI only for this customer in the proposed configuration.",
+      "value": "OpenAI only",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Models: OpenAI only, under a zero data retention agreement.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F2",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 2,
+      "topic": "provider_training_retention",
+      "claim": "Model provider works under a zero data retention agreement in the proposed configuration.",
+      "value": "zero data retention agreement",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "under a zero data retention agreement",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F3",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 2,
+      "topic": "model_fallback",
+      "claim": "No fallback provider is planned for this customer in the proposed configuration.",
+      "value": "no fallback provider",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "No fallback provider.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F4",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 3,
+      "topic": "storage_location",
+      "claim": "Customer data is proposed to be stored in AWS us-east-2.",
+      "value": "AWS us-east-2",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "Storage: AWS us-east-2.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F5",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 4,
+      "topic": "retention_app_logs",
+      "claim": "PHI-bearing application logs are proposed to be retained for 90 days.",
+      "value": "90 days for PHI-bearing application logs",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "PHI-bearing application logs retained 90 days.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F6",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 5,
+      "topic": "encryption_at_rest",
+      "claim": "Customer-managed encryption keys are under discussion and not confirmed.",
+      "value": null,
+      "applies_to": "this_customer",
+      "certainty": "uncertain",
+      "date": null,
+      "speaker": null,
+      "quote": "customer-managed keys under discussion, not confirmed",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#F7",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md",
+      "line": 6,
+      "topic": "human_oversight",
+      "claim": "A clinician is proposed to approve every drafted summary before it is filed.",
+      "value": "clinician approves every drafted summary before filing",
+      "applies_to": "this_customer",
+      "certainty": "proposed",
+      "date": null,
+      "speaker": null,
+      "quote": "A clinician approves every drafted summary before it is filed.",
+      "valid_until": null,
+      "rank": 3,
+      "source_type": "customer_config_draft",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F1",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 2,
+      "topic": "model_providers",
+      "claim": "Any supported model from OpenAI, Anthropic or Google may be selected per workspace.",
+      "value": "OpenAI, Anthropic, Google",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Any supported model (OpenAI, Anthropic, Google) may be selected per workspace.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F2",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 3,
+      "topic": "retention_app_logs",
+      "claim": "Standard application logs are retained for 30 days.",
+      "value": "30 days",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Standard application logs: 30 days.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F3",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 3,
+      "topic": "storage_location",
+      "claim": "Data is stored in AWS us-east-1 by default.",
+      "value": "AWS us-east-1 by default",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Data stored in AWS us-east-1 by default.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F4",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 4,
+      "topic": "encryption_in_transit",
+      "claim": "Data is encrypted in transit using TLS 1.2 or higher.",
+      "value": "TLS 1.2+",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "TLS 1.2+ in transit",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F5",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 4,
+      "topic": "encryption_at_rest",
+      "claim": "Data is encrypted at rest using AES-256.",
+      "value": "AES-256",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "AES-256 at rest",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    },
+    {
+      "id": "vendor_docs/platform_overview#F6",
+      "file": "vendor_docs/platform_overview.md",
+      "line": 4,
+      "topic": "incident_response",
+      "claim": "Confirmed breaches are notified to customers within 72 hours.",
+      "value": "72 hours",
+      "applies_to": "generic",
+      "certainty": "stated",
+      "date": null,
+      "speaker": null,
+      "quote": "Confirmed breaches are notified to customers within 72 hours.",
+      "valid_until": null,
+      "rank": 2,
+      "source_type": "generic_doc",
+      "case": "CASE_3_SYNTHETIC_Cedar_Valley_Health",
+      "customer": "Cedar Valley Health",
+      "valid_until_raw": null
+    }
+  ],
+  "blockers": [
+    {
+      "item": "dpa",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "dpa UNKNOWN",
+        "Go-live"
+      ],
+      "quote": "We need a signed BAA before any PHI is processed.",
+      "subject": null
+    },
+    {
+      "item": "dpa",
+      "reason": "explicit_dependency",
+      "chain": [
+        "dpa UNKNOWN",
+        "BAA signing",
+        "Go-live"
+      ],
+      "quote": "BAA can't be signed until subprocessors and key management are confirmed.",
+      "subject": "other:baa_signing"
+    },
+    {
+      "item": "encryption_at_rest",
+      "reason": "explicit_dependency",
+      "chain": [
+        "encryption_at_rest PROPOSED",
+        "BAA signing",
+        "Go-live"
+      ],
+      "quote": "BAA can't be signed until subprocessors and key management are confirmed.",
+      "subject": "other:baa_signing"
+    },
+    {
+      "item": "inference_location",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "inference_location UNKNOWN",
+        "Go-live"
+      ],
+      "quote": "PHI must stay in the United States, for storage and for model processing.",
+      "subject": null
+    },
+    {
+      "item": "other:audit_logging",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "other:audit_logging UNKNOWN",
+        "Go-live"
+      ],
+      "quote": "audit logging of user access to PHI",
+      "subject": null
+    },
+    {
+      "item": "other:iso27001_certification",
+      "reason": "caveat_before_milestone",
+      "chain": [
+        "other:iso27001_certification expires 2026-12-31",
+        "Go-live"
+      ],
+      "quote": "expires 2026-12-31",
+      "subject": null
+    },
+    {
+      "item": "retention_app_logs",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "retention_app_logs CONFLICT",
+        "Go-live"
+      ],
+      "quote": "state retention for PHI in logs",
+      "subject": null
+    },
+    {
+      "item": "soc2",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "soc2 UNKNOWN",
+        "Go-live"
+      ],
+      "quote": "a current ISO 27001 certificate or SOC 2 Type II report covering the service",
+      "subject": null
+    },
+    {
+      "item": "subprocessors",
+      "reason": "asked_hard_gap",
+      "chain": [
+        "subprocessors UNKNOWN",
+        "Go-live"
+      ],
+      "quote": "Please list every subprocessor that touches PHI",
+      "subject": null
+    },
+    {
+      "item": "subprocessors",
+      "reason": "explicit_dependency",
+      "chain": [
+        "subprocessors UNKNOWN",
+        "BAA signing",
+        "Go-live"
+      ],
+      "quote": "BAA can't be signed until subprocessors and key management are confirmed.",
+      "subject": "other:baa_signing"
+    }
+  ],
+  "next_steps": [
+    {
+      "owner": "Anthony",
+      "items": [
+        "BLOCKER encryption_at_rest (explicit_dependency): encryption_at_rest PROPOSED → BAA signing → Go-live",
+        "BLOCKER other:audit_logging (asked_hard_gap): other:audit_logging UNKNOWN → Go-live",
+        "BLOCKER retention_app_logs (asked_hard_gap): retention_app_logs CONFLICT → Go-live",
+        "BLOCKER soc2 (asked_hard_gap): soc2 UNKNOWN → Go-live",
+        "encryption_at_rest: PROPOSED AES-256 [caveats: open decision (internal): Whether to use customer-managed encryption keys is still under discussion.] — needed by HSA-03, inbox/2026-11-03_ciso_request#R3",
+        "encryption_in_transit: PROPOSED TLS 1.2+ — needed by HSA-03, inbox/2026-11-03_ciso_request#R3",
+        "iam_access: UNKNOWN — needed by HSA-10",
+        "incident_response: PROPOSED 72 hours — needed by HSA-09, inbox/2026-11-03_ciso_request#R5",
+        "other:audit_logging: UNKNOWN — needed by inbox/2026-11-03_ciso_request#R4",
+        "retention_app_logs: CONFLICT — needed by HSA-05, inbox/2026-11-10_privacy_officer#R4",
+        "soc2: UNKNOWN [caveats: no evidence: No SOC 2 report covers the clinical documentation platform.] — needed by HSA-04, inbox/2026-11-03_ciso_request#R1",
+        "storage_location: PROPOSED AWS us-east-2 — needed by HSA-11, inbox/2026-11-10_privacy_officer#R5",
+        "decide (internal): Whether to use customer-managed encryption keys is still under discussion. (affects encryption_at_rest)"
+      ],
+      "kind": "internal",
+      "topics": [
+        "encryption_at_rest",
+        "other:audit_logging",
+        "retention_app_logs",
+        "soc2",
+        "encryption_in_transit",
+        "iam_access",
+        "incident_response",
+        "storage_location"
+      ]
+    },
+    {
+      "owner": "Mina",
+      "items": [
+        "BLOCKER dpa (asked_hard_gap, explicit_dependency): dpa UNKNOWN → Go-live | dpa UNKNOWN → BAA signing → Go-live",
+        "BLOCKER subprocessors (asked_hard_gap, explicit_dependency): subprocessors UNKNOWN → Go-live | subprocessors UNKNOWN → BAA signing → Go-live",
+        "dpa: UNKNOWN — needed by HSA-02, inbox/2026-11-10_privacy_officer#R1",
+        "personal_info_scope: UNKNOWN — needed by HSA-01",
+        "subprocessors: UNKNOWN [caveats: no evidence: The subprocessor list for this deployment has not been provided.] — needed by HSA-06, inbox/2026-11-10_privacy_officer#R2"
+      ],
+      "kind": "internal",
+      "topics": [
+        "dpa",
+        "subprocessors",
+        "personal_info_scope"
+      ]
+    },
+    {
+      "owner": "Parsa",
+      "items": [
+        "BLOCKER inference_location (asked_hard_gap): inference_location UNKNOWN → Go-live",
+        "human_oversight: PROPOSED clinician approves every drafted summary before filing — needed by HSA-08, inbox/2026-11-10_privacy_officer#R6",
+        "inference_location: UNKNOWN — needed by HSA-11, inbox/2026-11-10_privacy_officer#R5",
+        "model_fallback: PROPOSED no fallback provider",
+        "model_providers: PROPOSED OpenAI only",
+        "provider_training_retention: PROPOSED zero data retention agreement — needed by HSA-07, inbox/2026-11-10_privacy_officer#R3"
+      ],
+      "kind": "internal",
+      "topics": [
+        "inference_location",
+        "human_oversight",
+        "model_fallback",
+        "model_providers",
+        "provider_training_retention"
+      ]
+    },
+    {
+      "owner": "Unassigned",
+      "items": [
+        "BLOCKER other:iso27001_certification (caveat_before_milestone): other:iso27001_certification expires 2026-12-31 → Go-live",
+        "other:iso27001_certification: VERIFIED ISO/IEC 27001:2022 [caveats: expires 2026-12-31]",
+        "other:iso_27001: PROPOSED ISO 27001"
+      ],
+      "kind": "internal",
+      "topics": [
+        "other:iso27001_certification",
+        "other:iso_27001"
+      ]
+    },
+    {
+      "owner": "Priya",
+      "items": [
+        "approval_blockers: PROPOSED 8 items may delay approval: dpa, encryption_at_rest, inference_location, other:audit_logging, other:iso27001_certification, retention_app_logs, soc2, subprocessors — needed by HSA-12",
+        "service_description: PROPOSED AI documentation assistant that drafts discharge summaries for cl [caveats: open decision (customer): Whether clinicians' free-text notes are in scope for the pilot or only structured fields.] — needed by HSA-01"
+      ],
+      "kind": "internal",
+      "topics": [
+        "approval_blockers",
+        "service_description"
+      ]
+    },
+    {
+      "owner": "Hospital Procurement",
+      "items": [
+        "decide (customer): Whether clinicians' free-text notes are in scope for the pilot or only structured fields. (affects personal_info_scope, service_description)"
+      ],
+      "kind": "customer_decision",
+      "topics": [
+        "personal_info_scope",
+        "service_description"
+      ]
+    }
+  ],
+  "answers": [
+    {
+      "req_id": "HSA-01",
+      "answer": "PHI scope: not yet confirmed. The personal information scope has no resolved value, so the specific PHI the service will process cannot be stated. Proposed (unconfirmed) service description: an AI documentation assistant that drafts discharge summaries for clinicians. Open decision (customer): whether clinicians' free-text notes are in scope for the pilot or only structured fields; until this is decided, PHI categories from free-text notes are unknown. Suggested internal owner (routing suggestion, not confirmed): Mina.\nCaveats: open decision (customer): Whether clinicians' free-text notes are in scope for the pilot or only structured fields.",
+      "cited": [
+        "intake_summary#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI documentation assistant that drafts discharge summaries for cl"
+      ],
+      "owner": "Mina",
+      "open_assumptions": [
+        "personal_info_scope: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-02",
+      "answer": "Not yet known. Owner: Mina. Open: dpa: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "dpa: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-03",
+      "answer": "In transit: TLS 1.2+ (proposed value, unconfirmed). At rest: AES-256 (proposed value, unconfirmed). Key management: whether customer-managed encryption keys will be used is still an open internal decision and is not yet confirmed. Suggested internal owner for this response: Anthony (routing suggestion, proposed, not confirmed).\nCaveats: open decision (internal): Whether to use customer-managed encryption keys is still under discussion.",
+      "cited": [
+        "vendor_docs/platform_overview#F4",
+        "vendor_docs/platform_overview#F5"
+      ],
+      "evidence_quotes": [
+        "TLS 1.2+ in transit",
+        "AES-256 at rest"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-04",
+      "answer": "Not yet known. Owner: Anthony. Open: soc2: unknown\nCaveats: no evidence: No SOC 2 report covers the clinical documentation platform.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "soc2: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-05",
+      "answer": "Retention of PHI in application logs: not confirmed. The topic is in conflict. Open assumption: a conflict exists between 30 days (Cedar Valley) and 90 days (PHI-bearing application logs); no allowed fact confirms which period applies. Suggested internal owner (routing suggestion, not confirmed): Anthony.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "retention_app_logs: conflict between 30 days for Cedar Valley vs 90 days for PHI-bearing application logs"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-06",
+      "answer": "Not yet known. Owner: Mina. Open: subprocessors: unknown\nCaveats: no evidence: The subprocessor list for this deployment has not been provided.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-07",
+      "answer": "Not confirmed. The only related evidence is a PROPOSED (unconfirmed) value of 'zero data retention agreement' from a draft vendor configuration document, which states the model provider would operate under a zero data retention agreement. This is a proposal only; whether model providers retain or train on PHI is not confirmed. No open assumptions are recorded. Suggested internal owner (routing suggestion, not confirmed): Parsa.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F2"
+      ],
+      "evidence_quotes": [
+        "under a zero data retention agreement"
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-08",
+      "answer": "Proposed, unconfirmed: a clinician approves every AI-drafted summary before it is filed (vendor draft configuration, vendor_docs/cedar_valley_config_DRAFT, fact F7). This value is a proposal, not a confirmed control. Confirmation of the human oversight control: not yet confirmed. Suggested internal owner (routing suggestion, not confirmed): Parsa.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F7"
+      ],
+      "evidence_quotes": [
+        "A clinician approves every drafted summary before it is filed."
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-09",
+      "answer": "Proposed, unconfirmed: confirmed breaches would be notified to customers within 72 hours (per the platform overview document; this value is a proposed value and not yet confirmed). The suggested internal owner for this answer is Anthony (routing suggestion only, not a confirmed owner). No open assumptions are recorded for this topic.",
+      "cited": [
+        "vendor_docs/platform_overview#F6"
+      ],
+      "evidence_quotes": [
+        "Confirmed breaches are notified to customers within 72 hours."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-10",
+      "answer": "Not yet known. Owner: Anthony. Open: iam_access: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "iam_access: unknown"
+      ],
+      "status": "unknown",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-11",
+      "answer": "Storage: PROPOSED (unconfirmed) value 'AWS us-east-2', per draft configuration document. Processing/inference location: not yet confirmed (unknown). Therefore the requirement that PHI is stored and processed only in the United States cannot be confirmed from the available facts. Suggested internal owner (routing suggestion, not confirmed): Anthony.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F4"
+      ],
+      "evidence_quotes": [
+        "Storage: AWS us-east-2."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "HSA-12",
+      "answer": "Items that may delay approval (8):\n- dpa (asked hard gap, explicit dependency): dpa UNKNOWN → Go-live | dpa UNKNOWN → BAA signing → Go-live\n- encryption_at_rest (explicit dependency): encryption_at_rest PROPOSED → BAA signing → Go-live\n- inference_location (asked hard gap): inference_location UNKNOWN → Go-live\n- other:audit_logging (asked hard gap): other:audit_logging UNKNOWN → Go-live\n- other:iso27001_certification (caveat before milestone): other:iso27001_certification expires 2026-12-31 → Go-live\n- retention_app_logs (asked hard gap): retention_app_logs CONFLICT → Go-live\n- soc2 (asked hard gap): soc2 UNKNOWN → Go-live\n- subprocessors (asked hard gap, explicit dependency): subprocessors UNKNOWN → Go-live | subprocessors UNKNOWN → BAA signing → Go-live\nCaveats: expires 2026-12-31; no evidence: No SOC 2 report covers the clinical documentation platform.; no evidence: The subprocessor list for this deployment has not been provided.; open decision (internal): Whether to use customer-managed encryption keys is still under discussion.",
+      "cited": [],
+      "evidence_quotes": [
+        "We need a signed BAA before any PHI is processed.",
+        "BAA can't be signed until subprocessors and key management are confirmed.",
+        "PHI must stay in the United States, for storage and for model processing.",
+        "audit logging of user access to PHI",
+        "state retention for PHI in logs",
+        "a current ISO 27001 certificate or SOC 2 Type II report covering the service",
+        "Please list every subprocessor that touches PHI"
+      ],
+      "owner": "Priya",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-03_ciso_request#R1",
+      "answer": "Not yet known. Owner: Anthony. Open: soc2: unknown\nCaveats: no evidence: No SOC 2 report covers the clinical documentation platform.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "soc2: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-03_ciso_request#R2",
+      "answer": "Latest penetration test referenced in the allowed facts: Mar 2026. It reported no Critical findings and one High finding, H-01 (session fixation on the clinician portal), which was open in the Mar 2026 test report. A retest letter dated May 2026 states that no findings from the Mar 2026 test remain open, so that letter describes a May 2026 status, not the status as of today (2026-12-07). The allowed facts do not include the full remediation evidence for H-01 or any test later than Mar 2026, so both remain unconfirmed. Suggested internal owner (routing suggestion, not confirmed): Anthony.",
+      "cited": [
+        "assurance/pen_test_2026#F1",
+        "assurance/pen_test_2026#F2",
+        "assurance/retest_letter_2026-05#F2"
+      ],
+      "evidence_quotes": [
+        "No Critical findings.",
+        "H-01 session fixation on the clinician portal.",
+        "No findings from the Mar 2026 test remain open."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "ready_for_review",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-03_ciso_request#R3",
+      "answer": "In transit: TLS 1.2+ is stated in vendor platform documentation (vendor_docs/platform_overview), but the value is a PROPOSED, unconfirmed answer for this requirement. At rest: AES-256 is stated in the same documentation, but is also PROPOSED and unconfirmed. Key management: who manages the encryption keys is not yet confirmed; whether to use customer-managed encryption keys is still an open internal decision. PHI-specific scope of these controls is not established by the allowed facts. Suggested internal owner (routing suggestion, not confirmed): Anthony, proposed as the accountable owner for this response.\nCaveats: open decision (internal): Whether to use customer-managed encryption keys is still under discussion.",
+      "cited": [
+        "vendor_docs/platform_overview#F4",
+        "vendor_docs/platform_overview#F5"
+      ],
+      "evidence_quotes": [
+        "TLS 1.2+ in transit",
+        "AES-256 at rest"
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-03_ciso_request#R4",
+      "answer": "Not yet known. Owner: Anthony. Open: other:audit_logging: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "other:audit_logging: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-03_ciso_request#R5",
+      "answer": "Proposed, unconfirmed: breach notification to customers within 72 hours of confirmation of a breach, per vendor platform overview (vendor_docs/platform_overview#F6). The 72-hour value is a proposed value and is not confirmed for this requirement. Suggested internal owner (routing suggestion, not confirmed): Anthony.",
+      "cited": [
+        "vendor_docs/platform_overview#F6"
+      ],
+      "evidence_quotes": [
+        "Confirmed breaches are notified to customers within 72 hours."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R1",
+      "answer": "Not yet known. Owner: Mina. Open: dpa: unknown",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "dpa: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R2",
+      "answer": "Not yet known. Owner: Mina. Open: subprocessors: unknown\nCaveats: no evidence: The subprocessor list for this deployment has not been provided.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Mina",
+      "open_assumptions": [
+        "subprocessors: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R3",
+      "answer": "Not confirmed. The only related evidence is a PROPOSED (unconfirmed) provider term of 'zero data retention agreement' from a draft vendor configuration document (vendor_docs/cedar_valley_config_DRAFT). This draft term does not by itself confirm that PHI is never used to train models; no confirmed statement on model training is available. Suggested internal owner (routing suggestion, not confirmed): Parsa.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F2"
+      ],
+      "evidence_quotes": [
+        "under a zero data retention agreement"
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R4",
+      "answer": "The retention period for PHI in logs is not confirmed. The topic retention_app_logs is in conflict: there is an open assumption that the sources disagree, with 30 days cited for Cedar Valley and 90 days cited for PHI-bearing application logs. No allowed fact confirms either value, so neither should be stated as the retention period. Suggested internal owner (routing suggestion, not confirmed): Anthony, who should resolve the conflict before a value is given.",
+      "cited": [],
+      "evidence_quotes": [],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "retention_app_logs: conflict between 30 days for Cedar Valley vs 90 days for PHI-bearing application logs"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R5",
+      "answer": "Storage location: the only evidence is a proposed value of AWS us-east-2 from a draft vendor configuration document (unconfirmed/proposed, not a confirmed commitment). Model processing (inference) location: not yet confirmed; no allowed fact establishes where inference runs, so the requirement to keep PHI in the United States for both storage and model processing cannot be answered as satisfied. Suggested internal owner (routing suggestion, not confirmed): Anthony, as proposed.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F4"
+      ],
+      "evidence_quotes": [
+        "Storage: AWS us-east-2."
+      ],
+      "owner": "Anthony",
+      "open_assumptions": [
+        "inference_location: unknown"
+      ],
+      "status": "blocked",
+      "citation_errors": []
+    },
+    {
+      "req_id": "inbox/2026-11-10_privacy_officer#R6",
+      "answer": "Proposed, unconfirmed: the vendor draft configuration states that a clinician approves every drafted summary before it is filed. This is a proposed value only and is not confirmed. No open assumptions are recorded. Suggested internal owner (routing suggestion, not confirmed): Parsa.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F7"
+      ],
+      "evidence_quotes": [
+        "A clinician approves every drafted summary before it is filed."
+      ],
+      "owner": "Parsa",
+      "open_assumptions": [],
+      "status": "needs_confirmation",
+      "citation_errors": []
+    }
+  ],
+  "failed_files": [],
+  "skipped_files": [],
+  "dropped_quotes": [],
+  "supplier": "Lantern AI Technologies Inc.",
+  "files": {
+    "assurance/assurance_note.txt": "7dd0141319d1ab86c62ef98cd4dba4ea6a2d2aea690aefafd450df6f3ae53685",
+    "assurance/iso27001_certificate.txt": "9b042645a62a97920efb5687f139ad0c756498836c9171cc2db98948acbc29f2",
+    "assurance/pen_test_2026.txt": "c1fa8f4a6bff70278b80988e35862921044b4af80eca6ae708b1edce8eaf32ea",
+    "assurance/retest_letter_2026-05.txt": "fa864d5567a0b3e27a0bdfe51c5ef08f5ddaf975c8aa5649d6141a7ea7fd7576",
+    "hospital_security_assessment.csv": "290e73681d698d7c32e0ab02ebaaeab0a7cf4498a410e05a9d5360f61fb000e3",
+    "inbox/2026-11-03_ciso_request.txt": "4842bef0b909616014675f73cdb9754b2975115450884d337051673ca5c9ca97",
+    "inbox/2026-11-10_privacy_officer.txt": "b83a45989480cb0b522f908725da7b289de2f35be02182ccf8c0b267936cc5fb",
+    "intake_summary.txt": "ed99d8945fe55d94166d0a19cda3faa7281a3b08e4a8c20598f1f6d7856ca696",
+    "prior_deals/riverbend_clinic_answers_2025.md": "53450eb557be0a084bccb1f3536ed0fd8c5be4501ff1bad7c552af454ce48efc",
+    "team.csv": "2eeb3f6401d3d0fa428246addc139327c6dccfab75c8a6b9749d175561e7cdb7",
+    "team_chat/export.txt": "707465b77b500e52a332b4ae1c76dc06b2597caa7ef6dc48e7f9b5957ffcfe75",
+    "vendor_docs/cedar_valley_config_DRAFT.md": "7303c7bd5278f47c596a3ca11741872d24c796edf8274373de90d8c377313767",
+    "vendor_docs/platform_overview.md": "6e7ad8d547dc33e8bd853f158aad4aacd4d3844e012a764e5b46f5488ec89569"
+  },
+  "owners": {
+    "approval_blockers": "Priya",
+    "dpa": "Mina",
+    "encryption_at_rest": "Anthony",
+    "encryption_in_transit": "Anthony",
+    "human_oversight": "Parsa",
+    "iam_access": "Anthony",
+    "incident_response": "Anthony",
+    "inference_location": "Parsa",
+    "model_fallback": "Parsa",
+    "model_providers": "Parsa",
+    "other:audit_logging": "Anthony",
+    "other:iso27001_certification": "Unassigned",
+    "other:iso27001_scope": "Unassigned",
+    "other:iso_27001": "Unassigned",
+    "pen_test": "Anthony",
+    "pen_test_remediation": "Anthony",
+    "personal_info_scope": "Mina",
+    "provider_training_retention": "Parsa",
+    "retention_app_logs": "Anthony",
+    "service_description": "Priya",
+    "soc2": "Anthony",
+    "storage_location": "Anthony",
+    "subprocessors": "Mina"
+  },
+  "dependencies": [
+    {
+      "id": "inbox/2026-11-03_ciso_request#D1",
+      "kind": "milestone",
+      "subject": "Go-live",
+      "depends_on_topics": [
+        "approval_blockers"
+      ],
+      "date": "2027-01-12",
+      "quote": "Go-live on Jan 12, 2027 depends on this assessment.",
+      "file": "inbox/2026-11-03_ciso_request.txt"
+    },
+    {
+      "id": "team_chat/export#D1",
+      "kind": "blocked_until",
+      "subject": "BAA signing",
+      "depends_on_topics": [
+        "dpa",
+        "subprocessors",
+        "encryption_at_rest"
+      ],
+      "date": "2026-11-13",
+      "quote": "BAA can't be signed until subprocessors and key management are confirmed.",
+      "file": "team_chat/export.txt"
+    }
+  ],
+  "open_decisions": [
+    {
+      "id": "inbox/2026-11-10_privacy_officer#O1",
+      "text": "Whether clinicians' free-text notes are in scope for the pilot or only structured fields.",
+      "decider": "customer",
+      "affected_topics": [
+        "personal_info_scope",
+        "service_description"
+      ],
+      "quote": "Our clinical leadership is deciding whether clinicians' free-text notes are in scope for the pilot or only structured fields.",
+      "file": "inbox/2026-11-10_privacy_officer.txt"
+    },
+    {
+      "id": "vendor_docs/cedar_valley_config_DRAFT#O1",
+      "text": "Whether to use customer-managed encryption keys is still under discussion.",
+      "decider": "internal",
+      "affected_topics": [
+        "encryption_at_rest"
+      ],
+      "quote": "customer-managed keys under discussion, not confirmed",
+      "file": "vendor_docs/cedar_valley_config_DRAFT.md"
+    }
+  ],
+  "chases": [
+    {
+      "owner": "Anthony",
+      "kind": "internal",
+      "message": "Hi Anthony, here is where the go-live items stand. Known so far, with proposed values unconfirmed: encryption at rest AES-256 (proposed), encryption in transit TLS 1.2+ (proposed), breach notification within 72 hours for confirmed breaches (proposed), and storage in AWS us-east-2 (proposed in the draft config). Needed from you: (1) Decide whether to use customer-managed encryption keys. This blocks encryption at rest and BAA signing. (2) SOC 2: no SOC 2 report covers the clinical documentation platform, so please confirm the status. (3) Audit logging: status is unknown, please confirm. (4) App log retention: the sources conflict, please confirm which period applies. (5) IAM access: status is unknown, please confirm. Go-live stays blocked until these are resolved.\nCaveats: no evidence: No SOC 2 report covers the clinical documentation platform.; open decision (internal): Whether to use customer-managed encryption keys is still under discussion.",
+      "cited": [
+        "vendor_docs/platform_overview#F5",
+        "vendor_docs/platform_overview#F4",
+        "vendor_docs/platform_overview#F6",
+        "vendor_docs/cedar_valley_config_DRAFT#F4"
+      ],
+      "evidence_quotes": [
+        "AES-256 at rest",
+        "TLS 1.2+ in transit",
+        "Confirmed breaches are notified to customers within 72 hours.",
+        "Storage: AWS us-east-2."
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Hospital Procurement",
+      "kind": "customer_decision",
+      "message": "Hello Hospital Procurement, one decision is needed to finalise the pilot scope. The service is described as an AI documentation assistant that drafts discharge summaries for clinicians (proposed, not yet confirmed). Please decide whether clinicians' free-text notes are in scope for the pilot, or whether the pilot should use only structured fields. The personal information scope and service description depend on this decision.",
+      "cited": [
+        "intake_summary#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI documentation assistant that drafts discharge summaries for cl"
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Mina",
+      "kind": "internal",
+      "message": "Hi Mina, we are still missing three items for this vendor-procurement case: the DPA, the subprocessor list, and the personal information scope. The DPA and subprocessor list are blockers for BAA signing and go-live. Please send the current DPA and the subprocessor list for this deployment, and confirm the scope of personal information involved. No evidence on these items is on file yet, so nothing is confirmed. A prior deal's BAA is a possible lead to check, but it is not evidence for this case.\nCaveats: no evidence: The subprocessor list for this deployment has not been provided.",
+      "cited": [],
+      "evidence_quotes": [],
+      "citation_errors": []
+    },
+    {
+      "owner": "Parsa",
+      "kind": "internal",
+      "message": "Parsa, open items for Cedar Valley vendor procurement. Proposed from the config draft, unconfirmed: models are OpenAI only (F1); no fallback provider (F3); zero data retention agreement (F2); a clinician approves every drafted summary before filing (F7). Needed from you: (1) inference_location is UNKNOWN and blocks go-live; please confirm where inference runs (needed by HSA-11). (2) Confirm or correct the proposed clinician approval step before filing (needed by HSA-08). (3) Confirm the zero data retention agreement (needed by HSA-07). (4) Confirm OpenAI as the only provider and that there is no fallback provider.",
+      "cited": [
+        "vendor_docs/cedar_valley_config_DRAFT#F1",
+        "vendor_docs/cedar_valley_config_DRAFT#F2",
+        "vendor_docs/cedar_valley_config_DRAFT#F3",
+        "vendor_docs/cedar_valley_config_DRAFT#F7"
+      ],
+      "evidence_quotes": [
+        "Models: OpenAI only, under a zero data retention agreement.",
+        "under a zero data retention agreement",
+        "No fallback provider.",
+        "A clinician approves every drafted summary before it is filed."
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Priya",
+      "kind": "internal",
+      "message": "Hi Priya, here is a consolidated chase on the open items. Service description: the intake summary states the service as an AI documentation assistant that drafts discharge summaries, but the stated text appears cut off, so please confirm the full wording by HSA-01. Open decision for the customer: whether clinicians' free-text notes are in scope for the pilot or only structured fields. Please route this to the customer for their decision; we should not decide it. Approval blockers: 8 PROPOSED items may delay approval (unconfirmed): dpa, encryption_at_rest, inference_location, audit_logging, iso27001_certification, retention_app_logs, soc2, subprocessors. Please send the current status or evidence for each by HSA-12. Thanks.\nCaveats: open decision (customer): Whether clinicians' free-text notes are in scope for the pilot or only structured fields.",
+      "cited": [
+        "intake_summary#S1"
+      ],
+      "evidence_quotes": [
+        "Service: AI documentation assistant that drafts discharge summaries for cl"
+      ],
+      "citation_errors": []
+    },
+    {
+      "owner": "Unassigned",
+      "kind": "internal",
+      "message": "Internal chase on the ISO 27001 assurance item. Known: the ISO/IEC 27001:2022 certificate is verified, but it expires 2026-12-31, which falls before go-live, so this is a blocker (today is 2026-12-07). A separate note refers to 'ISO 27001' as the assurance offered, but this is a PROPOSED value and is unconfirmed. Needed: (1) confirm whether the proposed 'ISO 27001' wording should be replaced by the verified 'ISO/IEC 27001:2022' certificate; (2) provide evidence of renewal or a re-certified certificate covering the period after 2026-12-31, or a decision on how to handle the expiry before go-live. Please assign an owner for both points.\nCaveats: expires 2026-12-31",
+      "cited": [
+        "assurance/iso27001_certificate#F1",
+        "assurance/assurance_note#F2"
+      ],
+      "evidence_quotes": [
+        "ISO/IEC 27001:2022 certificate",
+        "ISO 27001 is the assurance offered for it."
+      ],
+      "citation_errors": []
+    }
+  ],
+  "new_topics": [
+    "other:audit_logging",
+    "other:iso27001_certification",
+    "other:iso27001_scope",
+    "other:iso_27001"
+  ]
+}

@@ -1,8 +1,9 @@
 .env
 .procnav_cache/
-runs/
+# runs/
 __pycache__
 .DS_Store
 .superpowers/
 .venv/
 .pytest_cache/
+docs/
